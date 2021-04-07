@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {HomeProps, HomeStates, Render} from "../components/types";
+import React, { Component } from "react";
+import { HomeProps, HomeStates, Render } from "../helpers/types";
 
 export class Home extends Component<HomeProps, HomeStates> {
   public render(): Render {
