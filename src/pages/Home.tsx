@@ -1,10 +1,19 @@
 import React, { Component } from "react";
 import { HomeProps, HomeStates, Render } from "../helpers/types";
 import { StoreContext } from "../components/Store";
+import { Helper } from "../helpers/Helper";
 
 export class Home extends Component<HomeProps, HomeStates> {
   public static contextType = StoreContext;
   state = { carts: [], make: "" };
+
+  shouldComponentUpdate(
+    nextProps: Readonly<HomeProps>,
+    nextState: Readonly<HomeStates>,
+    nextContext: any
+  ): boolean {
+    return nextState && !Helper.compare(this.state, nextState);
+  }
 
   componentDidMount() {
     const { carts, make } = this.context.pick({ carts: [], make: "" });

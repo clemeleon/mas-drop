@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { StoreProps, StoreStates, StoreItem } from "../helpers/types";
+import { Helper } from "../helpers/Helper";
 
 const Def: StoreItem = { carts: [] },
   Context = React.createContext<StoreItem>(Def),
   { Provider, Consumer } = Context;
 
 class Store extends Component<StoreProps, StoreStates> {
-  private key: string = "state";
+  private key: string = "states";
 
   private actions: Array<Function | undefined> = [];
 
@@ -87,10 +88,10 @@ class Store extends Component<StoreProps, StoreStates> {
     nextState: Readonly<StoreStates>,
     nextContext: any
   ): boolean {
-    if (this.state !== nextState) {
+    const action = this.actions.shift();
+    if (nextState && !Helper.compare(this.state, nextState)) {
       try {
-        localStorage.setItem("state", JSON.stringify(nextState));
-        const action = this.actions.shift();
+        localStorage.setItem(this.key, JSON.stringify(nextState));
         if (action instanceof Function) {
           action(nextState);
         }

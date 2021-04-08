@@ -4,7 +4,7 @@ type Render = JSX.Element;
 /** Store props and states */
 type StoreItem = number | string | [] | object;
 type StoreProps = {};
-type StoreStates = { carts: [] };
+type StoreStates = { carts: []; items: [] };
 //type StoreStates = { [key: string]: StoreItem };
 
 /** Home props and states */
