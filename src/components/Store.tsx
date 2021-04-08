@@ -54,7 +54,7 @@ class Store extends Component<StoreProps, StoreStates> {
             }
             return datas;
           },
-          set: (key: string, val: StoreItem): boolean => this.set(key, val),
+          set: (key: string, val: StoreItem): void => this.set(key, val),
         }}
       >
         {children}
@@ -71,22 +71,28 @@ class Store extends Component<StoreProps, StoreStates> {
     return def;
   };
 
-  private set = (key: string, val: StoreItem): boolean => {
-    let bol = false,
-      old = this.get(key, "");
+  shouldComponentUpdate(
+    nextProps: Readonly<StoreProps>,
+    nextState: Readonly<StoreStates>,
+    nextContext: any
+  ): boolean {
+    if (this.state !== nextState) {
+      try {
+        localStorage.setItem("state", JSON.stringify(nextState));
+        //return true;
+      } catch (e) {}
+    }
+    return false;
+  }
+
+  private set = (key: string, val: StoreItem): void => {
     this.setState((preState) => {
+      const old = this.get(key, "");
       if (val && old !== val) {
-        bol = true;
         return { ...preState, ...{ [key]: val } };
       }
       return preState;
     });
-    if (bol) {
-      try {
-        localStorage.setItem("state", JSON.stringify(this.state));
-      } catch (e) {}
-    }
-    return bol;
   };
 }
 
