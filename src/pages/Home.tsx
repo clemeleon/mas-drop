@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Render } from "../helpers/types";
-import { StoreContext } from "../components/Store";
+import { StoreContext } from "../components/Stores/Store";
 import { Helper } from "../helpers/Helper";
 
 /** Home props and states */

@@ -12,30 +12,34 @@ export class User {
   private readonly email: string;
   private readonly password: string;
   private readonly phone?: string;
+  private readonly parent: number;
 
-  constructor({
-    id,
-    email,
-    username,
-    password,
-    phone,
-    name,
-    address,
-  }: {
-    id: number;
-    email: string;
-    username: string;
-    password: string;
-    phone?: string;
-    name: { firstname: string; lastname: string };
-    address: {
-      geolocation: { lat: string; long: string };
-      city: string;
-      street: string;
-      number: number;
-      zipcode: string;
-    };
-  }) {
+  constructor(
+    {
+      id,
+      email,
+      username,
+      password,
+      phone,
+      name,
+      address,
+    }: {
+      id: number;
+      email: string;
+      username: string;
+      password: string;
+      phone?: string;
+      name: { firstname: string; lastname: string };
+      address: {
+        geolocation: { lat: string; long: string };
+        city: string;
+        street: string;
+        number: number;
+        zipcode: string;
+      };
+    },
+    parent: number = 0
+  ) {
     this.id = id;
     this.email = email;
     this.username = username;
@@ -43,5 +47,6 @@ export class User {
     this.name = name;
     this.phone = phone;
     this.address = new Address(address);
+    this.parent = parent;
   }
 }
