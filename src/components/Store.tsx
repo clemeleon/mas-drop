@@ -8,6 +8,8 @@ const Def: StoreItem = { carts: [] },
 class Store extends Component<StoreProps, StoreStates> {
   private key: string = "state";
 
+  private actions: Array<Function | undefined> = [];
+
   public constructor(props: StoreProps) {
     super(props);
     try {
@@ -30,8 +32,10 @@ class Store extends Component<StoreProps, StoreStates> {
         .then((res) => {
           res.json().then((datas) => {
             if (Array.isArray(datas)) {
-              console.log(datas);
-              this.set("carts", datas);
+              this.set(
+                "carts",
+                datas.filter((data, i) => i <= 5)
+              );
             }
           });
         })
@@ -54,7 +58,14 @@ class Store extends Component<StoreProps, StoreStates> {
             }
             return datas;
           },
-          set: (key: string, val: StoreItem): void => this.set(key, val),
+          set: (
+            key: string,
+            val: StoreItem,
+            action?: (items: StoreItem) => {}
+          ): void => {
+            this.actions.push(action);
+            this.set(key, val);
+          },
         }}
       >
         {children}
@@ -79,7 +90,10 @@ class Store extends Component<StoreProps, StoreStates> {
     if (this.state !== nextState) {
       try {
         localStorage.setItem("state", JSON.stringify(nextState));
-        //return true;
+        const action = this.actions.shift();
+        if (action instanceof Function) {
+          action(nextState);
+        }
       } catch (e) {}
     }
     return false;

@@ -11,7 +11,7 @@ class App extends Component {
   public render(): Render {
     //this.context.set("test", "wow");
     //console.log(this.context.get("carts"));
-    console.log(this.context.pick({ carts: [], make: "ok" }));
+    //console.log(this.context.pick({ carts: [], make: "ok" }));
     //console.log(this.context);
     return (
       <div className="App">
