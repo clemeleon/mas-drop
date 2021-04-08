@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Helper } from "../helpers/Helper";
+import { Helper } from "../../helpers/Helper";
+import { StoreFactory } from "./StoreFactory";
 
 /** Store props and states */
 export type StoreItem = number | string | [] | object;
 type StoreProps = {};
-type StoreStates = { carts: [] };
+type StoreStates = { carts: []; products: []; users: [] };
 //type StoreStates = { [key: string]: StoreItem };
 const Def: StoreItem = { carts: [] },
   Context = React.createContext<StoreItem>(Def),
@@ -13,20 +14,24 @@ const Def: StoreItem = { carts: [] },
 class Store extends Component<StoreProps, StoreStates> {
   private key: string = "states";
 
+  private factory: StoreFactory;
+
   private actions: Array<Function | undefined> = [];
 
   public constructor(props: StoreProps) {
     super(props);
-    try {
-      const str = localStorage.getItem(this.key),
-        carts = str && str.length > 0 ? JSON.parse(str) : {};
-      this.state = { ...carts };
-    } catch (e) {}
+    this.factory = new StoreFactory();
+    this.state = { carts: [], products: [], users: [] };
+    // try {
+    //   const str = localStorage.getItem(this.key),
+    //     carts = str && str.length > 0 ? JSON.parse(str) : {};
+    //   this.state = { ...carts };
+    // } catch (e) {}
   }
 
-  public componentDidMount() {
+  public async componentDidMount() {
     const { carts } = this.state;
-    if (!carts || carts.length === 0) {
+    /*if (!carts || carts.length === 0) {
       fetch("https://fakestoreapi.com/carts", {
         method: "GET",
         headers: {
@@ -47,7 +52,8 @@ class Store extends Component<StoreProps, StoreStates> {
         .catch((err) => {
           console.log(err);
         });
-    }
+    }*/
+    console.log(await this.factory.products());
   }
 
   public render() {
