@@ -1,7 +1,11 @@
 import React, { Component } from "react";
-import { HomeProps, HomeStates, Render } from "../helpers/types";
+import { Render } from "../helpers/types";
 import { StoreContext } from "../components/Store";
 import { Helper } from "../helpers/Helper";
+
+/** Home props and states */
+export type HomeProps = {};
+export type HomeStates = {};
 
 export class Home extends Component<HomeProps, HomeStates> {
   public static contextType = StoreContext;

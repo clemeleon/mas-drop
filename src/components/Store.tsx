@@ -1,7 +1,11 @@
 import React, { Component } from "react";
-import { StoreProps, StoreStates, StoreItem } from "../helpers/types";
 import { Helper } from "../helpers/Helper";
 
+/** Store props and states */
+export type StoreItem = number | string | [] | object;
+type StoreProps = {};
+type StoreStates = { carts: [] };
+//type StoreStates = { [key: string]: StoreItem };
 const Def: StoreItem = { carts: [] },
   Context = React.createContext<StoreItem>(Def),
   { Provider, Consumer } = Context;
@@ -103,7 +107,7 @@ class Store extends Component<StoreProps, StoreStates> {
   private set = (key: string, val: StoreItem): void => {
     this.setState((preState) => {
       const old = this.get(key, "");
-      if (val && old !== val) {
+      if (val && !Helper.compare(old, val)) {
         return { ...preState, ...{ [key]: val } };
       }
       return preState;
