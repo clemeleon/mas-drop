@@ -4,15 +4,11 @@ import { Home } from "./pages/Home";
 import { Header } from "./components/Header";
 import { Render } from "./helpers/types";
 import { Footer } from "./components/Footer";
-import { StoreContext } from "./components/Store";
+import { StoreContext } from "./components/Stores/Store";
 
 class App extends Component {
   public static contextType = StoreContext;
   public render(): Render {
-    //this.context.set("test", "wow");
-    //console.log(this.context.get("carts"));
-    //console.log(this.context.pick({ carts: [], make: "ok" }));
-    //console.log(this.context);
     return (
       <div className="App">
         <Router>
