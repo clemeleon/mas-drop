@@ -11,4 +11,8 @@ export class Helper {
     }
     return JSON.stringify(one) === JSON.stringify(two);
   };
+
+  static typeCompare(): boolean {
+    return false;
+  }
 }

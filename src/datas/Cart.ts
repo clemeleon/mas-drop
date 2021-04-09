@@ -1,6 +1,8 @@
+import { IData } from "../faces/IData";
+
 export type CartProduct = Array<{ productId: number; quantity: number }>;
 
-export class Cart {
+export class Cart implements IData {
   public readonly id: number;
   public readonly user: number;
   public readonly date: string;
