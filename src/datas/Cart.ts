@@ -3,19 +3,19 @@ import { IData } from "../faces/IData";
 export type CartProduct = Array<{ productId: number; quantity: number }>;
 export type CartType = {
   id: number;
-  user: number;
+  userId: number;
   date: string;
   products: CartProduct;
 };
 export class Cart implements IData {
   public readonly id: number;
-  public readonly user: number;
+  public readonly userId: number;
   public readonly date: string;
   public readonly products: CartProduct;
 
-  constructor({ id, user, date, products }: CartType) {
+  constructor({ id, userId, date, products }: CartType) {
     this.id = id;
-    this.user = user;
+    this.userId = userId;
     this.date = date;
     this.products = products;
   }

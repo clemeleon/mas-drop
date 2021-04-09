@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Render } from "../helpers/types";
 import { StoreContext } from "../components/Stores/Store";
 import { Helper } from "../helpers/Helper";
+import { User } from "../datas/User";
 
 /** Home props and states */
 export type HomeProps = {};
@@ -19,9 +20,10 @@ export class Home extends Component<HomeProps, HomeStates> {
     return nextState && !Helper.compare(this.state, nextState);
   }
 
-  componentDidMount() {
-    //const { carts, make } = this.context.pick({ carts: [], make: "" });
-    //this.setState({ carts, make });
+  public async componentDidMount() {
+    console.log(await this.context.get("users", [], { id: 6 }));
+    console.log(await this.context.get("products", [], { id: 6 }));
+    console.log(await this.context.get("carts", [], { id: 1 }));
   }
 
   public click = () => {

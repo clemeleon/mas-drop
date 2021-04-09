@@ -5,7 +5,6 @@
 import { Table } from "./Table";
 import { IData } from "../../faces/IData";
 import { DataType } from "./Store";
-
 export class Schema {
   private readonly tables: { [key: string]: Table<any, any> } = {};
 
@@ -25,12 +24,16 @@ export class Schema {
     }
   }
 
-  public create<T extends IData, C extends DataType>(type: {
-    new (datas: C): T;
-  }): void {
+  public create<T extends IData, C extends DataType>(
+    type: {
+      new (datas: C): T;
+    },
+    format?: (datas: C[]) => C[]
+  ): void {
+    format = format ? format : (datas: C[]): C[] => datas;
     const name = `${type.name.toLocaleLowerCase()}s`;
     if (!this.tables.hasOwnProperty(name)) {
-      this.tables[name] = new Table<T, C>(name, type, this.fetch);
+      this.tables[name] = new Table<T, C>(name, type, format, this.fetch);
     }
   }
 
@@ -39,10 +42,32 @@ export class Schema {
     fields: K[] = [],
     wheres: { [key: string]: any } = {}
   ): Promise<T[]> {
-    if (name.length <= 0 && !this.tables.hasOwnProperty(name)) {
+    if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
       return [];
     }
     return await this.tables[name].all<K>(fields, wheres);
+  }
+
+  public async get<T extends IData, K extends keyof DataType>(
+    name: string,
+    fields: K[] = [],
+    wheres: { [key: string]: any } = {}
+  ): Promise<T | undefined> {
+    if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
+      return undefined;
+    }
+    return await this.tables[name].get<K>(fields, wheres);
+  }
+
+  public async set<T extends IData, K extends keyof DataType>(
+    name: string,
+    data: T,
+    changes: DataType
+  ): Promise<boolean> {
+    if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
+      return false;
+    }
+    return await this.tables[name].set(data, changes);
   }
 
   private fetch = async <C>(path: string, option: {} = {}): Promise<C[]> => {
@@ -60,4 +85,11 @@ export class Schema {
     }
     return [];
   };
+
+  public async prepare(): Promise<void> {
+    const tables = Object.values(this.tables);
+    for (const table of tables) {
+      await table.all();
+    }
+  }
 }

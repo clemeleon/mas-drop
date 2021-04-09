@@ -1,23 +1,20 @@
 import React, { Component } from "react";
-import { Helper } from "../../helpers/Helper";
 import { Schema } from "./Schema";
 import { Product, ProductType } from "../../datas/Product";
 import { User, UserType } from "../../datas/User";
 import { Cart, CartType } from "../../datas/Cart";
+import { IData } from "../../faces/IData";
 
 /** Store props and states */
 export type StoreItem = number | string | [] | object;
 type StoreProps = {};
-type StoreStates = {};
+type StoreStates = { loaded: boolean };
 export type DataType = { [key: string]: any };
-const Def: StoreItem = {},
+const Def: StoreItem = { state: { loaded: false }, all: Function },
   Context = React.createContext<StoreItem>(Def),
   { Provider, Consumer } = Context;
 
 class Store extends Component<StoreProps, StoreStates> {
-  private key: string = "states";
-
-  private actions: Array<Function | undefined> = [];
   private schema: Schema;
 
   public constructor(props: StoreProps) {
@@ -26,80 +23,80 @@ class Store extends Component<StoreProps, StoreStates> {
   }
 
   public async componentDidMount() {
-    this.schema.create<User, UserType>(User);
+    this.schema.create<User, UserType>(User, (datas) => {
+      const id = 6,
+        temps: UserType[] = [];
+      for (const data of datas) {
+        if (data.id !== id) {
+          data.parent = id;
+        }
+        temps.push(data);
+      }
+      return temps;
+    });
     this.schema.create<Product, ProductType>(Product);
-    this.schema.create<Cart, CartType>(Cart);
-    console.log(await this.schema.all("carts"));
+    this.schema.create<Cart, CartType>(Cart, (datas) => {
+      if (datas.length > 5) {
+        return datas.slice(0, 5);
+      }
+      return datas;
+    });
+    await this.schema.prepare();
+    this.setState({ loaded: true });
   }
 
   public render() {
     const { children } = this.props;
-    return <Provider value={{}}>{children}</Provider>;
-  }
-
-  /*public render() {
-    const { children } = this.props;
     return (
       <Provider
         value={{
-          get: (key: string, def: StoreItem): StoreItem => this.get(key, def),
-          pick: (keys: StoreItem): StoreItem => {
-            const datas: StoreItem = {};
-            for (const [key, val] of Object.entries(keys)) {
-              Object.assign(datas, { [key]: this.get(key, val) });
-            }
-            return datas;
-          },
-          set: (
-            key: string,
-            val: StoreItem,
-            action?: (items: StoreItem) => {}
-          ): void => {
-            this.actions.push(action);
-            this.set(key, val);
-          },
+          states: this.state,
+          all: async <T extends IData, K extends keyof DataType>(
+            table: string,
+            fields: K[] = [],
+            wheres: { [key: string]: any } = {}
+          ): Promise<T[]> => await this.all<T, K>(table, fields, wheres),
+          get: async <T extends IData, K extends keyof DataType>(
+            table: string,
+            fields: K[] = [],
+            wheres: { [key: string]: any } = {}
+          ): Promise<T | undefined> =>
+            await this.get<T, K>(table, fields, wheres),
+          set: async <T extends IData, K extends keyof DataType>(
+            table: string,
+            data: T,
+            changes: DataType = {}
+          ): Promise<boolean> => await this.set<T, K>(table, data, changes),
         }}
       >
         {children}
       </Provider>
     );
-  }*/
-
-  /*private get = (key: string, def: StoreItem): StoreItem => {
-    for (const [name, val] of Object.entries(this.state)) {
-      if (name === key) {
-        return val;
-      }
-    }
-    return def;
-  };*/
-
-  shouldComponentUpdate(
-    nextProps: Readonly<StoreProps>,
-    nextState: Readonly<StoreStates>,
-    nextContext: any
-  ): boolean {
-    const action = this.actions.shift();
-    if (nextState && !Helper.compare(this.state, nextState)) {
-      try {
-        localStorage.setItem(this.key, JSON.stringify(nextState));
-        if (action instanceof Function) {
-          action(nextState);
-        }
-      } catch (e) {}
-    }
-    return false;
   }
 
-  /*private set = (key: string, val: StoreItem): void => {
-    this.setState((preState) => {
-      const old = this.get(key, "");
-      if (val && !Helper.compare(old, val)) {
-        return { ...preState, ...{ [key]: val } };
-      }
-      return preState;
-    });
-  }*/
+  private async set<T extends IData, K extends keyof DataType>(
+    name: string,
+    data: T,
+    changes: DataType
+  ): Promise<boolean> {
+    return await this.schema.set<T, K>(name, data, changes);
+  }
+
+  private async all<T extends IData, K extends keyof DataType>(
+    table: string,
+    fields: K[] = [],
+    wheres: { [key: string]: any } = {}
+  ): Promise<T[]> {
+    return this.schema.all<T, K>(table, fields, wheres);
+  }
+
+  private async get<T extends IData, K extends keyof DataType>(
+    table: string,
+    fields: K[] = [],
+    wheres: { [key: string]: any } = {}
+  ): Promise<T | undefined> {
+    return this.schema.get<T, K>(table, fields, wheres);
+  }
 }
 
 export { Store, Consumer as StoreConsumer, Context as StoreContext };
