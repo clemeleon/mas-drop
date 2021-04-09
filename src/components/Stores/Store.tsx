@@ -50,15 +50,39 @@ class Store extends Component<StoreProps, StoreStates> {
       .then((bol: boolean) => this.setState({ loaded: bol }));*/
   }
 
+  private async prepare(): Promise<void> {
+    if (this.state.loaded) {
+      return;
+    }
+    this.schema.create<User, UserType>(User, (datas) => {
+      const id = 6,
+          temps: UserType[] = [];
+      for (const data of datas) {
+        data.parent = data.id !== id ? id : 0;
+        temps.push(data);
+      }
+      return temps.slice(0, id);
+    });
+    this.schema.create<Product, ProductType>(Product);
+    this.schema.create<Cart, CartType>(Cart, (datas) => {
+      if (datas.length > 5) {
+        return datas.slice(0, 5);
+      }
+      return datas;
+    });
+    await this.schema.prepare();
+    this.setState({loaded: true});
+  }
+
   public render() {
-    const { children } = this.props;
+    const {children} = this.props;
     return (
-      <Provider
-        value={{
-          states: this.state,
-          all: async <T extends IData, K extends keyof DataType>(
-            table: string,
-            fields: K[] = [],
+        <Provider
+            value={{
+              states: this.state,
+              all: async <T extends IData, K extends keyof DataType>(
+                  table: string,
+                  fields: K[] = [],
             wheres: { [key: string]: any } = {}
           ): Promise<T[]> => await this.all<T, K>(table, fields, wheres),
           get: async <T extends IData, K extends keyof DataType>(
@@ -77,32 +101,6 @@ class Store extends Component<StoreProps, StoreStates> {
         {children}
       </Provider>
     );
-  }
-
-  private async prepare(): Promise<void> {
-    if (this.state.loaded) {
-      return;
-    }
-    this.schema.create<User, UserType>(User, (datas) => {
-      const id = 6,
-        temps: UserType[] = [];
-      for (const data of datas) {
-        if (data.id !== id) {
-          data.parent = id;
-        }
-        temps.push(data);
-      }
-      return temps.slice(0, id);
-    });
-    this.schema.create<Product, ProductType>(Product);
-    this.schema.create<Cart, CartType>(Cart, (datas) => {
-      if (datas.length > 5) {
-        return datas.slice(0, 5);
-      }
-      return datas;
-    });
-    await this.schema.prepare();
-    this.setState({ loaded: true });
   }
 
   private async set<T extends IData>(

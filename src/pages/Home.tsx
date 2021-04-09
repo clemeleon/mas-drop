@@ -26,10 +26,8 @@ export class Home extends Component<HomeProps, HomeStates> {
     console.log(await this.context.get("users", [], { id: 6 }));
   }
 
-  public click = () => {
-    this.context.get("products", [], { id: 6 }).then((res: Product) => {
-      console.log(res);
-    });
+  public click = async (): Promise<void> => {
+    console.log(await this.context.get("users", [], { id: 2 }));
   };
 
   public render(): Render {
