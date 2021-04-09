@@ -4,8 +4,9 @@
  */
 import { IData } from "../../faces/IData";
 import { Helper } from "../../helpers/Helper";
+import { DataType } from "./Store";
 
-export class Table<T extends IData, C extends { id: string }> {
+export class Table<T extends IData, C extends DataType> {
   private datas: C[] = [];
 
   constructor(

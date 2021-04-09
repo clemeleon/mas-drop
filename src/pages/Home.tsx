@@ -20,8 +20,8 @@ export class Home extends Component<HomeProps, HomeStates> {
   }
 
   componentDidMount() {
-    const { carts, make } = this.context.pick({ carts: [], make: "" });
-    this.setState({ carts, make });
+    //const { carts, make } = this.context.pick({ carts: [], make: "" });
+    //this.setState({ carts, make });
   }
 
   public click = () => {

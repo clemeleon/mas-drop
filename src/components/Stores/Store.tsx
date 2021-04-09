@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Helper } from "../../helpers/Helper";
 import { Schema } from "./Schema";
-import { Product } from "../../datas/Product";
-import { User } from "../../datas/User";
-import { Cart } from "../../datas/Cart";
+import { Product, ProductType } from "../../datas/Product";
+import { User, UserType } from "../../datas/User";
+import { Cart, CartType } from "../../datas/Cart";
 
 /** Store props and states */
 export type StoreItem = number | string | [] | object;
 type StoreProps = {};
-type StoreStates = { schema: Schema };
-const Def: StoreItem = { carts: [] },
+type StoreStates = {};
+export type DataType = { id: number };
+const Def: StoreItem = {},
   Context = React.createContext<StoreItem>(Def),
   { Provider, Consumer } = Context;
 
@@ -18,14 +19,25 @@ class Store extends Component<StoreProps, StoreStates> {
 
   private actions: Array<Function | undefined> = [];
   private schema: Schema;
+
   public constructor(props: StoreProps) {
     super(props);
-    this.schema = new Schema({ products: Product, users: User, carts: Cart });
+    this.schema = new Schema();
   }
 
-  public async componentDidMount() {}
+  public componentDidMount() {
+    this.schema.create<User, UserType>("users", User);
+    this.schema.create<Product, ProductType>("products", Product);
+    this.schema.create<Cart, CartType>("carts", Cart);
+    console.log(this.schema);
+  }
 
   public render() {
+    const { children } = this.props;
+    return <Provider value={{}}>{children}</Provider>;
+  }
+
+  /*public render() {
     const { children } = this.props;
     return (
       <Provider
@@ -51,16 +63,16 @@ class Store extends Component<StoreProps, StoreStates> {
         {children}
       </Provider>
     );
-  }
+  }*/
 
-  private get = (key: string, def: StoreItem): StoreItem => {
+  /*private get = (key: string, def: StoreItem): StoreItem => {
     for (const [name, val] of Object.entries(this.state)) {
       if (name === key) {
         return val;
       }
     }
     return def;
-  };
+  };*/
 
   shouldComponentUpdate(
     nextProps: Readonly<StoreProps>,
@@ -79,7 +91,7 @@ class Store extends Component<StoreProps, StoreStates> {
     return false;
   }
 
-  private set = (key: string, val: StoreItem): void => {
+  /*private set = (key: string, val: StoreItem): void => {
     this.setState((preState) => {
       const old = this.get(key, "");
       if (val && !Helper.compare(old, val)) {
@@ -87,7 +99,7 @@ class Store extends Component<StoreProps, StoreStates> {
       }
       return preState;
     });
-  };
+  }*/
 }
 
 export { Store, Consumer as StoreConsumer, Context as StoreContext };
