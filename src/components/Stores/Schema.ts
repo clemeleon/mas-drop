@@ -62,12 +62,12 @@ export class Schema {
   public async set<T extends IData, K extends keyof DataType>(
     name: string,
     data: T,
-    keys: K[]
+    changes: DataType
   ): Promise<boolean> {
     if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
       return false;
     }
-    return await this.tables[name].set(data, keys);
+    return await this.tables[name].set(data, changes);
   }
 
   private fetch = async <C>(path: string, option: {} = {}): Promise<C[]> => {

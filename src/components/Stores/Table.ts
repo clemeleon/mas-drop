@@ -56,32 +56,43 @@ export class Table<T extends IData, C extends DataType> {
     return this.save();
   }
 
-  public async set<K extends keyof C>(data: T, keys: K[]): Promise<boolean> {
+  public async set<K extends keyof C>(
+      data: T,
+      changes: DataType
+  ): Promise<boolean> {
     if (!(await this.load())) {
       return false;
     }
     const raw: C = JSON.parse(JSON.stringify(data)),
-      old = this.datas.find((one) => {
-        return one.id === raw.id;
-      });
+        old = this.datas.find((one) => {
+          return one.id === raw.id;
+        }),
+        keys = Object.keys(changes);
     if (!old) {
       return false;
     }
     if (keys.length <= 0) {
       throw new Error("modified keys are needed!");
     }
-    if (Helper.compare(raw, old)) {
-      return true;
-    }
     const index = this.datas.indexOf(old);
+    let bol = false;
     for (const key of keys) {
-      if (raw.hasOwnProperty(key) && old.hasOwnProperty(key)) {
-        if (raw[key] !== old[key]) {
-          this.datas[index][key] = raw[key];
+      if (changes.hasOwnProperty(key) && old.hasOwnProperty(key)) {
+        if (
+            typeof changes[key] === typeof old[key] &&
+            changes[key] !== old[key]
+        ) {
+          if (key === "id") {
+            throw new Error("Can not change id!");
+          }
+          this.datas[index][key as K] = changes[key];
+          if (!bol) {
+            bol = true;
+          }
         }
       }
     }
-    return this.save();
+    return bol ? this.save() : true;
   }
 
   private async load(): Promise<boolean> {

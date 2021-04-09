@@ -42,45 +42,58 @@ class Store extends Component<StoreProps, StoreStates> {
       return datas;
     });
     await this.schema.prepare();
-    this.setState({loaded: true});
-  }
-
-  public async set<T extends IData, K extends keyof DataType>(
-      name: string,
-      data: T,
-      keys: K[]
-  ): Promise<boolean> {
-    return await this.schema.set<T, K>(name, data, keys);
+    this.setState({ loaded: true });
   }
 
   public render() {
-    const {children} = this.props;
+    const { children } = this.props;
     return (
-        <Provider
-            value={{
-              states: this.state,
-              all: this.all,
-              get: this.get,
-              set: this.set,
-            }}
-        >
-          {children}
-        </Provider>
+      <Provider
+        value={{
+          states: this.state,
+          all: async <T extends IData, K extends keyof DataType>(
+            table: string,
+            fields: K[] = [],
+            wheres: { [key: string]: any } = {}
+          ): Promise<T[]> => await this.all<T, K>(table, fields, wheres),
+          get: async <T extends IData, K extends keyof DataType>(
+            table: string,
+            fields: K[] = [],
+            wheres: { [key: string]: any } = {}
+          ): Promise<T | undefined> =>
+            await this.get<T, K>(table, fields, wheres),
+          set: async <T extends IData, K extends keyof DataType>(
+            table: string,
+            data: T,
+            changes: DataType = {}
+          ): Promise<boolean> => await this.set<T, K>(table, data, changes),
+        }}
+      >
+        {children}
+      </Provider>
     );
   }
 
+  private async set<T extends IData, K extends keyof DataType>(
+    name: string,
+    data: T,
+    changes: DataType
+  ): Promise<boolean> {
+    return await this.schema.set<T, K>(name, data, changes);
+  }
+
   private async all<T extends IData, K extends keyof DataType>(
-      table: string,
-      fields: K[] = [],
-      wheres: { [key: string]: any } = {}
+    table: string,
+    fields: K[] = [],
+    wheres: { [key: string]: any } = {}
   ): Promise<T[]> {
     return this.schema.all<T, K>(table, fields, wheres);
   }
 
   private async get<T extends IData, K extends keyof DataType>(
-      table: string,
-      fields: K[] = [],
-      wheres: { [key: string]: any } = {}
+    table: string,
+    fields: K[] = [],
+    wheres: { [key: string]: any } = {}
   ): Promise<T | undefined> {
     return this.schema.get<T, K>(table, fields, wheres);
   }
