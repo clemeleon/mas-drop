@@ -4,15 +4,14 @@
  */
 import { IData } from "../../faces/IData";
 import { Helper } from "../../helpers/Helper";
-import { DataList, DataType } from "./Schema";
 
-export class Table<T extends IData> {
-  private datas: DataList = [];
+export class Table<T extends IData, C extends { id: string }> {
+  private datas: C[] = [];
 
   constructor(
     public readonly key: string,
-    private readonly type: { new (datas: DataType): T },
-    private readonly action: (path: string, option?: {}) => Promise<DataList>
+    private readonly type: { new (datas: C): T },
+    private readonly action: (path: string, option?: {}) => Promise<C[]>
   ) {
     /*console.log(
       new type({
@@ -27,9 +26,9 @@ export class Table<T extends IData> {
     );*/
   }
 
-  public async all<K extends keyof DataType>(
+  public async all<K extends keyof C>(
     fields: K[] = [],
-    wheres: { [key: string]: any } = []
+    wheres: { [key: string]: any } = {}
   ): Promise<T[]> {
     if (!this.load() && !(await this.fetch())) {
       return [];
@@ -37,7 +36,7 @@ export class Table<T extends IData> {
     return this.populate(this.pick(wheres), fields);
   }
 
-  public async get<K extends keyof DataType>(
+  public async get<K extends keyof C>(
     fields: K[] = [],
     wheres: { [key: string]: any } = []
   ): Promise<T | undefined> {
@@ -51,7 +50,7 @@ export class Table<T extends IData> {
     if (!this.load() && !(await this.fetch())) {
       return false;
     }
-    const raw: DataType = JSON.parse(JSON.stringify(data)),
+    const raw: C = JSON.parse(JSON.stringify(data)),
       old = this.datas.find((one) => {
         return one.id === raw.id;
       });
@@ -95,9 +94,7 @@ export class Table<T extends IData> {
     return false;
   }
 
-  private pick<K extends keyof DataType>(keys: {
-    [key: string]: any;
-  }): DataList {
+  private pick<K extends keyof C>(keys: { [key: string]: any }): C[] {
     const datas = [...this.datas];
     return datas.filter((data) => {
       for (const [key, value] of Object.entries(keys)) {
@@ -113,7 +110,7 @@ export class Table<T extends IData> {
     });
   }
 
-  private cache(datas: DataList): boolean {
+  private cache(datas: C[]): boolean {
     if (datas.length <= 0) {
       return false;
     }
@@ -127,10 +124,7 @@ export class Table<T extends IData> {
     return false;
   }
 
-  private populate<K extends keyof DataType>(
-    datas: DataList,
-    keys: K[] = []
-  ): T[] {
+  private populate<K extends keyof C>(datas: C[], keys: K[] = []): T[] {
     const classes: T[] = [];
     for (const data of datas) {
       let value = Object.assign({}, data);
