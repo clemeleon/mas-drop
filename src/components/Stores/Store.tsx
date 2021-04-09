@@ -9,7 +9,7 @@ import { Cart, CartType } from "../../datas/Cart";
 export type StoreItem = number | string | [] | object;
 type StoreProps = {};
 type StoreStates = {};
-export type DataType = { id: number };
+export type DataType = { [key: string]: any };
 const Def: StoreItem = {},
   Context = React.createContext<StoreItem>(Def),
   { Provider, Consumer } = Context;
@@ -25,11 +25,11 @@ class Store extends Component<StoreProps, StoreStates> {
     this.schema = new Schema();
   }
 
-  public componentDidMount() {
-    this.schema.create<User, UserType>("users", User);
-    this.schema.create<Product, ProductType>("products", Product);
-    this.schema.create<Cart, CartType>("carts", Cart);
-    console.log(this.schema);
+  public async componentDidMount() {
+    this.schema.create<User, UserType>(User);
+    this.schema.create<Product, ProductType>(Product);
+    this.schema.create<Cart, CartType>(Cart);
+    console.log(await this.schema.all("carts"));
   }
 
   public render() {

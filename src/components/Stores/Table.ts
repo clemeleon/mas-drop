@@ -12,26 +12,15 @@ export class Table<T extends IData, C extends DataType> {
   constructor(
     public readonly key: string,
     private readonly type: { new (datas: C): T },
-    private readonly action: (path: string, option?: {}) => Promise<C[]>
-  ) {
-    /*console.log(
-      new type({
-        id: 1,
-        title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-        price: 109.95,
-        description:
-          "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-        category: "men clothing",
-        image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-      })
-    );*/
-  }
+    private readonly fetch: (path: string, option?: {}) => Promise<C[]>
+  ) {}
 
   public async all<K extends keyof C>(
     fields: K[] = [],
     wheres: { [key: string]: any } = {}
   ): Promise<T[]> {
-    if (!this.load() && !(await this.fetch())) {
+    if (!(await this.load())) {
+      console.log("1x");
       return [];
     }
     return this.populate(this.pick(wheres), fields);
@@ -41,14 +30,14 @@ export class Table<T extends IData, C extends DataType> {
     fields: K[] = [],
     wheres: { [key: string]: any } = []
   ): Promise<T | undefined> {
-    if (!this.load() && !(await this.fetch())) {
+    if (!(await this.load())) {
       return undefined;
     }
     return this.populate(this.pick(wheres), fields).shift();
   }
 
   public async set(data: T): Promise<boolean> {
-    if (!this.load() && !(await this.fetch())) {
+    if (!(await this.load())) {
       return false;
     }
     const raw: C = JSON.parse(JSON.stringify(data)),
@@ -66,13 +55,16 @@ export class Table<T extends IData, C extends DataType> {
     return this.save();
   }
 
-  private load(): boolean {
+  private async load(): Promise<boolean> {
     if (this.datas.length > 0) {
       return true;
     }
     try {
-      const strs = localStorage.getItem(this.key),
+      let strs = localStorage.getItem(this.key),
         datas = strs && strs.length > 0 ? JSON.parse(strs) : [];
+      if (datas.length <= 0) {
+        datas = await this.fetch(this.key);
+      }
       return this.cache(datas);
     } catch (e) {}
     return false;
@@ -84,13 +76,6 @@ export class Table<T extends IData, C extends DataType> {
         localStorage.setItem(this.key, JSON.stringify(this.datas));
         return true;
       }
-    } catch (e) {}
-    return false;
-  }
-
-  private async fetch(): Promise<boolean> {
-    try {
-      return this.cache(await this.action(this.key));
     } catch (e) {}
     return false;
   }
@@ -126,6 +111,37 @@ export class Table<T extends IData, C extends DataType> {
   }
 
   private populate<K extends keyof C>(datas: C[], keys: K[] = []): T[] {
+    const classes: T[] = [],
+      temps = Object.keys(datas[0]);
+    for (const data of datas) {
+      let value = Object.assign({}, data);
+      if (keys.length > 0) {
+        for (const temp of temps) {
+          let key = temp as K,
+            val;
+          if (keys.includes(key)) {
+            continue;
+          }
+          if (typeof data[key] === "object") {
+            val = {};
+          } else if (Array.isArray(data[key])) {
+            val = [];
+          } else if (typeof data[key] === "string") {
+            val = "";
+          } else if (typeof data[key] === "number") {
+            val = 0;
+          } else if (typeof data[key] === "boolean") {
+            val = false;
+          }
+          Object.assign(value, { [key]: val });
+        }
+      }
+      classes.push(new this.type(value));
+    }
+    return classes;
+  }
+
+  /*private populate<K extends keyof C>(datas: C[], keys: K[] = []): T[] {
     const classes: T[] = [];
     for (const data of datas) {
       let value = Object.assign({}, data);
@@ -152,5 +168,5 @@ export class Table<T extends IData, C extends DataType> {
       classes.push(new this.type(value));
     }
     return classes;
-  }
+  }*/
 }

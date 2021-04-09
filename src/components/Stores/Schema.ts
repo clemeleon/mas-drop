@@ -11,7 +11,7 @@ export class Schema {
 
   private readonly base: string = "https://fakestoreapi.com";
 
-  private options: {} = {
+  private readonly options: {} = {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -23,32 +23,41 @@ export class Schema {
     if (base.length > 0 && base.startsWith("http")) {
       this.base = base;
     }
-    /*for (const name in names) {
-      if (names.hasOwnProperty(name)) {
-        const type = names[name];
-        Object.assign(this.tables, {
-          [name]: new Table<IData>(name, type, this.fetch),
-        });
-      }
-    }*/
   }
 
-  public create<T extends IData, C extends DataType>(
-    name: string,
-    type: { new (datas: C): T }
-  ): void {
+  public create<T extends IData, C extends DataType>(type: {
+    new (datas: C): T;
+  }): void {
+    const name = `${type.name.toLocaleLowerCase()}s`;
     if (!this.tables.hasOwnProperty(name)) {
       this.tables[name] = new Table<T, C>(name, type, this.fetch);
     }
   }
 
-  private async fetch<C>(path: string, option: {} = {}): Promise<C[]> {
+  public async all<T extends IData, K extends keyof DataType>(
+    name: string,
+    fields: K[] = [],
+    wheres: { [key: string]: any } = {}
+  ): Promise<T[]> {
+    if (name.length <= 0 && !this.tables.hasOwnProperty(name)) {
+      return [];
+    }
+    return await this.tables[name].all<K>(fields, wheres);
+  }
+
+  private fetch = async <C>(path: string, option: {} = {}): Promise<C[]> => {
     try {
       const opts = Object.assign(this.options, option),
-        url = path.startsWith("http") ? path : `${this.base + path}`,
+        url = path.startsWith("http")
+          ? path
+          : `${
+              path.startsWith("/") ? this.base + path : this.base + "/" + path
+            }`,
         res = await fetch(url, opts);
-      return await res.json();
-    } catch (e) {}
+      return (await res.json()) as C[];
+    } catch (e) {
+      console.log(e.message);
+    }
     return [];
-  }
+  };
 }
