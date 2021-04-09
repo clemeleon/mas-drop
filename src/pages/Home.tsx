@@ -21,8 +21,8 @@ export class Home extends Component<HomeProps, HomeStates> {
   }
 
   public async componentDidMount() {
-    //console.log(await this.context.get("products", [], { id: 6 }));
-    //console.log(await this.context.get("carts", [], { id: 1 }));
+    console.log(await this.context.get("products", [], { id: 6 }));
+    console.log(await this.context.get("carts", [], { id: 1 }));
     console.log(await this.context.get("users", [], { id: 6 }));
   }
 
