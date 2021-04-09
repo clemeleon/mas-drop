@@ -42,10 +42,32 @@ export class Schema {
     fields: K[] = [],
     wheres: { [key: string]: any } = {}
   ): Promise<T[]> {
-    if (name.length <= 0 && !this.tables.hasOwnProperty(name)) {
+    if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
       return [];
     }
     return await this.tables[name].all<K>(fields, wheres);
+  }
+
+  public async get<T extends IData, K extends keyof DataType>(
+    name: string,
+    fields: K[] = [],
+    wheres: { [key: string]: any } = {}
+  ): Promise<T | undefined> {
+    if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
+      return undefined;
+    }
+    return await this.tables[name].get<K>(fields, wheres);
+  }
+
+  public async set<T extends IData, K extends keyof DataType>(
+    name: string,
+    data: T,
+    keys: K[]
+  ): Promise<boolean> {
+    if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
+      return false;
+    }
+    return await this.tables[name].set(data, keys);
   }
 
   private fetch = async <C>(path: string, option: {} = {}): Promise<C[]> => {

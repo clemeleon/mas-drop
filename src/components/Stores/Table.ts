@@ -37,7 +37,7 @@ export class Table<T extends IData, C extends DataType> {
     return this.populate(this.pick(wheres), fields).shift();
   }
 
-  public async set(data: T): Promise<boolean> {
+  public async setx<K extends keyof C>(data: T, keys: K[]): Promise<boolean> {
     if (!(await this.load())) {
       return false;
     }
@@ -53,6 +53,34 @@ export class Table<T extends IData, C extends DataType> {
     }
     const index = this.datas.indexOf(old);
     this.datas[index] = raw;
+    return this.save();
+  }
+
+  public async set<K extends keyof C>(data: T, keys: K[]): Promise<boolean> {
+    if (!(await this.load())) {
+      return false;
+    }
+    const raw: C = JSON.parse(JSON.stringify(data)),
+      old = this.datas.find((one) => {
+        return one.id === raw.id;
+      });
+    if (!old) {
+      return false;
+    }
+    if (keys.length <= 0) {
+      throw new Error("modified keys are needed!");
+    }
+    if (Helper.compare(raw, old)) {
+      return true;
+    }
+    const index = this.datas.indexOf(old);
+    for (const key of keys) {
+      if (raw.hasOwnProperty(key) && old.hasOwnProperty(key)) {
+        if (raw[key] !== old[key]) {
+          this.datas[index][key] = raw[key];
+        }
+      }
+    }
     return this.save();
   }
 
