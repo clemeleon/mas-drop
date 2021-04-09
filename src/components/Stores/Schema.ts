@@ -5,7 +5,6 @@
 import { Table } from "./Table";
 import { IData } from "../../faces/IData";
 import { DataType } from "./Store";
-
 export class Schema {
   private readonly tables: { [key: string]: Table<any, any> } = {};
 
@@ -25,12 +24,16 @@ export class Schema {
     }
   }
 
-  public create<T extends IData, C extends DataType>(type: {
-    new (datas: C): T;
-  }): void {
+  public create<T extends IData, C extends DataType>(
+    type: {
+      new (datas: C): T;
+    },
+    format?: (datas: C[]) => C[]
+  ): void {
+    format = format ? format : (datas: C[]): C[] => datas;
     const name = `${type.name.toLocaleLowerCase()}s`;
     if (!this.tables.hasOwnProperty(name)) {
-      this.tables[name] = new Table<T, C>(name, type, this.fetch);
+      this.tables[name] = new Table<T, C>(name, type, format, this.fetch);
     }
   }
 
@@ -60,4 +63,11 @@ export class Schema {
     }
     return [];
   };
+
+  public async prepare(): Promise<void> {
+    const tables = Object.values(this.tables);
+    for (const table of tables) {
+      await table.all();
+    }
+  }
 }

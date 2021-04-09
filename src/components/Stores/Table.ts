@@ -12,6 +12,7 @@ export class Table<T extends IData, C extends DataType> {
   constructor(
     public readonly key: string,
     private readonly type: { new (datas: C): T },
+    private readonly format: (datas: C[]) => C[],
     private readonly fetch: (path: string, option?: {}) => Promise<C[]>
   ) {}
 
@@ -63,7 +64,7 @@ export class Table<T extends IData, C extends DataType> {
       let strs = localStorage.getItem(this.key),
         datas = strs && strs.length > 0 ? JSON.parse(strs) : [];
       if (datas.length <= 0) {
-        datas = await this.fetch(this.key);
+        datas = this.format(await this.fetch(this.key));
       }
       return this.cache(datas);
     } catch (e) {}
@@ -140,33 +141,4 @@ export class Table<T extends IData, C extends DataType> {
     }
     return classes;
   }
-
-  /*private populate<K extends keyof C>(datas: C[], keys: K[] = []): T[] {
-    const classes: T[] = [];
-    for (const data of datas) {
-      let value = Object.assign({}, data);
-      if (keys.length > 0) {
-        for (const key of keys) {
-          if (data.hasOwnProperty(key)) {
-            continue;
-          }
-          let val;
-          if (typeof data[key] === "object") {
-            val = {};
-          } else if (Array.isArray(data[key])) {
-            val = [];
-          } else if (typeof data[key] === "string") {
-            val = "";
-          } else if (typeof data[key] === "number") {
-            val = 0;
-          } else if (typeof data[key] === "boolean") {
-            val = false;
-          }
-          Object.assign(value, { [key]: val });
-        }
-      }
-      classes.push(new this.type(value));
-    }
-    return classes;
-  }*/
 }

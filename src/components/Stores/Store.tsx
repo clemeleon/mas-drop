@@ -26,10 +26,25 @@ class Store extends Component<StoreProps, StoreStates> {
   }
 
   public async componentDidMount() {
-    this.schema.create<User, UserType>(User);
+    this.schema.create<User, UserType>(User, (datas) => {
+      const id = 6,
+        temps: UserType[] = [];
+      for (const data of datas) {
+        if (data.id !== id) {
+          data.parent = id;
+        }
+        temps.push(data);
+      }
+      return temps;
+    });
     this.schema.create<Product, ProductType>(Product);
-    this.schema.create<Cart, CartType>(Cart);
-    console.log(await this.schema.all("carts"));
+    this.schema.create<Cart, CartType>(Cart, (datas) => {
+      if (datas.length > 5) {
+        return datas.slice(0, 5);
+      }
+      return datas;
+    });
+    await this.schema.prepare();
   }
 
   public render() {
