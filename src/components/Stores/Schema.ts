@@ -59,7 +59,7 @@ export class Schema {
     return await this.tables[name].get<K>(fields, wheres);
   }
 
-  public async set<T extends IData, K extends keyof DataType>(
+  public async set<T extends IData>(
     name: string,
     data: T,
     changes: DataType
@@ -86,10 +86,13 @@ export class Schema {
     return [];
   };
 
-  public async prepare(): Promise<void> {
-    const tables = Object.values(this.tables);
+  public async prepare(): Promise<boolean> {
+    let count = 0,
+      tables = Object.values(this.tables);
     for (const table of tables) {
-      await table.all();
+      const all = await table.all();
+      count = count + all.length;
     }
+    return count > 0;
   }
 }

@@ -22,7 +22,7 @@ class Store extends Component<StoreProps, StoreStates> {
     this.schema = new Schema();
   }
 
-  public async componentDidMount() {
+  public componentDidMount() {
     this.schema.create<User, UserType>(User, (datas) => {
       const id = 6,
         temps: UserType[] = [];
@@ -32,7 +32,7 @@ class Store extends Component<StoreProps, StoreStates> {
         }
         temps.push(data);
       }
-      return temps;
+      return temps.slice(0, id);
     });
     this.schema.create<Product, ProductType>(Product);
     this.schema.create<Cart, CartType>(Cart, (datas) => {
@@ -41,8 +41,9 @@ class Store extends Component<StoreProps, StoreStates> {
       }
       return datas;
     });
-    await this.schema.prepare();
-    this.setState({ loaded: true });
+    this.schema
+      .prepare()
+      .then((bol: boolean) => this.setState({ loaded: bol }));
   }
 
   public render() {
@@ -62,11 +63,11 @@ class Store extends Component<StoreProps, StoreStates> {
             wheres: { [key: string]: any } = {}
           ): Promise<T | undefined> =>
             await this.get<T, K>(table, fields, wheres),
-          set: async <T extends IData, K extends keyof DataType>(
+          set: async <T extends IData>(
             table: string,
             data: T,
             changes: DataType = {}
-          ): Promise<boolean> => await this.set<T, K>(table, data, changes),
+          ): Promise<boolean> => await this.set<T>(table, data, changes),
         }}
       >
         {children}
@@ -74,12 +75,12 @@ class Store extends Component<StoreProps, StoreStates> {
     );
   }
 
-  private async set<T extends IData, K extends keyof DataType>(
+  private async set<T extends IData>(
     name: string,
     data: T,
     changes: DataType
   ): Promise<boolean> {
-    return await this.schema.set<T, K>(name, data, changes);
+    return await this.schema.set<T>(name, data, changes);
   }
 
   private async all<T extends IData, K extends keyof DataType>(
