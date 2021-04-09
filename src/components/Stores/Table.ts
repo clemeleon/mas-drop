@@ -57,17 +57,17 @@ export class Table<T extends IData, C extends DataType> {
   }
 
   public async set<K extends keyof C>(
-      data: T,
-      changes: DataType
+    data: T,
+    changes: DataType
   ): Promise<boolean> {
     if (!(await this.load())) {
       return false;
     }
     const raw: C = JSON.parse(JSON.stringify(data)),
-        old = this.datas.find((one) => {
-          return one.id === raw.id;
-        }),
-        keys = Object.keys(changes);
+      old = this.datas.find((one) => {
+        return one.id === raw.id;
+      }),
+      keys = Object.keys(changes);
     if (!old) {
       return false;
     }
@@ -79,8 +79,8 @@ export class Table<T extends IData, C extends DataType> {
     for (const key of keys) {
       if (changes.hasOwnProperty(key) && old.hasOwnProperty(key)) {
         if (
-            typeof changes[key] === typeof old[key] &&
-            changes[key] !== old[key]
+          typeof changes[key] === typeof old[key] &&
+          changes[key] !== old[key]
         ) {
           if (key === "id") {
             throw new Error("Can not change id!");
