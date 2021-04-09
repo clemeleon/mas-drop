@@ -3,7 +3,6 @@
  * 09 April 2021
  */
 import { IData } from "../../faces/IData";
-import { Helper } from "../../helpers/Helper";
 import { DataType } from "./Store";
 
 export class Table<T extends IData, C extends DataType> {
@@ -21,7 +20,6 @@ export class Table<T extends IData, C extends DataType> {
     wheres: { [key: string]: any } = {}
   ): Promise<T[]> {
     if (!(await this.load())) {
-      console.log("1x");
       return [];
     }
     return this.populate(this.pick(wheres), fields);
@@ -37,7 +35,7 @@ export class Table<T extends IData, C extends DataType> {
     return this.populate(this.pick(wheres), fields).shift();
   }
 
-  public async setx<K extends keyof C>(data: T, keys: K[]): Promise<boolean> {
+  /*public async setx<K extends keyof C>(data: T, keys: K[]): Promise<boolean> {
     if (!(await this.load())) {
       return false;
     }
@@ -54,7 +52,7 @@ export class Table<T extends IData, C extends DataType> {
     const index = this.datas.indexOf(old);
     this.datas[index] = raw;
     return this.save();
-  }
+  }*/
 
   public async set<K extends keyof C>(
     data: T,

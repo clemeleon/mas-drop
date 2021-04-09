@@ -20,12 +20,16 @@ class Store extends Component<StoreProps, StoreStates> {
   public constructor(props: StoreProps) {
     super(props);
     this.schema = new Schema();
+    this.state = {
+      loaded: false,
+    };
   }
 
   public componentDidMount() {
-    this.schema.create<User, UserType>(User, (datas) => {
+    /*this.schema.create<User, UserType>(User, (datas) => {
       const id = 6,
         temps: UserType[] = [];
+      console.log(datas);
       for (const data of datas) {
         if (data.id !== id) {
           data.parent = id;
@@ -40,10 +44,10 @@ class Store extends Component<StoreProps, StoreStates> {
         return datas.slice(0, 5);
       }
       return datas;
-    });
-    this.schema
+    });*/
+    /*this.schema
       .prepare()
-      .then((bol: boolean) => this.setState({ loaded: bol }));
+      .then((bol: boolean) => this.setState({ loaded: bol }));*/
   }
 
   public render() {
@@ -75,11 +79,36 @@ class Store extends Component<StoreProps, StoreStates> {
     );
   }
 
+  private async prepare(): Promise<void> {
+    if (this.state.loaded) {
+      return;
+    }
+    this.schema.create<User, UserType>(User, (datas) => {
+      const id = 6,
+        temps: UserType[] = [];
+      for (const data of datas) {
+        data.parent = data.id !== id ? id : 0;
+        temps.push(data);
+      }
+      return temps.slice(0, id);
+    });
+    this.schema.create<Product, ProductType>(Product);
+    this.schema.create<Cart, CartType>(Cart, (datas) => {
+      if (datas.length > 5) {
+        return datas.slice(0, 5);
+      }
+      return datas;
+    });
+    await this.schema.prepare();
+    this.setState({ loaded: true });
+  }
+
   private async set<T extends IData>(
     name: string,
     data: T,
     changes: DataType
   ): Promise<boolean> {
+    await this.prepare();
     return await this.schema.set<T>(name, data, changes);
   }
 
@@ -88,6 +117,7 @@ class Store extends Component<StoreProps, StoreStates> {
     fields: K[] = [],
     wheres: { [key: string]: any } = {}
   ): Promise<T[]> {
+    await this.prepare();
     return this.schema.all<T, K>(table, fields, wheres);
   }
 
@@ -96,6 +126,7 @@ class Store extends Component<StoreProps, StoreStates> {
     fields: K[] = [],
     wheres: { [key: string]: any } = {}
   ): Promise<T | undefined> {
+    await this.prepare();
     return this.schema.get<T, K>(table, fields, wheres);
   }
 }
