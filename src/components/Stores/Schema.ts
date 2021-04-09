@@ -29,12 +29,14 @@ export class Schema {
       new (datas: C): T;
     },
     format?: (datas: C[]) => C[]
-  ): void {
+  ): boolean {
     format = format ? format : (datas: C[]): C[] => datas;
     const name = `${type.name.toLocaleLowerCase()}s`;
     if (!this.tables.hasOwnProperty(name)) {
       this.tables[name] = new Table<T, C>(name, type, format, this.fetch);
+      return true;
     }
+    return false;
   }
 
   public async all<T extends IData, K extends keyof DataType>(
