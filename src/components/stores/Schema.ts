@@ -2,9 +2,9 @@
  * Package: Mas Drop.
  * 09 April 2021
  */
-import { Table } from "./Table";
-import { IData } from "../../faces/IData";
-import { ClassType, DataType } from "./Store";
+import {Table} from "./Table";
+import {ClassType, DataType} from "./Store";
+import {IData} from "../../faces/IData";
 
 export class Schema {
   private readonly tables: { [key: string]: Table<any, any> } = {};
