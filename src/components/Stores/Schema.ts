@@ -4,11 +4,14 @@
  */
 import { Table } from "./Table";
 import { IData } from "../../faces/IData";
-import { DataType } from "./Store";
+import { ClassType, DataType } from "./Store";
+
 export class Schema {
   private readonly tables: { [key: string]: Table<any, any> } = {};
 
   private readonly base: string = "https://fakestoreapi.com";
+
+  private loaded: boolean = false;
 
   private readonly options: {} = {
     method: "GET",
@@ -39,37 +42,55 @@ export class Schema {
     return false;
   }
 
-  public async all<T extends IData, K extends keyof DataType>(
+  public async all<T extends ClassType>(
     name: string,
-    fields: K[] = [],
+    fields: string[] = [],
     wheres: { [key: string]: any } = {}
   ): Promise<T[]> {
-    if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
-      return [];
-    }
-    return await this.tables[name].all<K>(fields, wheres);
+    const table = await this.table<T, DataType>(name);
+    return await table.all(fields, wheres);
   }
 
-  public async get<T extends IData, K extends keyof DataType>(
+  public async get<T extends ClassType>(
     name: string,
-    fields: K[] = [],
+    fields: string[] = [],
     wheres: { [key: string]: any } = {}
   ): Promise<T | undefined> {
-    if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
-      return undefined;
+    const table = await this.table<T, DataType>(name);
+    if (Object.keys(wheres).length <= 0) {
+      throw new Error(
+        "Wheres parameters can not be empty, the condition is needed, example: {id: 1}!"
+      );
     }
-    return await this.tables[name].get<K>(fields, wheres);
+    return await table.get(fields, wheres);
   }
 
-  public async set<T extends IData>(
+  public async set<T extends ClassType>(
     name: string,
     data: T,
     changes: DataType
-  ): Promise<boolean> {
-    if (name.length <= 0 || !this.tables.hasOwnProperty(name)) {
-      return false;
+  ): Promise<T> {
+    const table = await this.table<T, DataType>(name);
+    if (Object.keys(changes).length <= 0) {
+      throw new Error(
+        "Changes parameter can not be empty, all the update key/value, example: {id: 1}!"
+      );
     }
-    return await this.tables[name].set(data, changes);
+    return await table.set(data, changes);
+  }
+
+  private async table<T extends IData, C extends DataType>(
+    name: string
+  ): Promise<Table<T, C>> {
+    if (name.length <= 0) {
+      throw new Error(`Table cannot be null or empty!`);
+    } else if (!this.tables.hasOwnProperty(name)) {
+      throw new Error(
+        `No table found with the ${name}, make sure table are created first!`
+      );
+    }
+    await this.prepare();
+    return this.tables[name];
   }
 
   private fetch = async <C>(path: string, option: {} = {}): Promise<C[]> => {
@@ -88,13 +109,14 @@ export class Schema {
     return [];
   };
 
-  public async prepare(): Promise<boolean> {
-    let count = 0,
-      tables = Object.values(this.tables);
-    for (const table of tables) {
-      const all = await table.all();
-      count = count + all.length;
+  private async prepare(): Promise<boolean> {
+    if (this.loaded) {
+      return true;
     }
-    return count > 0;
+    const tables = Object.values(this.tables);
+    for (const table of tables) {
+      await table.all();
+    }
+    return true;
   }
 }
