@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Render } from "../helpers/types";
 import { StoreContext } from "../components/Stores/Store";
 import { Helper } from "../helpers/Helper";
-import { Product } from "../datas/Product";
+import { Schema } from "../components/Stores/Schema";
 
 /** Home props and states */
 export type HomeProps = {};
@@ -10,7 +10,13 @@ export type HomeStates = {};
 
 export class Home extends Component<HomeProps, HomeStates> {
   public static contextType = StoreContext;
-  state = { carts: [], make: "" };
+  public state = { users: [], user: {} };
+
+  private schema: Schema | undefined;
+
+  constructor(props: HomeProps) {
+    super(props);
+  }
 
   shouldComponentUpdate(
     nextProps: Readonly<HomeProps>,
@@ -20,14 +26,32 @@ export class Home extends Component<HomeProps, HomeStates> {
     return nextState && !Helper.compare(this.state, nextState);
   }
 
+  /*public async componentDidMount() {
+    const { schema }: { schema: Schema } = this.context;
+    console.log(
+      await schema.all<User>("users", ["username"])
+    );
+    console.log(
+      await schema.all<Product>("products", ["category"])
+    );
+    const cart = await schema.get<Cart>("carts", [], { id: 1 });
+    if (cart instanceof Cart) {
+      const pro = cart?.products[0];
+      console.log(cart, pro);
+      pro.quantity = 20;
+      await schema.set("carts", cart as Cart, { products: [] });
+      console.log(
+        await schema.get<Cart>("carts", [], { id: 1 })
+      );
+    }
+  }*/
+
   public async componentDidMount() {
-    console.log(await this.context.get("products", [], { id: 6 }));
-    console.log(await this.context.get("carts", [], { id: 1 }));
-    console.log(await this.context.get("users", [], { id: 6 }));
+    this.schema = this.context.schema;
   }
 
   public click = async (): Promise<void> => {
-    console.log(await this.context.get("users", [], { id: 2 }));
+    console.log(this.schema);
   };
 
   public render(): Render {

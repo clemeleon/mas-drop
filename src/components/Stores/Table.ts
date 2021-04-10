@@ -54,12 +54,9 @@ export class Table<T extends IData, C extends DataType> {
     return this.save();
   }*/
 
-  public async set<K extends keyof C>(
-    data: T,
-    changes: DataType
-  ): Promise<boolean> {
+  public async set<K extends keyof C>(data: T, changes: DataType): Promise<T> {
     if (!(await this.load())) {
-      return false;
+      return data;
     }
     const raw: C = JSON.parse(JSON.stringify(data)),
       old = this.datas.find((one) => {
@@ -67,7 +64,7 @@ export class Table<T extends IData, C extends DataType> {
       }),
       keys = Object.keys(changes);
     if (!old) {
-      return false;
+      return data;
     }
     if (keys.length <= 0) {
       throw new Error("modified keys are needed!");
@@ -83,14 +80,32 @@ export class Table<T extends IData, C extends DataType> {
           if (key === "id") {
             throw new Error("Can not change id!");
           }
-          this.datas[index][key as K] = changes[key];
+          raw[key as K] = this.update(raw[key as K], changes[key]);
+          this.datas[index][key as K] = raw[key as K];
           if (!bol) {
             bol = true;
           }
         }
       }
     }
-    return bol ? this.save() : true;
+    if (bol) {
+      this.save();
+    }
+    return this.populate([raw])[0];
+  }
+
+  private update(data: any, update: any): any {
+    if (typeof data === "object" && typeof update === "object") {
+      for (const [key, val] of Object.entries(update)) {
+        if (data.hasOwnProperty(key)) {
+          data[key] = this.update(data[key], val);
+        }
+      }
+      return data;
+    } else if (typeof data === typeof update) {
+      return update;
+    }
+    return data;
   }
 
   private async load(): Promise<boolean> {
@@ -155,27 +170,34 @@ export class Table<T extends IData, C extends DataType> {
       let value = Object.assign({}, data);
       if (keys.length > 0) {
         for (const temp of temps) {
-          let key = temp as K,
-            val;
-          if (keys.includes(key)) {
+          const key = temp as K;
+          if (keys.includes(key) || ["id"].includes(temp)) {
             continue;
           }
-          if (typeof data[key] === "object") {
-            val = {};
-          } else if (Array.isArray(data[key])) {
-            val = [];
-          } else if (typeof data[key] === "string") {
-            val = "";
-          } else if (typeof data[key] === "number") {
-            val = 0;
-          } else if (typeof data[key] === "boolean") {
-            val = false;
-          }
-          Object.assign(value, { [key]: val });
+          Object.assign(value, { [key]: this.value(data[key]) });
         }
       }
       classes.push(new this.type(value));
     }
     return classes;
+  }
+
+  private value(value: any): any {
+    if (typeof value === "object") {
+      const obj: { [key: string]: any } = {};
+      for (const [key, val] of Object.entries(value)) {
+        obj[key] = this.value(val);
+      }
+      return obj;
+    } else if (Array.isArray(value)) {
+      return [];
+    } else if (typeof value === "string") {
+      return "";
+    } else if (typeof value === "number") {
+      return 0;
+    } else if (typeof value === "boolean") {
+      return false;
+    }
+    return undefined;
   }
 }
