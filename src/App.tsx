@@ -4,7 +4,7 @@ import { Home } from "./pages/Home";
 import { Header } from "./components/Header";
 import { Render } from "./helpers/types";
 import { Footer } from "./components/Footer";
-import { StoreContext } from "./components/Stores/Store";
+import { StoreContext } from "./components/stores/Store";
 
 class App extends Component {
   public static contextType = StoreContext;

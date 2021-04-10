@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Render } from "../helpers/types";
-import { StoreContext } from "../components/Stores/Store";
+import { StoreContext } from "../components/stores/Store";
 import { Helper } from "../helpers/Helper";
-import { Schema } from "../components/Stores/Schema";
+import {Schema} from "../components/stores/Schema";
 
 /** Home props and states */
 export type HomeProps = {};

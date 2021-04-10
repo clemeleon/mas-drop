@@ -1,0 +1,63 @@
+@import "vars"
+//prefixes(one, 1, webkit moz)
+=prefix($property, $value, $prefixes: $prefixList)
+    @each $prefix in $prefixes
+        #{'-' + $prefix + '-' + $property}: $value
+    #{$property}: $value
+
+//prefixes((one:1, two:2), webkit moz)
+=prefixes($declarations, $prefixes: $prefixList)
+    @each $property, $value in $declarations
+        +prefix($property, $value, $prefixes)
+
+=media($size: 320px, $max: false)
+    @if $max == false
+        @media screen and (min-width: '#{$size}')
+            @content
+    @else
+        @media screen and (max-width: '#{$size}')
+            @content
+
+=calc($property, $value, $prefixes: $prefixList)
+    @each $prefix in $prefixes
+        #{$property}: #{'-' + $prefix + '-' + calc(#{$value})}
+    #{$property}: #{calc(#{$value})}
+
+=background-size($value, $prefixes: $prefixList)
+    +prefix(background-size, $value, $prefixes)
+
+=flexbox($prefixes: $prefixList)
+    @each $prefix in $prefixes
+        display: #{'-' + $prefix + '-flex'}
+    display: flex
+
+=transition($value, $prefixes: $prefixList)
+    +prefix(transition, $value, $prefixes)
+
+=transform($value, $prefixes: $prefixList)
+    +prefix(transform, $value, $prefixes)
+
+=animation($name, $duration, $timing, $type, $prefixes: $prefixList)
+    +prefix(animation, #{$name $duration $timing $type}, $prefixes)
+
+=animation-delay($value, $prefixes: $prefixList)
+    +prefix(animation, #{$value}, $prefixes)
+
+=svg($source, $extension: null)
+    @if $extension != null
+        background: url('#{$source}.#{$extension}')
+    background: none, url('#{$source}.svg')
+
+=rgba($property, $color, $opacity: 0.5)
+    #{$property}: $color
+    #{$property}: rgba($color, $opacity)
+
+%show
+    visibility: visible
+    opacity: 1
+    //+prefix(transition-delay, 0s)
+
+%hide
+    visibility: hidden
+    opacity: 0
+    //+transition(visibility 0s linear 0.5s, opacity 0.5s linear)
