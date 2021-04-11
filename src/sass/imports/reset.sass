@@ -1,3 +1,4 @@
+@import "helper"
 *, *:before, *:after
     box-sizing: border-box
 
@@ -35,3 +36,7 @@ table
 input
     -webkit-appearance: none
     border-radius: 0
+
+@for $i from 1 through 6
+    h#{$i}
+        +font-size($heading-size + $heading-scale * (6 - $i))
