@@ -4,6 +4,7 @@
  */
 import { Address } from "./Address";
 import { IData } from "../faces/IData";
+import { Helper } from "../helpers/Helper";
 
 export type UserType = {
   id: number;
@@ -30,7 +31,7 @@ export class User implements IData {
   private readonly email: string;
   private readonly password: string;
   private readonly phone?: string;
-  private readonly parent: number;
+  public readonly parent: number;
 
   constructor({
     id,
@@ -50,5 +51,21 @@ export class User implements IData {
     this.phone = phone;
     this.address = new Address(address);
     this.parent = parent;
+  }
+
+  public firstName(): string {
+    return `${Helper.strFirstUpper(this.name.firstname)}`;
+  }
+
+  public lastName(): string {
+    return `${Helper.strFirstUpper(this.name.lastname)}`;
+  }
+
+  public fullName(): string {
+    return `${this.firstName()} ${this.lastName()}`;
+  }
+
+  public type(): string {
+    return `Account type: ${this.parent > 0 ? "Child" : "Parent"}`;
   }
 }
