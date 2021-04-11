@@ -1,4 +1,6 @@
 /** Render return type */
 type Render = JSX.Element;
 
-export type { Render };
+type valueOf<V> = V[keyof V];
+
+export type { Render, valueOf };
