@@ -1,21 +1,24 @@
 import React, { Component } from "react";
 import { Render } from "../helpers/types";
-import { StoreContext } from "../components/stores/Store";
+import { StoreContext, StoreStates } from "../components/stores/Store";
 import { Helper } from "../helpers/Helper";
-import {Schema} from "../components/stores/Schema";
+import { User } from "../datas/User";
+import { Login } from "../components/home/Login";
+import { Schema } from "../components/stores/Schema";
 
 /** Home props and states */
 export type HomeProps = {};
-export type HomeStates = {};
+export type HomeStates = {
+  user: User | undefined;
+  loading: boolean;
+};
 
 export class Home extends Component<HomeProps, HomeStates> {
   public static contextType = StoreContext;
-  public state = { users: [], user: {} };
-
-  private schema: Schema | undefined;
 
   constructor(props: HomeProps) {
     super(props);
+    this.state = { user: undefined, loading: true };
   }
 
   shouldComponentUpdate(
@@ -47,18 +50,40 @@ export class Home extends Component<HomeProps, HomeStates> {
   }*/
 
   public async componentDidMount() {
-    this.schema = this.context.schema;
+    let {
+        get,
+        db,
+      }: { get: () => StoreStates; db: () => Schema } = this.context,
+      user = undefined,
+      { id } = get();
+    if (id > 0) {
+      user = await db().get<User>("users", [], { id });
+    }
+    this.setState({ user, loading: false });
   }
 
-  public click = async (): Promise<void> => {
-    console.log(this.schema);
+  private login = async (id: number): Promise<void> => {
+    const {
+      db,
+      set,
+    }: {
+      db: () => Schema;
+      set: (state: StoreStates) => boolean;
+    } = this.context;
+    if (set({ id })) {
+      const user =
+        id > 0 ? await db().get<User>("users", [], { id }) : undefined;
+      if (user instanceof User) {
+        this.setState({ user });
+      }
+    }
   };
 
   public render(): Render {
+    const { user } = this.state;
     return (
-      <div>
-        <h1>Home</h1>
-        <button onClick={this.click}>click</button>
+      <div className={"home container"}>
+        {user ? <div /> : <Login login={this.login} />}
       </div>
     );
   }

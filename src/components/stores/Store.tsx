@@ -5,47 +5,98 @@ import { User, UserType } from "../../datas/User";
 import { Cart, CartType } from "../../datas/Cart";
 
 /** Store props and states */
-export type StoreItem = number | string | [] | object;
 
 type StoreProps = {};
 
-export type StoreStates = { user: User | undefined };
+export type StoreStates = { id: number };
 
 export type ClassType = User | Product | Cart;
 
 export type DataType = { [key: string]: any };
 
-const Def: StoreItem = { user: undefined },
+export type StoreItem = {
+  db: () => Schema;
+  get: () => StoreStates;
+  set: (state: StoreStates) => boolean;
+};
+
+const schema = new Schema(),
+  Def: StoreItem = {
+    get: (): StoreStates => {
+      return {} as StoreStates;
+    },
+    set: (): boolean => false,
+    db: (): Schema => schema,
+  },
   Context = React.createContext<StoreItem>(Def),
   { Provider, Consumer } = Context;
 
 class Store extends Component<StoreProps, StoreStates> {
-  private readonly schema: Schema;
-
   private loaded: boolean = false;
+
+  private str: string = "key";
 
   public constructor(props: StoreProps) {
     super(props);
-    this.schema = new Schema();
-    this.state = {
-      user: undefined,
-    };
+    let id = 0;
+    try {
+      const key = sessionStorage.getItem(this.str);
+      if (typeof key === "string") {
+        id = parseInt(key);
+      }
+    } catch (e) {}
+    this.state = { id };
     this.createTables();
   }
 
-  public componentDidMount() {}
+  shouldComponentUpdate(
+    nextProps: Readonly<StoreProps>,
+    nextState: Readonly<StoreStates>,
+    nextContext: any
+  ): boolean {
+    try {
+      const { id } = nextState,
+        key = this.state.id;
+      if (id && id !== key) {
+        if (id > 0) {
+          sessionStorage.setItem(this.str, id.toString());
+        } else {
+          sessionStorage.removeItem(this.str);
+        }
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  private schema = (): Schema => schema;
+
+  private get = (): StoreStates => this.state;
+
+  private set = (state: StoreStates): boolean => {
+    const states: { [key: string]: any } = {},
+      old: { [key: string]: any } = { ...this.state };
+    for (const [key, val] of Object.entries(state)) {
+      if (!this.state.hasOwnProperty(key)) {
+        throw new Error(`${key} does not exist in state`);
+      }
+      if (old[key] !== val) {
+        states[key] = val;
+      }
+    }
+    if (Object.keys(states).length > 0) {
+      this.setState(states as StoreStates);
+      return true;
+    }
+    return false;
+  };
+
+  public async componentDidMount() {}
 
   public render() {
-    const { children } = this.props,
-      { user } = this.state;
+    const { children } = this.props;
 
     return (
-      <Provider
-        value={{
-          user,
-          schema: this.schema,
-        }}
-      >
+      <Provider value={{ set: this.set, get: this.get, db: this.schema }}>
         {children}
       </Provider>
     );
@@ -53,7 +104,7 @@ class Store extends Component<StoreProps, StoreStates> {
 
   private createTables(): boolean {
     if (!this.loaded) {
-      this.schema.create<User, UserType>(User, (datas) => {
+      schema.create<User, UserType>(User, (datas) => {
         const id = 6,
           temps: UserType[] = [];
         for (const data of datas) {
@@ -62,8 +113,8 @@ class Store extends Component<StoreProps, StoreStates> {
         }
         return temps.slice(0, id);
       });
-      this.schema.create<Product, ProductType>(Product);
-      this.schema.create<Cart, CartType>(Cart, (datas) => {
+      schema.create<Product, ProductType>(Product);
+      schema.create<Cart, CartType>(Cart, (datas) => {
         if (datas.length > 5) {
           return datas.slice(0, 5);
         }

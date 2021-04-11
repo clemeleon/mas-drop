@@ -12,7 +12,24 @@ export class Helper {
     return JSON.stringify(one) === JSON.stringify(two);
   };
 
-  static typeCompare(): boolean {
-    return false;
+  static strLower(str: string): string {
+    if (str.length === 0) {
+      return str;
+    }
+    return str.toLowerCase();
+  }
+
+  static strUpper(str: string): string {
+    if (str.length === 0) {
+      return str;
+    }
+    return str.toUpperCase();
+  }
+
+  static strFirstUpper(str: string): string {
+    if (str.length === 0) {
+      return str;
+    }
+    return this.strUpper(str.charAt(0)) + str.slice(1);
   }
 }
