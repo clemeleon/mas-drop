@@ -105,18 +105,23 @@ class Store extends Component<StoreProps, StoreStates> {
   private createTables(): boolean {
     if (!this.loaded) {
       schema.create<User, UserType>(User, (datas) => {
-        const id = 6,
+        const id = 1,
           temps: UserType[] = [];
         for (const data of datas) {
           data.parent = data.id !== id ? id : 0;
           temps.push(data);
         }
-        return temps.slice(0, id);
+        return temps.slice(0, 6);
       });
       schema.create<Product, ProductType>(Product);
       schema.create<Cart, CartType>(Cart, (datas) => {
         if (datas.length > 5) {
-          return datas.slice(0, 5);
+          datas = datas.slice(0, 5);
+        }
+        let i,
+          len = datas.length;
+        for (i = 0; i < len; i++) {
+          datas[i].userId = i + 2;
         }
         return datas;
       });

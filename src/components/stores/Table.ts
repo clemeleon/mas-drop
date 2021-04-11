@@ -149,7 +149,7 @@ export class Table<T extends IData, C extends DataType> {
     });
   }
 
-  private pickAll<K extends keyof C>(keys: number[]): C[] {
+  private pickAll(keys: number[]): C[] {
     const datas = [...this.datas];
     return datas.filter((data) => {
       return keys.length === 0 || keys.includes(data.id);
