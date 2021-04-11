@@ -5,6 +5,7 @@
 import { Address } from "./Address";
 import { IData } from "../faces/IData";
 import { Helper } from "../helpers/Helper";
+import { Cart } from "./Cart";
 
 export type UserType = {
   id: number;
@@ -32,6 +33,7 @@ export class User implements IData {
   private readonly password: string;
   private readonly phone?: string;
   public readonly parent: number;
+  public cart?: Cart;
 
   constructor({
     id,

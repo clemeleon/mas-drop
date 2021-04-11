@@ -1,4 +1,5 @@
 import { IData } from "../faces/IData";
+import { Product } from "./Product";
 
 export type CartProduct = Array<{ productId: number; quantity: number }>;
 export type CartType = {
@@ -11,33 +12,34 @@ export class Cart implements IData {
   public readonly id: number;
   public readonly userId: number;
   public readonly date: string;
-  public readonly products: CartProduct;
+  public readonly proCarts: CartProduct;
+  public products: Product[] = [];
 
   constructor({ id, userId, date, products }: CartType) {
     this.id = id;
     this.userId = userId;
     this.date = date;
-    this.products = products;
+    this.proCarts = products;
   }
 
   public plus(id: number): void {
-    const len = this.products.length;
+    const len = this.proCarts.length;
     for (let i = 0; i < len; i++) {
-      const product = this.products[i];
+      const product = this.proCarts[i];
       if (product.productId === id) {
-        this.products[i].quantity = this.products[i].quantity + 1;
+        this.proCarts[i].quantity = this.proCarts[i].quantity + 1;
       }
     }
   }
 
   public minus(id: number): boolean {
-    const len = this.products.length;
+    const len = this.proCarts.length;
     for (let i = 0; i < len; i++) {
-      const product = this.products[i];
+      const product = this.proCarts[i];
       if (product.productId === id) {
-        this.products[i].quantity = this.products[i].quantity - 1;
-        if (this.products[i].quantity === 0) {
-          this.products.slice(i, 1);
+        this.proCarts[i].quantity = this.proCarts[i].quantity - 1;
+        if (this.proCarts[i].quantity === 0) {
+          this.proCarts.slice(i, 1);
           return false;
         }
       }
