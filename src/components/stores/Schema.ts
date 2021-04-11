@@ -2,9 +2,12 @@
  * Package: Mas Drop.
  * 09 April 2021
  */
-import {Table} from "./Table";
-import {ClassType, DataType} from "./Store";
-import {IData} from "../../faces/IData";
+import { Table } from "./Table";
+import { ClassType, DataType } from "./Store";
+import { IData } from "../../faces/IData";
+import { Product } from "../../datas/Product";
+import { Cart } from "../../datas/Cart";
+import { User } from "../../datas/User";
 
 export class Schema {
   private readonly tables: { [key: string]: Table<any, any> } = {};
@@ -42,16 +45,16 @@ export class Schema {
     return false;
   }
 
-  public async all<T extends ClassType>(
+  private async all<T extends ClassType>(
     name: string,
     fields: string[] = [],
-    wheres: { [key: string]: any } = {}
+    ids: number[] = []
   ): Promise<T[]> {
     const table = await this.table<T, DataType>(name);
-    return await table.all(fields, wheres);
+    return await table.all(fields, ids);
   }
 
-  public async get<T extends ClassType>(
+  private async get<T extends ClassType>(
     name: string,
     fields: string[] = [],
     wheres: { [key: string]: any } = {}
@@ -63,6 +66,76 @@ export class Schema {
       );
     }
     return await table.get(fields, wheres);
+  }
+
+  public async user(
+    wheres: { [key: string]: any },
+    cart: boolean = false,
+    product: boolean = false,
+    fields: string[] = []
+  ): Promise<User | undefined> {
+    let user = await this.get<User>("users", fields, wheres);
+    if (user instanceof User && cart) {
+      user.cart = await this.cart({ userId: user.id }, product, []);
+    }
+    return user;
+  }
+
+  public async users(
+    cart: boolean = false,
+    product: boolean = false,
+    ids: Array<number> = [],
+    fields: string[] = [],
+  ): Promise<User[]> {
+    let users = await this.all<User>("users", fields, ids);
+    if (users.length > 0 && cart) {
+      for (const user of users) {
+        user.cart = await this.cart({userId: user.id}, product);
+      }
+    }
+    return users;
+  }
+
+  public async cart(
+    wheres: { [key: string]: any },
+    product: boolean = false,
+    fields: string[] = []
+  ): Promise<Cart | undefined> {
+    const cart = await this.get<Cart>("cart", fields, wheres);
+    if (cart instanceof Cart && product) {
+      const keys = cart.proCarts.map((pro) => pro.productId);
+      cart.products = await this.products(keys, []);
+    }
+    return cart;
+  }
+
+  public async carts(
+    product: boolean = false,
+    ids: Array<number> = [],
+    fields: string[] = []
+  ): Promise<Cart[]> {
+    const carts = await this.all<Cart>("carts", fields, ids);
+    if (carts.length > 0 && product) {
+      for (const cart of carts) {
+        const keys = cart.proCarts.map((pro) => pro.productId);
+        cart.products = await this.products(keys, []);
+      }
+    }
+    return carts;
+  }
+
+  public async product(
+    wheres: { [key: string]: any },
+    fields: string[] = []
+  ): Promise<Product | undefined> {
+    return await this.get<Product>("products", fields, wheres);
+  }
+
+  public async products(
+    ids: Array<number> = [],
+    fields: string[] = []
+  ): Promise<Product[]> {
+    return await this.all<Product>("products", fields, ids);
   }
 
   public async set<T extends ClassType>(
