@@ -77,6 +77,12 @@ html {
     html body p {
       font-size: 20px;
       font-size: 1.25rem; }
+    html body header {
+      width: 100%;
+      height: 80px; }
+    html body footer {
+      width: 100%;
+      height: 100px; }
     html body .container {
       margin: 0 auto;
       max-width: 1300px;
@@ -84,7 +90,7 @@ html {
       min-width: 320px;
       overflow-x: hidden; }
 
-.home .users {
+.home .list .users {
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flex;
@@ -96,10 +102,10 @@ html {
   justify-content: center;
   align-items: center; }
   @media screen and (min-width: 1000px) {
-    .home .users {
+    .home .list .users {
       flex-direction: row;
       flex-wrap: wrap; } }
-  .home .users .user {
+  .home .list .users .user {
     min-height: 100px;
     margin-bottom: 15px;
     padding: 10px;
@@ -114,7 +120,7 @@ html {
     display: flex;
     flex-direction: column; }
     @media screen and (min-width: 600px) {
-      .home .users .user {
+      .home .list .users .user {
         flex-direction: row;
         height: 200px;
         width: 100%;
@@ -122,15 +128,15 @@ html {
         overflow: hidden;
         justify-content: space-between; } }
   @media screen and (min-width: 600px) and (min-width: 1000px) {
-    .home .users .user {
+    .home .list .users .user {
       max-width: 480px;
       margin-right: 10px;
       margin-left: 10px; } }
   @media screen and (min-width: 600px) and (min-width: 1200px) {
-    .home .users .user {
+    .home .list .users .user {
       max-width: 500px; } }
 
-    .home .users .user .pic {
+    .home .list .users .user .pic {
       overflow: hidden;
       width: 100%;
       height: 220px;
@@ -142,10 +148,10 @@ html {
       -o-background-size: cover;
       background-size: cover; }
       @media screen and (min-width: 600px) {
-        .home .users .user .pic {
+        .home .list .users .user .pic {
           width: 40%;
           height: auto; } }
-    .home .users .user .detail {
+    .home .list .users .user .detail {
       width: 100%;
       display: -webkit-flex;
       display: -moz-flex;
@@ -154,12 +160,12 @@ html {
       display: flex;
       flex-direction: column; }
       @media screen and (min-width: 600px) {
-        .home .users .user .detail {
+        .home .list .users .user .detail {
           width: 58%; } }
-      .home .users .user .detail > * {
+      .home .list .users .user .detail > * {
         margin-bottom: 15px;
         flex-grow: 2; }
-      .home .users .user .detail .btn {
+      .home .list .users .user .detail .btn {
         width: 100%;
         display: -webkit-flex;
         display: -moz-flex;
@@ -168,7 +174,7 @@ html {
         display: flex;
         justify-content: flex-end;
         margin-bottom: 0; }
-        .home .users .user .detail .btn button {
+        .home .list .users .user .detail .btn button {
           cursor: pointer;
           font-size: 24px;
           padding: 0.4em 0.3em;
@@ -177,10 +183,10 @@ html {
           text-transform: capitalize;
           width: 100%;
           border: 0; }
-          .home .users .user .detail .btn button:hover {
+          .home .list .users .user .detail .btn button:hover {
             opacity: 0.9; }
           @media screen and (min-width: 600px) {
-            .home .users .user .detail .btn button {
+            .home .list .users .user .detail .btn button {
               margin: 1px; } }
 
 /*# sourceMappingURL=index.css.map */

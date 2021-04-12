@@ -57,7 +57,10 @@ export class Home extends Component<HomeProps, HomeStates> {
       user = undefined,
       { id } = get();
     if (id > 0) {
-      user = await db().get<User>("users", [], { id });
+      user = await db().user({ id }, true);
+      if (db().error()) {
+        console.log(db().message);
+      }
     }
     this.setState({ user, loading: false });
   }
@@ -71,8 +74,7 @@ export class Home extends Component<HomeProps, HomeStates> {
       set: (state: StoreStates) => boolean;
     } = this.context;
     if (set({ id })) {
-      const user =
-        id > 0 ? await db().get<User>("users", [], { id }) : undefined;
+      const user = id > 0 ? await db().user({ id }, true) : undefined;
       if (user instanceof User) {
         this.setState({ user });
       }
@@ -83,7 +85,7 @@ export class Home extends Component<HomeProps, HomeStates> {
     const { user } = this.state;
     return (
       <div className={"home container"}>
-        {user ? <div /> : <Login login={this.login} />}
+        {user ? <div>{user.fullName()}</div> : <Login login={this.login} />}
       </div>
     );
   }

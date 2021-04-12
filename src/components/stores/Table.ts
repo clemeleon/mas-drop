@@ -17,12 +17,12 @@ export class Table<T extends IData, C extends DataType> {
 
   public async all<K extends keyof C>(
     fields: K[] = [],
-    wheres: { [key: string]: any } = {}
+    ids: Array<number> = []
   ): Promise<T[]> {
     if (!(await this.load())) {
       return [];
     }
-    return this.populate(this.pick(wheres), fields);
+    return this.populate(this.pickAll(ids), fields);
   }
 
   public async get<K extends keyof C>(
@@ -146,6 +146,13 @@ export class Table<T extends IData, C extends DataType> {
         }
       }
       return true;
+    });
+  }
+
+  private pickAll(keys: number[]): C[] {
+    const datas = [...this.datas];
+    return datas.filter((data) => {
+      return keys.length === 0 || keys.includes(data.id);
     });
   }
 

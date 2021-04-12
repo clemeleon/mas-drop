@@ -22,7 +22,7 @@ export class Login extends Component<LoginProps, LoginStates> {
 
   public async componentDidMount() {
     const { db }: { db: () => Schema } = this.context;
-    const users = await db().all<User>("users");
+    const users = await db().users(true);
     this.setState({
       users: users.sort((a, b) => (a.parent > b.parent ? 1 : -1)),
     });
@@ -32,8 +32,8 @@ export class Login extends Component<LoginProps, LoginStates> {
     const { users } = this.state,
       { login } = this.props;
     return (
-      <div>
-        <h1>All Users</h1>
+      <div className={"list"}>
+        <h1>List of users</h1>
         <div className={"users"}>
           {users.map((user) => (
             <div key={user.id} className={"user"}>
@@ -46,6 +46,14 @@ export class Login extends Component<LoginProps, LoginStates> {
               <div className={"detail"}>
                 <h4>{user.fullName()}</h4>
                 <p>{user.type()}</p>
+                {user.parent === 0 ? (
+                  ""
+                ) : (
+                  <p>
+                    Cart items:{" "}
+                    {user.cart ? `${user.cart?.proCarts.length}` : 0}
+                  </p>
+                )}
                 <div className={"btn"}>
                   <button
                     onClick={() => login(user.id)}
