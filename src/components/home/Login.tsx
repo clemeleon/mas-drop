@@ -5,14 +5,13 @@
 import { Component } from "react";
 import { User } from "../../datas/User";
 import { Schema } from "../stores/Schema";
-import { StoreContext } from "../stores/Store";
 import { Render } from "../../helpers/types";
-export type LoginProps = { login: (id: number) => void };
+import { Helper } from "../../helpers/Helper";
+export type LoginProps = { login: (id: number) => void; db(): Schema };
 export type LoginStates = {
   users: User[];
 };
 export class Login extends Component<LoginProps, LoginStates> {
-  public static contextType = StoreContext;
   constructor(props: LoginProps) {
     super(props);
     this.state = {
@@ -20,8 +19,16 @@ export class Login extends Component<LoginProps, LoginStates> {
     };
   }
 
+  shouldComponentUpdate(
+    nextProps: Readonly<LoginProps>,
+    nextState: Readonly<LoginStates>,
+    nextContext: any
+  ): boolean {
+    return nextState && !Helper.compare(this.state, nextState);
+  }
+
   public async componentDidMount() {
-    const { db }: { db: () => Schema } = this.context;
+    const { db }: { db: () => Schema } = this.props;
     const users = await db().users(true);
     this.setState({
       users: users.sort((a, b) => (a.parent > b.parent ? 1 : -1)),

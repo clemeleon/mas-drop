@@ -29,37 +29,12 @@ export class Home extends Component<HomeProps, HomeStates> {
     return nextState && !Helper.compare(this.state, nextState);
   }
 
-  /*public async componentDidMount() {
-    const { schema }: { schema: Schema } = this.context;
-    console.log(
-      await schema.all<User>("users", ["username"])
-    );
-    console.log(
-      await schema.all<Product>("products", ["category"])
-    );
-    const cart = await schema.get<Cart>("carts", [], { id: 1 });
-    if (cart instanceof Cart) {
-      const pro = cart?.products[0];
-      console.log(cart, pro);
-      pro.quantity = 20;
-      await schema.set("carts", cart as Cart, { products: [] });
-      console.log(
-        await schema.get<Cart>("carts", [], { id: 1 })
-      );
-    }
-  }*/
-
   public async componentDidMount() {
-    let {
-        get,
-        db,
-      }: { get: () => StoreStates; db: () => Schema } = this.context,
-      user = undefined,
-      { id } = get();
+    let { id, db }: { id: number; db: () => Schema } = this.context,
+      user = undefined;
     if (id > 0) {
       user = await db().user({ id }, true);
-      if (db().error()) {
-        console.log(db().message);
+      if (db().isError()) {
       }
     }
     this.setState({ user, loading: false });
@@ -82,10 +57,25 @@ export class Home extends Component<HomeProps, HomeStates> {
   };
 
   public render(): Render {
-    const { user } = this.state;
+    const { user } = this.state,
+      {
+        id,
+        db,
+      }: {
+        id: number;
+        db: () => Schema;
+      } = this.context;
     return (
       <div className={"home container"}>
-        {user ? <div>{user.fullName()}</div> : <Login login={this.login} />}
+        {id > 0 ? (
+          user ? (
+            <div>{user.fullName()}</div>
+          ) : (
+            "please wait"
+          )
+        ) : (
+          <Login login={this.login} db={db} />
+        )}
       </div>
     );
   }

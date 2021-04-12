@@ -14,17 +14,15 @@ export type ClassType = User | Product | Cart;
 
 export type DataType = { [key: string]: any };
 
-export type StoreItem = {
-  db: () => Schema;
-  get: () => StoreStates;
-  set: (state: StoreStates) => boolean;
-};
+export type StoreItem =
+  | StoreStates
+  | {
+      db: () => Schema;
+      set: (state: StoreStates) => boolean;
+    };
 
 const schema = new Schema(),
   Def: StoreItem = {
-    get: (): StoreStates => {
-      return {} as StoreStates;
-    },
     set: (): boolean => false,
     db: (): Schema => schema,
   },
@@ -57,12 +55,13 @@ class Store extends Component<StoreProps, StoreStates> {
     try {
       const { id } = nextState,
         key = this.state.id;
-      if (id && id !== key) {
+      if (id !== key) {
         if (id > 0) {
           sessionStorage.setItem(this.str, id.toString());
         } else {
           sessionStorage.removeItem(this.str);
         }
+        return true;
       }
     } catch (e) {}
     return false;
@@ -73,18 +72,18 @@ class Store extends Component<StoreProps, StoreStates> {
   private get = (): StoreStates => this.state;
 
   private set = (state: StoreStates): boolean => {
-    const states: { [key: string]: any } = {},
+    let bol = false,
       old: { [key: string]: any } = { ...this.state };
     for (const [key, val] of Object.entries(state)) {
       if (!this.state.hasOwnProperty(key)) {
         throw new Error(`${key} does not exist in state`);
       }
       if (old[key] !== val) {
-        states[key] = val;
+        bol = true;
       }
     }
-    if (Object.keys(states).length > 0) {
-      this.setState(states as StoreStates);
+    if (bol) {
+      this.setState(state);
       return true;
     }
     return false;
@@ -96,7 +95,9 @@ class Store extends Component<StoreProps, StoreStates> {
     const { children } = this.props;
 
     return (
-      <Provider value={{ set: this.set, get: this.get, db: this.schema }}>
+      <Provider
+        value={{ ...this.state, ...{ set: this.set, db: this.schema } }}
+      >
         {children}
       </Provider>
     );
