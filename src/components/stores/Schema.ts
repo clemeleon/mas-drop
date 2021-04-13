@@ -66,7 +66,7 @@ export class Schema {
     fields: string[] = [],
     wheres: { [K in keyof DataType]: any },
     ids: number[] = [],
-    limit: [number, number] = [0, 0]
+    limit: [number, number]
   ): Promise<T[]> {
     const table = await this.table<T, DataType>(name);
     if (!table) {

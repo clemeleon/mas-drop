@@ -1,33 +1,34 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Render } from "../helpers/types";
-import { StoreContext, StoreStates } from "./stores/Store";
+import { Context, StoreStates } from "./stores/Store";
+import { User } from "../datas/User";
 
 /** Header props and states */
 export type HeaderProps = {};
-export type HeaderStates = {
-  key: string;
-};
+export type HeaderStates = {};
 
 export class Header extends Component<HeaderProps, HeaderStates> {
-  public static contextType = StoreContext;
+  public static contextType = Context;
+
+  private update = ({ user }: StoreStates): void => {
+    this.setState({ user });
+  };
+
   private logout = (): void => {
-    const {
-      set,
-    }: {
-      set: (state: StoreStates) => boolean;
-    } = this.context;
-    set({ id: 0 });
+    const [, dispatch] = this.context;
+    dispatch({ id: 0 });
   };
 
   public render(): Render {
-    const { id }: { id: number } = this.context;
+    const [state] = this.context,
+      { user } = state;
     return (
       <header>
         <div className={"logo"}>
           <Link to={"/"}>logo</Link>
         </div>
-        {id > 0 ? (
+        {user ? (
           <div className={"nav"}>
             <nav>
               <Link to={"/products"}>Products</Link>

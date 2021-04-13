@@ -12,7 +12,7 @@ import { Home } from "./pages/Home";
 import { Header } from "./components/Header";
 import { Render } from "./helpers/types";
 import { Footer } from "./components/Footer";
-import { StoreContext } from "./components/stores/Store";
+import { Context } from "./components/stores/Store";
 import { Carts } from "./pages/Carts";
 import { Products } from "./pages/Products";
 import OneProduct from "./pages/OneProduct";
@@ -27,14 +27,14 @@ type AppProps = {};
 type AppStates = {};
 
 class App extends Component<AppProps, AppStates> {
-  public static contextType = StoreContext;
+  public static contextType = Context;
 
   private static product({ match }: ProductRouteParams) {
     if (match) {
       const { params } = match,
         { name } = params;
       if (name.length > 0) {
-        return <OneProduct  name={name}/>;
+        return <OneProduct name={name} />;
       }
     }
     return <Redirect to={"/"} />;

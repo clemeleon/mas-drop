@@ -1,162 +1,70 @@
-import React, { Component } from "react";
-import { Schema } from "./Schema";
-import { Product, ProductType } from "../../datas/Product";
+/**
+ * Package: mas-drop.
+ * 10 April 2021
+ */
+/*import { Render } from "../../helpers/types";
+import React, {FC, useReducer} from "react";
+import {User} from "../../datas/User";
+type StoreStates = {id: number, user: User | undefined}
+type Actions = {type: string, payload: {[K keyof StoreStates]: any}}
+const Reducer = (state: any, action: Actions) => {
+  switch (action.type) {
+    case 'update':
+  }
+}, Store: FC<{ children: Render[] }> = ({ children }): Render =>
+const [state, dispatch] = useReducer(Reducer, {});
+  return <div>hoom</div>;
+};
+export { Store };*/
 import { User, UserType } from "../../datas/User";
+import { Product, ProductType } from "../../datas/Product";
 import { Cart, CartType } from "../../datas/Cart";
+import { Schema } from "./Schema";
+import React, { Component, createContext } from "react";
 import { Helper } from "../../helpers/Helper";
-
-/** Store props and states */
 
 type StoreProps = {};
 
-export type StoreStates = { id?: number; user?: User };
+type StoreStates = {
+  id: number;
+  user: User | undefined;
+  db: () => Schema;
+  loading: boolean;
+};
 
-export type ClassType = User | Product | Cart;
+type ClassType = User | Product | Cart;
 
-export type DataType = { [key: string]: any };
+type DataType = { [key: string]: any };
 
-export type StoreItem =
-  | StoreStates
-  | {
-      db: () => Schema;
-      set: (state: { [K in keyof StoreStates]: any }) => void;
-    };
+export type StoreItem = [
+  StoreStates,
+  (state: { [K in keyof StoreStates]: any }) => void
+];
 
 const schema = new Schema(),
-  Def: StoreItem = {
-    set: (state: { [K in keyof StoreStates]: any }): void => {},
-    db: (): Schema => schema,
-  },
-  Context = React.createContext<StoreItem>(Def),
+  Def: StoreItem = [
+    { id: 0, user: undefined, db: () => schema, loading: true },
+    (state: { [K in keyof StoreStates]: any }): void => {},
+  ],
+  Context = createContext<StoreItem>(Def),
   { Provider, Consumer } = Context;
 
 class Store extends Component<StoreProps, StoreStates> {
-  private loaded: boolean = false;
+  private str: string = "key";
 
   private excludes: string[] = ["user"];
 
-  private str: string = "key";
+  private loaded: boolean = false;
+
+  private skip: boolean = false;
 
   public constructor(props: StoreProps) {
     super(props);
-    this.createTables();
+    this.state = { id: 0, user: undefined, db: () => schema, loading: true };
+    this.tables();
   }
 
-  /*shouldComponentUpdate(
-    nextProps: Readonly<StoreProps>,
-    nextState: Readonly<StoreStates>,
-    nextContext: any
-  ): boolean {
-    try {
-      const { id } = nextState,
-        key = this.state.id;
-      if (id !== key) {
-        if (id > 0) {
-          sessionStorage.setItem(this.str, id.toString());
-        } else {
-          sessionStorage.removeItem(this.str);
-        }
-        return true;
-      } else {
-        return nextState && !Helper.compare(this.state, nextState);
-      }
-    } catch (e) {}
-    return false;
-  }*/
-
-  shouldComponentUpdate(
-    nextProps: Readonly<StoreProps>,
-    nextState: Readonly<StoreStates>,
-    nextContext: any
-  ): boolean {
-    try {
-      if (Helper.state(this.state, nextState)) {
-        const { id } = nextState,
-          key = this.state.id;
-        if (id && id !== key) {
-          if (id > 0) {
-            sessionStorage.setItem(this.str, id.toString());
-          } else {
-            sessionStorage.removeItem(this.str);
-          }
-          this.update(id).then();
-          return false;
-        }
-        return true;
-      }
-    } catch (e) {}
-    return false;
-  }
-
-  public async componentDidMount() {
-    let id = 0;
-    try {
-      const key = sessionStorage.getItem(this.str);
-      if (typeof key === "string") {
-        id = parseInt(key);
-      }
-    } catch (e) {}
-    await this.update(id);
-  }
-
-  private async update(id: number): Promise<boolean> {
-    const user = await schema.user({ id }, true);
-    this.setState({ user, id });
-    return true;
-  }
-
-  private get = (): StoreStates => this.state;
-
-  /*private set = (state: StoreStates): boolean => {
-    let bol = false,
-      old: { [key: string]: any } = { ...this.state };
-    for (const [key, val] of Object.entries(state)) {
-      if (!this.state.hasOwnProperty(key)) {
-        throw new Error(`${key} does not exist in state`);
-      }
-      if (old[key] !== val) {
-        bol = true;
-      }
-    }
-    if (bol) {
-      this.setState(state);
-      return true;
-    }
-    return false;
-  };*/
-
-  private set = (state: { [K in keyof StoreStates]: any }): void => {
-    let bol = false,
-      old: { [key: string]: any } = { ...this.state };
-    for (const [key, val] of Object.entries(state)) {
-      if (!this.state.hasOwnProperty(key)) {
-        throw new Error(`${key} does not exist in state`);
-      }
-      if (this.excludes.includes(key)) {
-        throw new Error(`Can not set this ${key} from outside`);
-      }
-      if (old[key] !== val) {
-        bol = true;
-      }
-    }
-    if (bol) {
-      this.setState(state);
-    }
-  };
-
-  public render() {
-    const { children } = this.props;
-
-    return (
-      <Provider
-        value={{ ...this.state, ...{ set: this.set, db: () => schema } }}
-      >
-        {children}
-      </Provider>
-    );
-  }
-
-  private createTables(): boolean {
+  private tables() {
     if (!this.loaded) {
       schema.create<User, UserType>(User, (datas) => {
         const id = 1,
@@ -183,6 +91,76 @@ class Store extends Component<StoreProps, StoreStates> {
     }
     return this.loaded;
   }
+
+  private async update(id: number): Promise<boolean> {
+    const loading = false,
+      user = await schema.user({ id }, true);
+    this.setState({ user, id, loading });
+    return true;
+  }
+
+  public componentDidMount() {
+    let id = 0;
+    try {
+      const key = sessionStorage.getItem(this.str);
+      if (typeof key === "string") {
+        id = parseInt(key);
+      }
+    } catch (e) {}
+    if (id > 0) {
+      this.skip = true;
+      this.update(id).then((bol) => {
+        this.skip = false;
+      });
+    }
+  }
+
+  shouldComponentUpdate(
+    nextProps: Readonly<StoreProps>,
+    nextState: Readonly<StoreStates>,
+    nextContext: any
+  ): boolean {
+    try {
+      if (Helper.state(this.state, nextState)) {
+        const { id } = this.state,
+          key = nextState.id;
+        if (id !== key) {
+          if (key > 0) {
+            sessionStorage.setItem(this.str, key.toString());
+          } else {
+            sessionStorage.removeItem(this.str);
+          }
+          if (!this.skip) {
+            this.skip = true;
+            this.update(key).then((bol) => {
+              this.skip = false;
+            });
+            return false;
+          }
+        }
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  private dispatch = (state: { [K in keyof StoreStates]: any }): void => {
+    const keys = Object.keys(state) as [keyof StoreStates];
+    for (const key of keys) {
+      if (!this.state.hasOwnProperty(key)) {
+        throw new Error(`${key} does not exist in state`);
+      } else if (this.excludes.includes(key)) {
+        throw new Error(`Can not set this ${key} from outside`);
+      }
+    }
+    this.setState({ ...this.state, ...state });
+  };
+
+  public render() {
+    const { children } = this.props;
+    return <Provider value={[this.state, this.dispatch]}>{children}</Provider>;
+  }
 }
 
-export { Store, Consumer as StoreConsumer, Context as StoreContext };
+export { Store, Context, Consumer };
+export type { ClassType, StoreStates, StoreProps, DataType };

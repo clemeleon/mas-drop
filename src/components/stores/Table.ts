@@ -27,7 +27,7 @@ export class Table<T extends IData, C extends DataType> {
     const temps = this.pick(wheres),
       datas = this.populate(this.pickAll(ids, temps), fields),
       [start, end] = limit;
-    return datas.length > end ? datas.splice(start, end) : datas;
+    return datas.length > end && end > 0 ? datas.splice(start, end) : datas;
   }
 
   public async get<K extends keyof C>(

@@ -34,6 +34,7 @@ export class User implements IData {
   private readonly phone?: string;
   public readonly parent: number;
   public cart?: Cart;
+  public children: User[] = [];
 
   constructor({
     id,

@@ -76,4 +76,25 @@ export class Helper {
     }
     return str + suffix;
   }
+
+  /**
+   * Check if state really changed
+   * @param state
+   * @param nextState
+   */
+  static state(
+    state: { [key: string]: any },
+    nextState: { [key: string]: any }
+  ): boolean {
+    let bol = false;
+    for (const [key, val] of Object.entries(state)) {
+      if (nextState.hasOwnProperty(key)) {
+        bol = !this.compare(nextState[key], val);
+        if (bol) {
+          break;
+        }
+      }
+    }
+    return bol;
+  }
 }
