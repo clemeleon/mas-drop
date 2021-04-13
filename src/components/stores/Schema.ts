@@ -64,14 +64,16 @@ export class Schema {
   private async all<T extends ClassType>(
     name: string,
     fields: string[] = [],
-    ids: number[] = []
+    wheres: { [K in keyof DataType]: any },
+    ids: number[] = [],
+    limit: [number, number] = [0, 0]
   ): Promise<T[]> {
     const table = await this.table<T, DataType>(name);
     if (!table) {
       return [];
     }
     try {
-      return await table.all(fields, ids);
+      return await table.all(fields, wheres, ids, limit);
     } catch (e) {
       this.message = `${e.message} on db.all()`;
     }
@@ -81,7 +83,7 @@ export class Schema {
   private async get<T extends ClassType>(
     name: string,
     fields: string[] = [],
-    wheres: { [key: string]: any } = {}
+    wheres: { [K in keyof DataType]: any }
   ): Promise<T | undefined> {
     const table = await this.table<T, DataType>(name);
     if (!table) {
@@ -100,15 +102,22 @@ export class Schema {
   }
 
   public async user(
-    wheres: { [key: string]: any },
+    wheres: { [K in keyof DataType]: any },
+    children: boolean = false,
     cart: boolean = false,
     product: boolean = false,
     fields: string[] = []
   ): Promise<User | undefined> {
     let user = await this.get<User>("users", fields, wheres);
-    if (user instanceof User && cart) {
-      user.cart = await this.cart({ userId: user.id }, product, []);
-    }
+    if (user instanceof User)
+      if (children) {
+        user.children = await this.users(false, false, [], [], {
+          parent: user.id,
+        });
+        if (cart) {
+          user.cart = await this.cart({ userId: user.id }, product, []);
+        }
+      }
     return user;
   }
 
@@ -116,9 +125,11 @@ export class Schema {
     cart: boolean = false,
     product: boolean = false,
     ids: Array<number> = [],
-    fields: string[] = []
+    fields: string[] = [],
+    wheres: { [K in keyof DataType]: any } = {},
+    limit: [number, number] = [0, 0]
   ): Promise<User[]> {
-    let users = await this.all<User>("users", fields, ids);
+    let users = await this.all<User>("users", fields, wheres, ids, limit);
     if (users.length > 0 && cart) {
       for (const user of users) {
         user.cart = await this.cart({ userId: user.id }, product);
@@ -143,9 +154,11 @@ export class Schema {
   public async carts(
     product: boolean = false,
     ids: Array<number> = [],
-    fields: string[] = []
+    fields: string[] = [],
+    wheres: { [K in keyof DataType]: any } = {},
+    limit: [number, number] = [0, 0]
   ): Promise<Cart[]> {
-    const carts = await this.all<Cart>("carts", fields, ids);
+    const carts = await this.all<Cart>("carts", fields, wheres, ids, limit);
     if (carts.length > 0 && product) {
       for (const cart of carts) {
         const keys = cart.proCarts.map((pro) => pro.productId);
@@ -164,9 +177,11 @@ export class Schema {
 
   public async products(
     ids: Array<number> = [],
-    fields: string[] = []
+    fields: string[] = [],
+    wheres: { [K in keyof DataType]: any } = {},
+    limit: [number, number] = [0, 0]
   ): Promise<Product[]> {
-    return await this.all<Product>("products", fields, ids);
+    return await this.all<Product>("products", fields, wheres, ids, limit);
   }
 
   public async set<T extends ClassType>(
@@ -230,7 +245,7 @@ export class Schema {
     }
     const tables = Object.values(this.tables);
     for (const table of tables) {
-      await table.all();
+      await table.all([], {});
     }
     return true;
   }

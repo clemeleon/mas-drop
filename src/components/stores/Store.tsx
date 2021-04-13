@@ -3,12 +3,13 @@ import { Schema } from "./Schema";
 import { Product, ProductType } from "../../datas/Product";
 import { User, UserType } from "../../datas/User";
 import { Cart, CartType } from "../../datas/Cart";
+import { Helper } from "../../helpers/Helper";
 
 /** Store props and states */
 
 type StoreProps = {};
 
-export type StoreStates = { id: number };
+export type StoreStates = { id?: number; user?: User };
 
 export type ClassType = User | Product | Cart;
 
@@ -18,12 +19,12 @@ export type StoreItem =
   | StoreStates
   | {
       db: () => Schema;
-      set: (state: StoreStates) => boolean;
+      set: (state: { [K in keyof StoreStates]: any }) => void;
     };
 
 const schema = new Schema(),
   Def: StoreItem = {
-    set: (): boolean => false,
+    set: (state: { [K in keyof StoreStates]: any }): void => {},
     db: (): Schema => schema,
   },
   Context = React.createContext<StoreItem>(Def),
@@ -32,22 +33,16 @@ const schema = new Schema(),
 class Store extends Component<StoreProps, StoreStates> {
   private loaded: boolean = false;
 
+  private excludes: string[] = ["user"];
+
   private str: string = "key";
 
   public constructor(props: StoreProps) {
     super(props);
-    let id = 0;
-    try {
-      const key = sessionStorage.getItem(this.str);
-      if (typeof key === "string") {
-        id = parseInt(key);
-      }
-    } catch (e) {}
-    this.state = { id };
     this.createTables();
   }
 
-  shouldComponentUpdate(
+  /*shouldComponentUpdate(
     nextProps: Readonly<StoreProps>,
     nextState: Readonly<StoreStates>,
     nextContext: any
@@ -62,16 +57,57 @@ class Store extends Component<StoreProps, StoreStates> {
           sessionStorage.removeItem(this.str);
         }
         return true;
+      } else {
+        return nextState && !Helper.compare(this.state, nextState);
+      }
+    } catch (e) {}
+    return false;
+  }*/
+
+  shouldComponentUpdate(
+    nextProps: Readonly<StoreProps>,
+    nextState: Readonly<StoreStates>,
+    nextContext: any
+  ): boolean {
+    try {
+      if (Helper.state(this.state, nextState)) {
+        const { id } = nextState,
+          key = this.state.id;
+        if (id && id !== key) {
+          if (id > 0) {
+            sessionStorage.setItem(this.str, id.toString());
+          } else {
+            sessionStorage.removeItem(this.str);
+          }
+          this.update(id).then();
+          return false;
+        }
+        return true;
       }
     } catch (e) {}
     return false;
   }
 
-  private schema = (): Schema => schema;
+  public async componentDidMount() {
+    let id = 0;
+    try {
+      const key = sessionStorage.getItem(this.str);
+      if (typeof key === "string") {
+        id = parseInt(key);
+      }
+    } catch (e) {}
+    await this.update(id);
+  }
+
+  private async update(id: number): Promise<boolean> {
+    const user = await schema.user({ id }, true);
+    this.setState({ user, id });
+    return true;
+  }
 
   private get = (): StoreStates => this.state;
 
-  private set = (state: StoreStates): boolean => {
+  /*private set = (state: StoreStates): boolean => {
     let bol = false,
       old: { [key: string]: any } = { ...this.state };
     for (const [key, val] of Object.entries(state)) {
@@ -87,16 +123,33 @@ class Store extends Component<StoreProps, StoreStates> {
       return true;
     }
     return false;
-  };
+  };*/
 
-  public async componentDidMount() {}
+  private set = (state: { [K in keyof StoreStates]: any }): void => {
+    let bol = false,
+      old: { [key: string]: any } = { ...this.state };
+    for (const [key, val] of Object.entries(state)) {
+      if (!this.state.hasOwnProperty(key)) {
+        throw new Error(`${key} does not exist in state`);
+      }
+      if (this.excludes.includes(key)) {
+        throw new Error(`Can not set this ${key} from outside`);
+      }
+      if (old[key] !== val) {
+        bol = true;
+      }
+    }
+    if (bol) {
+      this.setState(state);
+    }
+  };
 
   public render() {
     const { children } = this.props;
 
     return (
       <Provider
-        value={{ ...this.state, ...{ set: this.set, db: this.schema } }}
+        value={{ ...this.state, ...{ set: this.set, db: () => schema } }}
       >
         {children}
       </Provider>
