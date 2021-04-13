@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Render } from "../helpers/types";
-import { Helper } from "../helpers/Helper";
 import { Login } from "../components/home/Login";
 import { Context } from "../components/stores/Store";
 
