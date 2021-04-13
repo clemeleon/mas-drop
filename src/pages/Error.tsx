@@ -8,4 +8,8 @@ export type ErrorProps = { mgs: string };
 
 export type ErrorStates = {};
 
-export class Error extends Component<ErrorProps, ErrorStates> {}
+export class Error extends Component<ErrorProps, ErrorStates> {
+  render() {
+    return <div>Error Page</div>;
+  }
+}

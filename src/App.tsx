@@ -17,6 +17,8 @@ import { Carts } from "./pages/Carts";
 import { Products } from "./pages/Products";
 import OneProduct from "./pages/OneProduct";
 import { Error } from "./pages/Error";
+import { Auth } from "./helpers/MixFc";
+import { User } from "./datas/User";
 
 type ProductParams = { name: string };
 
@@ -41,6 +43,7 @@ class App extends Component<AppProps, AppStates> {
   }
 
   public render(): Render {
+    const [{ id, user }] = this.context;
     return (
       <div className="App">
         <Router>
@@ -54,7 +57,12 @@ class App extends Component<AppProps, AppStates> {
             </Route>
             <Route exact path="/product/:name" render={App.product} />
             <Route exact path="/carts">
-              {<Carts />}
+              <Auth
+                lose={false}
+                condition={id > 0 && user instanceof User}
+                main={<Carts />}
+                other={<Error mgs={"Not allowed!"} />}
+              />
             </Route>
           </Switch>
           <Footer />

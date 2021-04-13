@@ -7,4 +7,8 @@ export type CartsProps = {};
 
 export type CartsStates = {};
 
-export class Carts extends Component<CartsProps, CartsStates> {}
+export class Carts extends Component<CartsProps, CartsStates> {
+  render() {
+    return <div>Carts</div>;
+  }
+}

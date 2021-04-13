@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Render } from "../helpers/types";
 import { Login } from "../components/home/Login";
 import { Context } from "../components/stores/Store";
+import { Loading } from "../helpers/MixFc";
 
 /** Home props and states */
 export type HomeProps = {};
@@ -23,11 +24,12 @@ export class Home extends Component<HomeProps, HomeStates> {
   };
 
   public render(): Render {
-    const [{ user, loading }] = this.context;
+    const [{ user, loading }] = this.context,
+      clas = loading ? " center" : "";
     return (
-      <div className={"home container"}>
+      <div className={`home container${clas}`}>
         {loading ? (
-          "Loading!"
+          <Loading bol={loading} />
         ) : user ? (
           <div>{user.fullName()}</div>
         ) : (
