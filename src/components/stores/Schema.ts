@@ -111,7 +111,7 @@ export class Schema {
     let user = await this.get<User>("users", fields, wheres);
     if (user instanceof User)
       if (children) {
-        user.children = await this.users(false, false, [], [], {
+        user.children = await this.users(cart, product, [], [], {
           parent: user.id,
         });
         if (cart) {

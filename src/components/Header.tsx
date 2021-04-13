@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Render } from "../helpers/types";
 import { Context, StoreStates } from "./stores/Store";
-import { User } from "../datas/User";
 
 /** Header props and states */
 export type HeaderProps = {};
@@ -21,18 +20,19 @@ export class Header extends Component<HeaderProps, HeaderStates> {
   };
 
   public render(): Render {
-    const [state] = this.context,
-      { user } = state;
+    const [{ user }] = this.context,
+      auth = user;
     return (
       <header>
         <div className={"logo"}>
           <Link to={"/"}>logo</Link>
         </div>
-        {user ? (
-          <div className={"nav"}>
-            <nav>
-              <Link to={"/products"}>Products</Link>
-              <Link to={"/carts"}>Carts</Link>
+
+        <div className={"nav"}>
+          <nav>
+            <Link to={"/products"}>Products</Link>
+            {auth ? <Link to={"/carts"}>Carts</Link> : ""}
+            {auth ? (
               <a
                 href={"/logout"}
                 onClick={(e) => {
@@ -42,11 +42,11 @@ export class Header extends Component<HeaderProps, HeaderStates> {
               >
                 Logout
               </a>
-            </nav>
-          </div>
-        ) : (
-          ""
-        )}
+            ) : (
+              <Link to={"/"}>Login</Link>
+            )}
+          </nav>
+        </div>
       </header>
     );
   }

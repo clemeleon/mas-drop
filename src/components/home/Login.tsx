@@ -4,21 +4,13 @@
  */
 import { Component } from "react";
 import { User } from "../../datas/User";
-import { Schema } from "../stores/Schema";
 import { Render } from "../../helpers/types";
 import { Helper } from "../../helpers/Helper";
-export type LoginProps = { login: (id: number) => void; db(): Schema };
-export type LoginStates = {
-  users: User[];
-};
+import { Context } from "../stores/Store";
+export type LoginProps = { login: (id: number) => void };
+export type LoginStates = {};
 export class Login extends Component<LoginProps, LoginStates> {
-  constructor(props: LoginProps) {
-    console.log("lll");
-    super(props);
-    this.state = {
-      users: [],
-    };
-  }
+  public static contextType = Context;
 
   shouldComponentUpdate(
     nextProps: Readonly<LoginProps>,
@@ -28,22 +20,16 @@ export class Login extends Component<LoginProps, LoginStates> {
     return nextState && !Helper.compare(this.state, nextState);
   }
 
-  public async componentDidMount() {
-    const { db }: { db: () => Schema } = this.props;
-    const users = await db().users(true);
-    this.setState({
-      users: users.sort((a, b) => (a.parent > b.parent ? 1 : -1)),
-    });
-  }
+  public async componentDidMount() {}
 
   public render(): Render {
-    const { users } = this.state,
+    const [{ users }] = this.context,
       { login } = this.props;
     return (
       <div className={"list"}>
         <h1>List of users</h1>
         <div className={"users"}>
-          {users.map((user) => (
+          {users.map((user: User) => (
             <div key={user.id} className={"user"}>
               <div
                 className={"pic"}

@@ -28,7 +28,8 @@ type StoreProps = {};
 type StoreStates = {
   id: number;
   user: User | undefined;
-  db: () => Schema;
+  users: User[];
+  products: Product[];
   loading: boolean;
 };
 
@@ -43,7 +44,7 @@ export type StoreItem = [
 
 const schema = new Schema(),
   Def: StoreItem = [
-    { id: 0, user: undefined, db: () => schema, loading: true },
+    { id: 0, user: undefined, users: [], products: [], loading: true },
     (state: { [K in keyof StoreStates]: any }): void => {},
   ],
   Context = createContext<StoreItem>(Def),
@@ -60,7 +61,13 @@ class Store extends Component<StoreProps, StoreStates> {
 
   public constructor(props: StoreProps) {
     super(props);
-    this.state = { id: 0, user: undefined, db: () => schema, loading: true };
+    this.state = {
+      id: 0,
+      user: undefined,
+      products: [],
+      users: [],
+      loading: true,
+    };
     this.tables();
   }
 
@@ -93,10 +100,18 @@ class Store extends Component<StoreProps, StoreStates> {
   }
 
   private async update(id: number): Promise<boolean> {
-    const loading = false,
-      user = await schema.user({ id }, true);
-    this.setState({ user, id, loading });
-    return true;
+    let loading = false,
+      { users, products } = this.state,
+      user = id > 0 ? await schema.user({ id }, true, true) : undefined;
+    products = products.length > 0 ? products : await schema.products();
+    users =
+      users.length > 0
+        ? users
+        : (await schema.users(true)).sort((a, b) =>
+            a.parent > b.parent ? 1 : -1
+          );
+    this.setState({ user, id, loading, products, users });
+    return false;
   }
 
   public componentDidMount() {
@@ -107,12 +122,10 @@ class Store extends Component<StoreProps, StoreStates> {
         id = parseInt(key);
       }
     } catch (e) {}
-    if (id > 0) {
-      this.skip = true;
-      this.update(id).then((bol) => {
-        this.skip = false;
-      });
-    }
+    this.skip = true;
+    this.update(id).then((bol) => {
+      this.skip = bol;
+    });
   }
 
   shouldComponentUpdate(
@@ -133,7 +146,7 @@ class Store extends Component<StoreProps, StoreStates> {
           if (!this.skip) {
             this.skip = true;
             this.update(key).then((bol) => {
-              this.skip = false;
+              this.skip = bol;
             });
             return false;
           }
