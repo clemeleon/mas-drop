@@ -3,30 +3,23 @@
  * 10 April 2021
  */
 import { Component } from "react";
-import { User } from "../../datas/User";
-import { Render } from "../../helpers/types";
-import { Helper } from "../../helpers/Helper";
-import { Context } from "../stores/Store";
-export type LoginProps = { login: (id: number) => void };
+import { User } from "../datas/User";
+import { Render } from "../helpers/types";
+import { Context } from "../components/stores/Store";
+export type LoginProps = {};
 export type LoginStates = {};
 export class Login extends Component<LoginProps, LoginStates> {
   public static contextType = Context;
 
-  shouldComponentUpdate(
-    nextProps: Readonly<LoginProps>,
-    nextState: Readonly<LoginStates>,
-    nextContext: any
-  ): boolean {
-    return nextState && !Helper.compare(this.state, nextState);
-  }
-
-  public async componentDidMount() {}
+  private login = async (id: number): Promise<void> => {
+    const [, dispatch] = this.context;
+    dispatch({ id });
+  };
 
   public render(): Render {
-    const [{ users }] = this.context,
-      { login } = this.props;
+    const [{ users }] = this.context;
     return (
-      <div className={"list"}>
+      <div className={"login"}>
         <h1>List of users</h1>
         <div className={"users"}>
           {users.map((user: User) => (
@@ -50,7 +43,7 @@ export class Login extends Component<LoginProps, LoginStates> {
                 )}
                 <div className={"btn"}>
                   <button
-                    onClick={() => login(user.id)}
+                    onClick={() => this.login(user.id)}
                   >{`Login as ${user.firstName()}`}</button>
                 </div>
               </div>

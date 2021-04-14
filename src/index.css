@@ -60,237 +60,6 @@ h6 {
   font-size: 16px;
   font-size: 1rem; }
 
-:root {
-  font-size: 16px;
-  font-size: 1rem; }
-
-html {
-  width: 100vw;
-  height: 100%;
-  overflow-x: hidden;
-  min-width: 320px; }
-  html body {
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    min-width: 320px; }
-    html body p {
-      font-size: 20px;
-      font-size: 1.25rem; }
-    html body header {
-      width: 100%;
-      padding: 0 15px;
-      height: 80px;
-      border-bottom: 1px solid #1b1f3d;
-      display: -webkit-flex;
-      display: -moz-flex;
-      display: -ms-flex;
-      display: -o-flex;
-      display: flex;
-      justify-content: space-between; }
-      html body header .logo {
-        width: 100px;
-        height: 100%;
-        display: -webkit-flex;
-        display: -moz-flex;
-        display: -ms-flex;
-        display: -o-flex;
-        display: flex;
-        justify-content: center;
-        align-items: center; }
-      html body header .nav {
-        display: -webkit-flex;
-        display: -moz-flex;
-        display: -ms-flex;
-        display: -o-flex;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%; }
-        html body header .nav nav {
-          width: 100%;
-          display: -webkit-flex;
-          display: -moz-flex;
-          display: -ms-flex;
-          display: -o-flex;
-          display: flex;
-          justify-content: flex-end; }
-          html body header .nav nav a {
-            margin: 0 10px; }
-    html body footer {
-      width: 100%;
-      height: 100px;
-      border-top: 1px solid #1b1f3d; }
-    html body .container {
-      margin: 0 auto;
-      max-width: 1300px;
-      width: 95%;
-      min-width: 320px;
-      min-height: -webkit-calc(100vh - 180px);
-      min-height: -moz-calc(100vh - 180px);
-      min-height: -ms-calc(100vh - 180px);
-      min-height: -o-calc(100vh - 180px);
-      min-height: calc(100vh - 180px);
-      overflow-x: hidden; }
-      html body .container.center {
-        display: -webkit-flex;
-        display: -moz-flex;
-        display: -ms-flex;
-        display: -o-flex;
-        display: flex;
-        justify-content: center;
-        align-items: center; }
-
-.home .list {
-  width: 100%; }
-  .home .list .users {
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flex;
-    display: -o-flex;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin: 0 auto;
-    justify-content: center;
-    align-items: center; }
-    @media screen and (min-width: 1000px) {
-      .home .list .users {
-        flex-direction: row;
-        flex-wrap: wrap; } }
-    .home .list .users .user {
-      min-height: 100px;
-      margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 0.5rem;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 1px 0 12px rgba(0, 0, 0, 0.13);
-      width: 310px;
-      display: -webkit-flex;
-      display: -moz-flex;
-      display: -ms-flex;
-      display: -o-flex;
-      display: flex;
-      flex-direction: column; }
-      @media screen and (min-width: 600px) {
-        .home .list .users .user {
-          flex-direction: row;
-          height: 200px;
-          width: 100%;
-          max-width: 500px;
-          overflow: hidden;
-          justify-content: space-between; } }
-  @media screen and (min-width: 600px) and (min-width: 1000px) {
-    .home .list .users .user {
-      max-width: 480px;
-      margin-right: 10px;
-      margin-left: 10px; } }
-  @media screen and (min-width: 600px) and (min-width: 1200px) {
-    .home .list .users .user {
-      max-width: 500px; } }
-
-      .home .list .users .user .pic {
-        overflow: hidden;
-        width: 100%;
-        height: 220px;
-        background-repeat: no-repeat;
-        background-position: center center;
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -ms-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover; }
-        @media screen and (min-width: 600px) {
-          .home .list .users .user .pic {
-            width: 40%;
-            height: auto; } }
-      .home .list .users .user .detail {
-        width: 100%;
-        display: -webkit-flex;
-        display: -moz-flex;
-        display: -ms-flex;
-        display: -o-flex;
-        display: flex;
-        flex-direction: column; }
-        @media screen and (min-width: 600px) {
-          .home .list .users .user .detail {
-            width: 58%; } }
-        .home .list .users .user .detail > * {
-          margin-bottom: 15px;
-          flex-grow: 2; }
-        .home .list .users .user .detail .btn {
-          width: 100%;
-          display: -webkit-flex;
-          display: -moz-flex;
-          display: -ms-flex;
-          display: -o-flex;
-          display: flex;
-          justify-content: flex-end;
-          margin-bottom: 0; }
-          .home .list .users .user .detail .btn button {
-            cursor: pointer;
-            font-size: 24px;
-            padding: 0.4em 0.3em;
-            background-color: #1b1f3d;
-            color: #fff;
-            text-transform: capitalize;
-            width: 100%;
-            border: 0; }
-            .home .list .users .user .detail .btn button:hover {
-              opacity: 0.9; }
-            @media screen and (min-width: 600px) {
-              .home .list .users .user .detail .btn button {
-                margin: 1px; } }
-
-.products {
-  overflow-x: hidden; }
-  .products .list {
-    margin: 15px 0;
-    width: 100%;
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flex;
-    display: -o-flex;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center; }
-    @media screen and (min-width: 600px) {
-      .products .list {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center; } }
-    .products .list .product {
-      min-height: 100px;
-      padding: 10px;
-      border-radius: 0.5rem;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 1px 0 12px rgba(0, 0, 0, 0.13);
-      width: -webkit-calc(100% - 20px);
-      width: -moz-calc(100% - 20px);
-      width: -ms-calc(100% - 20px);
-      width: -o-calc(100% - 20px);
-      width: calc(100% - 20px);
-      margin: 10px;
-      max-width: 300px;
-      display: -webkit-flex;
-      display: -moz-flex;
-      display: -ms-flex;
-      display: -o-flex;
-      display: flex;
-      flex-direction: column; }
-      .products .list .product .img {
-        overflow: hidden;
-        width: 100%;
-        height: 320px;
-        background-repeat: no-repeat;
-        background-position: center center;
-        -webkit-background-size: contain;
-        -moz-background-size: contain;
-        -ms-background-size: contain;
-        -o-background-size: contain;
-        background-size: contain; }
-
 .loading {
   display: block;
   position: relative;
@@ -397,5 +166,239 @@ html {
     -ms-transform: translate(24px, 0);
     -o-transform: translate(24px, 0);
     transform: translate(24px, 0); } }
+:root {
+  font-size: 16px;
+  font-size: 1rem; }
+
+html {
+  width: 100vw;
+  height: 100%;
+  overflow-x: hidden;
+  min-width: 320px; }
+  html body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    min-width: 320px; }
+    html body p {
+      font-size: 20px;
+      font-size: 1.25rem; }
+    html body header {
+      width: 100%;
+      padding: 0 15px;
+      height: 80px;
+      border-bottom: 1px solid #1b1f3d;
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flex;
+      display: -o-flex;
+      display: flex;
+      justify-content: space-between; }
+      html body header .logo {
+        width: 100px;
+        height: 100%;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flex;
+        display: -o-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center; }
+      html body header .nav {
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flex;
+        display: -o-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%; }
+        html body header .nav nav {
+          width: 100%;
+          display: -webkit-flex;
+          display: -moz-flex;
+          display: -ms-flex;
+          display: -o-flex;
+          display: flex;
+          justify-content: flex-end; }
+          html body header .nav nav a {
+            margin: 0 10px; }
+    html body footer {
+      width: 100%;
+      height: 100px;
+      border-top: 1px solid #1b1f3d; }
+    html body .container {
+      margin: 0 auto;
+      max-width: 1300px;
+      width: 95%;
+      min-width: 320px;
+      min-height: -webkit-calc(100vh - 180px);
+      min-height: -moz-calc(100vh - 180px);
+      min-height: -ms-calc(100vh - 180px);
+      min-height: -o-calc(100vh - 180px);
+      min-height: calc(100vh - 180px);
+      overflow-x: hidden; }
+      html body .container.center {
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flex;
+        display: -o-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center; }
+
+.home {
+  width: 100%; }
+
+.login {
+  width: 100%; }
+  .login .users {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center; }
+    @media screen and (min-width: 1000px) {
+      .login .users {
+        flex-direction: row;
+        flex-wrap: wrap; } }
+    .login .users .user {
+      min-height: 100px;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 1px 0 12px rgba(0, 0, 0, 0.13);
+      width: 310px;
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flex;
+      display: -o-flex;
+      display: flex;
+      flex-direction: column; }
+      @media screen and (min-width: 600px) {
+        .login .users .user {
+          flex-direction: row;
+          height: 200px;
+          width: 100%;
+          max-width: 500px;
+          overflow: hidden;
+          justify-content: space-between; } }
+  @media screen and (min-width: 600px) and (min-width: 1000px) {
+    .login .users .user {
+      max-width: 480px;
+      margin-right: 10px;
+      margin-left: 10px; } }
+  @media screen and (min-width: 600px) and (min-width: 1200px) {
+    .login .users .user {
+      max-width: 500px; } }
+
+      .login .users .user .pic {
+        overflow: hidden;
+        width: 100%;
+        height: 220px;
+        background-repeat: no-repeat;
+        background-position: center center;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover; }
+        @media screen and (min-width: 600px) {
+          .login .users .user .pic {
+            width: 40%;
+            height: auto; } }
+      .login .users .user .detail {
+        width: 100%;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flex;
+        display: -o-flex;
+        display: flex;
+        flex-direction: column; }
+        @media screen and (min-width: 600px) {
+          .login .users .user .detail {
+            width: 58%; } }
+        .login .users .user .detail > * {
+          margin-bottom: 15px;
+          flex-grow: 2; }
+        .login .users .user .detail .btn {
+          width: 100%;
+          display: -webkit-flex;
+          display: -moz-flex;
+          display: -ms-flex;
+          display: -o-flex;
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 0; }
+          .login .users .user .detail .btn button {
+            cursor: pointer;
+            font-size: 24px;
+            padding: 0.4em 0.3em;
+            background-color: #1b1f3d;
+            color: #fff;
+            text-transform: capitalize;
+            width: 100%;
+            border: 0; }
+            .login .users .user .detail .btn button:hover {
+              opacity: 0.9; }
+            @media screen and (min-width: 600px) {
+              .login .users .user .detail .btn button {
+                margin: 1px; } }
+
+.products {
+  overflow-x: hidden; }
+  .products .list {
+    margin: 15px 0;
+    width: 100%;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center; }
+    @media screen and (min-width: 600px) {
+      .products .list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center; } }
+    .products .list .product {
+      min-height: 100px;
+      padding: 10px;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 1px 0 12px rgba(0, 0, 0, 0.13);
+      width: -webkit-calc(100% - 20px);
+      width: -moz-calc(100% - 20px);
+      width: -ms-calc(100% - 20px);
+      width: -o-calc(100% - 20px);
+      width: calc(100% - 20px);
+      margin: 10px;
+      max-width: 300px;
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flex;
+      display: -o-flex;
+      display: flex;
+      flex-direction: column; }
+      .products .list .product .img {
+        overflow: hidden;
+        width: 100%;
+        height: 320px;
+        background-repeat: no-repeat;
+        background-position: center center;
+        -webkit-background-size: contain;
+        -moz-background-size: contain;
+        -ms-background-size: contain;
+        -o-background-size: contain;
+        background-size: contain; }
 
 /*# sourceMappingURL=index.css.map */

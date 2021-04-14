@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Render } from "../helpers/types";
-import { Login } from "../components/home/Login";
 import { Context } from "../components/stores/Store";
 import { Loading } from "../helpers/MixFc";
 
@@ -18,22 +17,15 @@ export class Home extends Component<HomeProps, HomeStates> {
     this.state = { loading: true };
   }
 
-  private login = async (id: number): Promise<void> => {
-    const [, dispatch] = this.context;
-    dispatch({ id });
-  };
-
   public render(): Render {
     const [{ user, loading }] = this.context,
       clas = loading ? " center" : "";
     return (
       <div className={`home container${clas}`}>
-        {loading ? (
+        {loading || !user ? (
           <Loading bol={loading} />
-        ) : user ? (
-          <div>{user.fullName()}</div>
         ) : (
-          <Login login={this.login} />
+          <div>{user.fullName()}</div>
         )}
       </div>
     );

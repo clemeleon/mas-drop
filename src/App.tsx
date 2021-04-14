@@ -15,14 +15,15 @@ import { Footer } from "./components/Footer";
 import { Context } from "./components/stores/Store";
 import { Carts } from "./pages/Carts";
 import { Products } from "./pages/Products";
-import OneProduct from "./pages/OneProduct";
+import OneProduct, { ProductProps } from "./pages/OneProduct";
 import { Error } from "./pages/Error";
-import { Auth } from "./helpers/MixFc";
+import { Auth, Conditional } from "./helpers/MixFc";
 import { User } from "./datas/User";
+import { Login } from "./pages/Login";
 
-type ProductParams = { name: string };
+export type ProductParams = { [key: string]: any };
 
-type ProductRouteParams = { match?: match<ProductParams> };
+export type ProductRouteParams = { match?: match<ProductParams> };
 
 type AppProps = {};
 
@@ -31,7 +32,7 @@ type AppStates = {};
 class App extends Component<AppProps, AppStates> {
   public static contextType = Context;
 
-  private static product({ match }: ProductRouteParams) {
+  /*private static product({ match }: ProductRouteParams) {
     if (match) {
       const { params } = match,
         { name } = params;
@@ -40,6 +41,32 @@ class App extends Component<AppProps, AppStates> {
       }
     }
     return <Redirect to={"/"} />;
+  }*/
+
+  private static product({ match }: ProductRouteParams): string {
+    if (match) {
+      const { params } = match,
+        { name } = params;
+      if (name.length > 0) {
+        return "";
+      }
+    }
+    return "Product not found!";
+  }
+
+  private static conditional(
+    { match }: ProductRouteParams,
+    action: ({ name }: ProductParams) => Render,
+    names: string[]
+  ) {
+    return (
+      <Conditional
+        uri={match?.url ?? ""}
+        params={match?.params ?? {}}
+        names={names}
+        action={action}
+      />
+    );
   }
 
   public render(): Render {
@@ -50,19 +77,39 @@ class App extends Component<AppProps, AppStates> {
           <Header />
           <Switch>
             <Route exact path="/">
-              {<Home />}
+              <Auth
+                lose={false}
+                condition={id > 0 && user instanceof User}
+                main={<Home />}
+                other={<Login />}
+              />
             </Route>
             <Route exact path="/products">
               {<Products />}
             </Route>
-            <Route exact path="/product/:name" render={App.product} />
+            <Route
+              exact
+              path="/product/:name"
+              render={(props) =>
+                App.conditional(
+                  props,
+                  ({ name }: ProductParams): Render => {
+                    return <OneProduct name={name} />;
+                  },
+                  ["name"]
+                )
+              }
+            />
             <Route exact path="/carts">
               <Auth
                 lose={false}
                 condition={id > 0 && user instanceof User}
                 main={<Carts />}
-                other={<Error mgs={"Not allowed!"} />}
+                other={<Redirect to={"/"} />}
               />
+            </Route>
+            <Route>
+              <Error mgs={"404 Page not found!!"} />
             </Route>
           </Switch>
           <Footer />
