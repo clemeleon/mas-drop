@@ -16,23 +16,29 @@ export class Table<T extends IData, C extends DataType> {
   ) {}
 
   public async all<K extends keyof C>(
-    fields: K[] = [],
-    ids: Array<number> = []
+    fields: K[],
+    wheres: { [K in keyof C]: any },
+    ids: Array<number> = [],
+    limit: [number, number] = [0, 0]
   ): Promise<T[]> {
     if (!(await this.load())) {
       return [];
     }
-    return this.populate(this.pickAll(ids), fields);
+    const temps = this.pick(wheres),
+      datas = this.populate(this.pickAll(ids, temps), fields),
+      [start, end] = limit;
+    return datas.length > end && end > 0 ? datas.splice(start, end) : datas;
   }
 
   public async get<K extends keyof C>(
-    fields: K[] = [],
-    wheres: { [key: string]: any } = []
+    fields: K[],
+    wheres: { [K in keyof C]: any }
   ): Promise<T | undefined> {
     if (!(await this.load())) {
       return undefined;
     }
-    return this.populate(this.pick(wheres), fields).shift();
+    const temps = this.pick(wheres);
+    return temps.length > 0 ? this.populate(temps, fields).shift() : undefined;
   }
 
   /*public async setx<K extends keyof C>(data: T, keys: K[]): Promise<boolean> {
@@ -133,13 +139,13 @@ export class Table<T extends IData, C extends DataType> {
     return false;
   }
 
-  private pick<K extends keyof C>(keys: { [key: string]: any }): C[] {
+  private pick(keys: { [K in keyof C]: any }): C[] {
     const datas = [...this.datas];
     return datas.filter((data) => {
       for (const [key, value] of Object.entries(keys)) {
         if (data.hasOwnProperty(key) && keys.hasOwnProperty(key)) {
           try {
-            return value === data[key as K];
+            return value === data[key];
           } catch (e) {
             return false;
           }
@@ -149,8 +155,7 @@ export class Table<T extends IData, C extends DataType> {
     });
   }
 
-  private pickAll(keys: number[]): C[] {
-    const datas = [...this.datas];
+  private pickAll(keys: number[], datas: C[]): C[] {
     return datas.filter((data) => {
       return keys.length === 0 || keys.includes(data.id);
     });
@@ -166,27 +171,10 @@ export class Table<T extends IData, C extends DataType> {
         this.datas = [];
       }
       return true;
-    } catch (e) {}
-    return false;
-  }
-
-  private populate<K extends keyof C>(datas: C[], keys: K[] = []): T[] {
-    const classes: T[] = [],
-      temps = Object.keys(datas[0]);
-    for (const data of datas) {
-      let value = Object.assign({}, data);
-      if (keys.length > 0) {
-        for (const temp of temps) {
-          const key = temp as K;
-          if (keys.includes(key) || ["id"].includes(temp)) {
-            continue;
-          }
-          Object.assign(value, { [key]: this.value(data[key]) });
-        }
-      }
-      classes.push(new this.type(value));
+    } catch (e) {
+      console.log(e.message);
     }
-    return classes;
+    return false;
   }
 
   private value(value: any): any {
@@ -206,5 +194,32 @@ export class Table<T extends IData, C extends DataType> {
       return false;
     }
     return undefined;
+  }
+
+  private populate<K extends keyof C>(datas: C[], keys: K[] = []): T[] {
+    const classes: T[] = [],
+      temps = Object.keys(datas[0]);
+    try {
+      for (const data of datas) {
+        let value = Object.assign({}, data);
+        if (keys.length > 0) {
+          for (const temp of temps) {
+            const key = temp as K;
+            if (keys.includes(key) || ["id"].includes(temp)) {
+              continue;
+            }
+            if (data.hasOwnProperty(key)) {
+              Object.assign(value, { [key]: this.value(data[key]) });
+            }
+          }
+        }
+        if (value) {
+          classes.push(new this.type(value));
+        }
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+    return classes;
   }
 }

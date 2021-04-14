@@ -3,39 +3,26 @@
  * 10 April 2021
  */
 import { Component } from "react";
-import { User } from "../../datas/User";
-import { Schema } from "../stores/Schema";
-import { StoreContext } from "../stores/Store";
-import { Render } from "../../helpers/types";
-export type LoginProps = { login: (id: number) => void };
-export type LoginStates = {
-  users: User[];
-};
+import { User } from "../datas/User";
+import { Render } from "../helpers/types";
+import { Context } from "../components/stores/Store";
+export type LoginProps = {};
+export type LoginStates = {};
 export class Login extends Component<LoginProps, LoginStates> {
-  public static contextType = StoreContext;
-  constructor(props: LoginProps) {
-    super(props);
-    this.state = {
-      users: [],
-    };
-  }
+  public static contextType = Context;
 
-  public async componentDidMount() {
-    const { db }: { db: () => Schema } = this.context;
-    const users = await db().users(true);
-    this.setState({
-      users: users.sort((a, b) => (a.parent > b.parent ? 1 : -1)),
-    });
-  }
+  private login = async (id: number): Promise<void> => {
+    const [, dispatch] = this.context;
+    dispatch({ id });
+  };
 
   public render(): Render {
-    const { users } = this.state,
-      { login } = this.props;
+    const [{ users }] = this.context;
     return (
-      <div className={"list"}>
+      <div className={"login"}>
         <h1>List of users</h1>
         <div className={"users"}>
-          {users.map((user) => (
+          {users.map((user: User) => (
             <div key={user.id} className={"user"}>
               <div
                 className={"pic"}
@@ -56,7 +43,7 @@ export class Login extends Component<LoginProps, LoginStates> {
                 )}
                 <div className={"btn"}>
                   <button
-                    onClick={() => login(user.id)}
+                    onClick={() => this.login(user.id)}
                   >{`Login as ${user.firstName()}`}</button>
                 </div>
               </div>

@@ -1,4 +1,5 @@
 import { IData } from "../faces/IData";
+import { Helper } from "../helpers/Helper";
 
 export type ProductType = {
   id: number;
@@ -24,5 +25,13 @@ export class Product implements IData {
     this.description = description;
     this.category = category;
     this.image = image;
+  }
+
+  public name(): string {
+    return Helper.truncate(this.title, 20);
+  }
+
+  public slug(): string {
+    return Helper.slug(this.title);
   }
 }
