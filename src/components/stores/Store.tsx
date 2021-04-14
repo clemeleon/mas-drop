@@ -59,6 +59,8 @@ class Store extends Component<StoreProps, StoreStates> {
 
   private skip: boolean = false;
 
+  private engine: Storage = sessionStorage;
+
   public constructor(props: StoreProps) {
     super(props);
     this.state = {
@@ -117,7 +119,7 @@ class Store extends Component<StoreProps, StoreStates> {
   public componentDidMount() {
     let id = 0;
     try {
-      const key = sessionStorage.getItem(this.str);
+      const key = this.engine.getItem(this.str);
       if (typeof key === "string") {
         id = parseInt(key);
       }
@@ -139,9 +141,9 @@ class Store extends Component<StoreProps, StoreStates> {
           key = nextState.id;
         if (id !== key) {
           if (key > 0) {
-            sessionStorage.setItem(this.str, key.toString());
+            this.engine.setItem(this.str, key.toString());
           } else {
-            sessionStorage.removeItem(this.str);
+            this.engine.removeItem(this.str);
           }
           if (!this.skip) {
             this.skip = true;

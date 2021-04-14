@@ -8,6 +8,8 @@ import { DataType } from "./Store";
 export class Table<T extends IData, C extends DataType> {
   private datas: C[] = [];
 
+  private engine: Storage = localStorage;
+
   constructor(
     public readonly key: string,
     private readonly type: { new (datas: C): T },
@@ -40,25 +42,6 @@ export class Table<T extends IData, C extends DataType> {
     const temps = this.pick(wheres);
     return temps.length > 0 ? this.populate(temps, fields).shift() : undefined;
   }
-
-  /*public async setx<K extends keyof C>(data: T, keys: K[]): Promise<boolean> {
-    if (!(await this.load())) {
-      return false;
-    }
-    const raw: C = JSON.parse(JSON.stringify(data)),
-      old = this.datas.find((one) => {
-        return one.id === raw.id;
-      });
-    if (!old) {
-      return false;
-    }
-    if (Helper.compare(raw, old)) {
-      return true;
-    }
-    const index = this.datas.indexOf(old);
-    this.datas[index] = raw;
-    return this.save();
-  }*/
 
   public async set<K extends keyof C>(data: T, changes: DataType): Promise<T> {
     if (!(await this.load())) {
@@ -119,7 +102,7 @@ export class Table<T extends IData, C extends DataType> {
       return true;
     }
     try {
-      let strs = localStorage.getItem(this.key),
+      let strs = this.engine.getItem(this.key),
         datas = strs && strs.length > 0 ? JSON.parse(strs) : [];
       if (datas.length <= 0) {
         datas = this.format(await this.fetch(this.key));
@@ -132,7 +115,7 @@ export class Table<T extends IData, C extends DataType> {
   private save(): boolean {
     try {
       if (this.datas.length > 0) {
-        localStorage.setItem(this.key, JSON.stringify(this.datas));
+        this.engine.setItem(this.key, JSON.stringify(this.datas));
         return true;
       }
     } catch (e) {}
