@@ -5,7 +5,7 @@
 import React, { ReactNode, ComponentType, FC } from "react";
 import { Render } from "./types";
 import { Error } from "../pages/Error";
-import { ProductParams, ProductRouteParams } from "../App";
+import { ProductParams } from "../App";
 
 const Loading: FC<{ bol: boolean }> = ({ bol }): Render => {
     return (

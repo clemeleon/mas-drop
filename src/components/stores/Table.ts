@@ -4,6 +4,7 @@
  */
 import { IData } from "../../faces/IData";
 import { DataType } from "./Store";
+import { Helper } from "../../helpers/Helper";
 
 export class Table<T extends IData, C extends DataType> {
   private datas: C[] = [];
@@ -43,44 +44,23 @@ export class Table<T extends IData, C extends DataType> {
     return temps.length > 0 ? this.populate(temps, fields).shift() : undefined;
   }
 
-  public async set<K extends keyof C>(data: T, changes: DataType): Promise<T> {
+  public async set(data: T): Promise<boolean> {
     if (!(await this.load())) {
-      return data;
+      return false;
     }
-    const raw: C = JSON.parse(JSON.stringify(data)),
+    const raw: C = Helper.clone(data),
       old = this.datas.find((one) => {
         return one.id === raw.id;
       }),
-      keys = Object.keys(changes);
+      index = old ? this.datas.indexOf(old) : -1;
     if (!old) {
-      return data;
+      return false;
     }
-    if (keys.length <= 0) {
-      throw new Error("modified keys are needed!");
+    if (!Helper.compare(raw, old) && index > -1) {
+      this.datas[index] = raw;
+      return this.save();
     }
-    const index = this.datas.indexOf(old);
-    let bol = false;
-    for (const key of keys) {
-      if (changes.hasOwnProperty(key) && old.hasOwnProperty(key)) {
-        if (
-          typeof changes[key] === typeof old[key] &&
-          changes[key] !== old[key]
-        ) {
-          if (key === "id") {
-            throw new Error("Can not change id!");
-          }
-          raw[key as K] = this.update(raw[key as K], changes[key]);
-          this.datas[index][key as K] = raw[key as K];
-          if (!bol) {
-            bol = true;
-          }
-        }
-      }
-    }
-    if (bol) {
-      this.save();
-    }
-    return this.populate([raw])[0];
+    return false;
   }
 
   private update(data: any, update: any): any {
@@ -197,7 +177,7 @@ export class Table<T extends IData, C extends DataType> {
           }
         }
         if (value) {
-          classes.push(new this.type(value));
+          classes.push(new this.type(Helper.clone(value)));
         }
       }
     } catch (e) {

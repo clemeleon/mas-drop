@@ -18,7 +18,7 @@ const [state, dispatch] = useReducer(Reducer, {});
 export { Store };*/
 import { User, UserType } from "../../datas/User";
 import { Product, ProductType } from "../../datas/Product";
-import { Cart, CartProduct, CartType } from "../../datas/Cart";
+import { Cart, CartType } from "../../datas/Cart";
 import { Schema } from "./Schema";
 import React, { Component, createContext } from "react";
 import { Helper } from "../../helpers/Helper";
@@ -28,7 +28,9 @@ type StoreProps = {};
 type StoreStates = {
   id: number;
   user: User | undefined;
+  cart: Cart | undefined;
   users: User[];
+  carts: Cart[];
   products: Product[];
   loading: boolean;
 };
@@ -51,7 +53,15 @@ export type StoreItem = [
 
 const schema = new Schema(),
   Def: StoreItem = [
-    { id: 0, user: undefined, users: [], products: [], loading: true },
+    {
+      id: 0,
+      user: undefined,
+      cart: undefined,
+      users: [],
+      carts: [],
+      products: [],
+      loading: true,
+    },
     ({ state, cart }): void => {},
     //(state: { [K in keyof StoreStates]: any }): void => {},
   ],
@@ -74,8 +84,10 @@ class Store extends Component<StoreProps, StoreStates> {
     this.state = {
       id: 0,
       user: undefined,
+      cart: undefined,
       products: [],
       users: [],
+      carts: [],
       loading: true,
     };
     this.tables();
@@ -112,15 +124,17 @@ class Store extends Component<StoreProps, StoreStates> {
   private async update(id: number): Promise<boolean> {
     let loading = false,
       { users, products } = this.state,
-      user = id > 0 ? await schema.user({ id }, true, true) : undefined;
+      user = id > 0 ? await schema.user({ id }) : undefined,
+      cart =
+        user instanceof User ? await schema.cart({ userId: id }) : undefined,
+      carts =
+        user instanceof User && user.parent === 0 ? await schema.carts() : [];
     products = products.length > 0 ? products : await schema.products();
     users =
       users.length > 0
         ? users
-        : (await schema.users(true)).sort((a, b) =>
-            a.parent > b.parent ? 1 : -1
-          );
-    this.setState({ user, id, loading, products, users });
+        : (await schema.users()).sort((a, b) => (a.parent > b.parent ? 1 : -1));
+    this.setState({ user, cart, id, loading, products, users, carts });
     return false;
   }
 
@@ -167,69 +181,13 @@ class Store extends Component<StoreProps, StoreStates> {
     return false;
   }
 
-  private dispatchs = (state: { [K in keyof StoreStates]: any }): void => {
-    const keys = Object.keys(state) as [keyof StoreStates];
-    for (const key of keys) {
-      if (!this.state.hasOwnProperty(key)) {
-        throw new Error(`${key} does not exist in state`);
-      } else if (this.excludes.includes(key)) {
-        throw new Error(`Can not set this ${key} from outside`);
-      }
-    }
-    this.setState({ ...this.state, ...state });
-  };
-
-  /*private async checkCart(temp?: Cart): Promise<User | undefined> {
-    if (temp instanceof Cart) {
-      const { user } = this.state;
-      const cart = user?.cart;
-      if (cart instanceof Cart) {
-        const list = [],
-          carts = cart.proCarts,
-          ones = carts.map((c) => c.productId),
-          twos = temps.map((t) => t.productId),
-          ids = Array.from(new Set(ones.concat(twos)));
-        for (const id of ids) {
-          const one = temps.find((cart) => cart.productId === id),
-            two = temps.find((temp) => temp.productId === id);
-          if ((one && two) || (!one && two)) {
-            list.push(two);
-          } else if (one && !two) {
-            list.push(one);
-          }
+  private async checkCart(temp?: Cart): Promise<Cart | undefined> {
+    const { cart } = this.state;
+    if (temp instanceof Cart && cart instanceof Cart) {
+      if (!Helper.compare(temp, cart)) {
+        if (await schema.set("carts", temp)) {
+          return temp;
         }
-        user.cart = await schema.set<Cart>("carts", cart, { proCarts: list });
-        return user;
-      }
-    }
-    return undefined;
-  }*/
-
-  private async checkCart(temp?: Cart): Promise<User | undefined> {
-    const { user } = this.state;
-    if (temp instanceof Cart && user instanceof User) {
-      const old = user.cart;
-      if (old instanceof Cart && old.id === temp.id) {
-        const carts = [],
-          pros = old.proCarts,
-          temps = temp.proCarts,
-          ones = pros.map((c) => c.productId),
-          twos = temps.map((t) => t.productId),
-          ids = Array.from(new Set(ones.concat(twos)));
-        for (const id of ids) {
-          const one = pros.find((cart) => cart.productId === id),
-            two = temps.find((temp) => temp.productId === id);
-          if ((one && two) || (!one && two)) {
-            carts.push(two);
-          } else if (one && !two) {
-            carts.push(one);
-          }
-        }
-        user.cart = await schema.set<Cart>("carts", temp, {
-          date: temp.date,
-          proCart: carts,
-        });
-        return user;
       }
     }
     return undefined;
@@ -254,9 +212,9 @@ class Store extends Component<StoreProps, StoreStates> {
         states[key] = state[key];
       }
     }
-    this.checkCart(cart).then((user: User | undefined) => {
-      if (user) {
-        states.user = user;
+    this.checkCart(cart).then((c: Cart | undefined) => {
+      if (c) {
+        states.cart = c;
       }
       if (states && Object.keys(states).length > 0) {
         this.setState({ ...this.state, ...states });
@@ -266,7 +224,13 @@ class Store extends Component<StoreProps, StoreStates> {
 
   public render() {
     const { children } = this.props;
-    return <Provider value={[this.state, this.dispatch]}>{children}</Provider>;
+    let temp = this.state.cart,
+      cart = temp instanceof Cart ? new Cart(Helper.clone(temp)) : undefined;
+    return (
+      <Provider value={[{ ...this.state, cart }, this.dispatch]}>
+        {children}
+      </Provider>
+    );
   }
 }
 

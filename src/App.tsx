@@ -3,8 +3,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  RouteComponentProps,
-  RouteProps,
   match,
   Redirect,
 } from "react-router-dom";
@@ -15,7 +13,7 @@ import { Footer } from "./components/Footer";
 import { Context } from "./components/stores/Store";
 import { Carts } from "./pages/Carts";
 import { Products } from "./pages/Products";
-import OneProduct, { ProductProps } from "./pages/OneProduct";
+import OneProduct from "./pages/OneProduct";
 import { Error } from "./pages/Error";
 import { Auth, Conditional } from "./helpers/MixFc";
 import { User } from "./datas/User";
@@ -31,28 +29,6 @@ type AppStates = {};
 
 class App extends Component<AppProps, AppStates> {
   public static contextType = Context;
-
-  /*private static product({ match }: ProductRouteParams) {
-    if (match) {
-      const { params } = match,
-        { name } = params;
-      if (name.length > 0) {
-        return <OneProduct name={name} />;
-      }
-    }
-    return <Redirect to={"/"} />;
-  }*/
-
-  private static product({ match }: ProductRouteParams): string {
-    if (match) {
-      const { params } = match,
-        { name } = params;
-      if (name.length > 0) {
-        return "";
-      }
-    }
-    return "Product not found!";
-  }
 
   private static conditional(
     { match }: ProductRouteParams,

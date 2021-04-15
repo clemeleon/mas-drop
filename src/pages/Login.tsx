@@ -38,14 +38,14 @@ export class Login extends Component<LoginProps, LoginStates> {
                   <div className={"detail"}>
                     <h4>{user.fullName()}</h4>
                     <p>{user.type()}</p>
-                    {user.parent === 0 ? (
-                      ""
-                    ) : (
-                      <p>
-                        Cart items:{" "}
-                        {user.cart ? `${user.cart?.proCarts.length}` : 0}
-                      </p>
-                    )}
+                    {/*{user.parent === 0 ? (*/}
+                    {/*  ""*/}
+                    {/*) : (*/}
+                    {/*  <p>*/}
+                    {/*    Cart items:{" "}*/}
+                    {/*    {user.cart ? `${user.cart?.products.length}` : 0}*/}
+                    {/*  </p>*/}
+                    {/*)}*/}
                     <div className={"btn"}>
                       <button
                         onClick={() => this.login(user.id)}

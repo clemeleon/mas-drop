@@ -97,4 +97,8 @@ export class Helper {
     }
     return bol;
   }
+
+  static clone<T>(clone: any): T {
+    return JSON.parse(JSON.stringify(clone));
+  }
 }

@@ -103,69 +103,34 @@ export class Schema {
 
   public async user(
     wheres: { [K in keyof DataType]: any },
-    children: boolean = false,
-    cart: boolean = false,
-    product: boolean = false,
     fields: string[] = []
   ): Promise<User | undefined> {
-    let user = await this.get<User>("users", fields, wheres);
-    if (user instanceof User)
-      if (children) {
-        user.children = await this.users(cart, product, [], [], {
-          parent: user.id,
-        });
-        if (cart) {
-          user.cart = await this.cart({ userId: user.id }, product, []);
-        }
-      }
-    return user;
+    return await this.get<User>("users", fields, wheres);
   }
 
   public async users(
-    cart: boolean = false,
-    product: boolean = false,
     ids: Array<number> = [],
     fields: string[] = [],
     wheres: { [K in keyof DataType]: any } = {},
     limit: [number, number] = [0, 0]
   ): Promise<User[]> {
-    let users = await this.all<User>("users", fields, wheres, ids, limit);
-    if (users.length > 0 && cart) {
-      for (const user of users) {
-        user.cart = await this.cart({ userId: user.id }, product);
-      }
-    }
-    return users;
+    return await this.all<User>("users", fields, wheres, ids, limit);
   }
 
   public async cart(
     wheres: { [key: string]: any },
-    product: boolean = false,
     fields: string[] = []
   ): Promise<Cart | undefined> {
-    const cart = await this.get<Cart>("carts", fields, wheres);
-    if (cart instanceof Cart && product) {
-      const keys = cart.proCarts.map((pro) => pro.productId);
-      cart.products = await this.products(keys, []);
-    }
-    return cart;
+    return await this.get<Cart>("carts", fields, wheres);
   }
 
   public async carts(
-    product: boolean = false,
     ids: Array<number> = [],
     fields: string[] = [],
     wheres: { [K in keyof DataType]: any } = {},
     limit: [number, number] = [0, 0]
   ): Promise<Cart[]> {
-    const carts = await this.all<Cart>("carts", fields, wheres, ids, limit);
-    if (carts.length > 0 && product) {
-      for (const cart of carts) {
-        const keys = cart.proCarts.map((pro) => pro.productId);
-        cart.products = await this.products(keys, []);
-      }
-    }
-    return carts;
+    return await this.all<Cart>("carts", fields, wheres, ids, limit);
   }
 
   public async product(
@@ -186,24 +151,18 @@ export class Schema {
 
   public async set<T extends ClassType>(
     name: string,
-    data: T,
-    changes: DataType
-  ): Promise<T> {
+    data: T
+  ): Promise<boolean> {
     const table = await this.table<T, DataType>(name);
     if (!table) {
-      return data;
+      return false;
     }
     try {
-      if (Object.keys(changes).length <= 0) {
-        this.message =
-          "Changes parameter can not be empty, all the update key/value, example: {id: 1}!";
-        return data;
-      }
-      return await table.set(data, changes);
+      return await table.set(data);
     } catch (e) {
       this.message = `${e.message} on db.set()`;
     }
-    return data;
+    return false;
   }
 
   private async table<T extends IData, C extends DataType>(

@@ -9,6 +9,38 @@
         justify-content: center
         flex-direction: column
         align-items: center
+        .product
+            +flexbox()
+            max-width: 320px
+            margin: 10px
+            padding: 10px
+            flex-direction: column
+            border: 1px solid rgba(0,0,0,.1)
+            box-shadow: 1px 0 12px rgba(0,0,0,.13)
+            .img
+                overflow: hidden
+                width: 100%
+                height: 320px
+                background-repeat: no-repeat
+                background-position: center center
+                +background-size(contain)
+                margin-bottom: 1rem
+            .detail
+                +flexbox()
+                flex-direction: column
+                width: 100%
+                a
+                    text-decoration: none
+                    color: $light-black
+//.products
+    overflow-x: hidden
+    .list
+        margin: 15px 0
+        width: 100%
+        +flexbox()
+        justify-content: center
+        flex-direction: column
+        align-items: center
         +media(600px)
             flex-direction: row
             flex-wrap: wrap
