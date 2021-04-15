@@ -18,7 +18,7 @@ const [state, dispatch] = useReducer(Reducer, {});
 export { Store };*/
 import { User, UserType } from "../../datas/User";
 import { Product, ProductType } from "../../datas/Product";
-import { Cart, CartType } from "../../datas/Cart";
+import { Cart, CartProduct, CartType } from "../../datas/Cart";
 import { Schema } from "./Schema";
 import React, { Component, createContext } from "react";
 import { Helper } from "../../helpers/Helper";
@@ -39,13 +39,21 @@ type DataType = { [key: string]: any };
 
 export type StoreItem = [
   StoreStates,
-  (state: { [K in keyof StoreStates]: any }) => void
+  ({
+    state,
+    cart,
+  }: {
+    state?: { [K in keyof StoreStates]: any };
+    cart?: Cart;
+  }) => void
+  //(state: { [K in keyof StoreStates]: any }) => void
 ];
 
 const schema = new Schema(),
   Def: StoreItem = [
     { id: 0, user: undefined, users: [], products: [], loading: true },
-    (state: { [K in keyof StoreStates]: any }): void => {},
+    ({ state, cart }): void => {},
+    //(state: { [K in keyof StoreStates]: any }): void => {},
   ],
   Context = createContext<StoreItem>(Def),
   { Provider, Consumer } = Context;
@@ -53,7 +61,7 @@ const schema = new Schema(),
 class Store extends Component<StoreProps, StoreStates> {
   private str: string = "key";
 
-  private excludes: string[] = ["user"];
+  private excludes: string[] = ["user", "products", "users"];
 
   private loaded: boolean = false;
 
@@ -159,7 +167,7 @@ class Store extends Component<StoreProps, StoreStates> {
     return false;
   }
 
-  private dispatch = (state: { [K in keyof StoreStates]: any }): void => {
+  private dispatchs = (state: { [K in keyof StoreStates]: any }): void => {
     const keys = Object.keys(state) as [keyof StoreStates];
     for (const key of keys) {
       if (!this.state.hasOwnProperty(key)) {
@@ -169,6 +177,91 @@ class Store extends Component<StoreProps, StoreStates> {
       }
     }
     this.setState({ ...this.state, ...state });
+  };
+
+  /*private async checkCart(temp?: Cart): Promise<User | undefined> {
+    if (temp instanceof Cart) {
+      const { user } = this.state;
+      const cart = user?.cart;
+      if (cart instanceof Cart) {
+        const list = [],
+          carts = cart.proCarts,
+          ones = carts.map((c) => c.productId),
+          twos = temps.map((t) => t.productId),
+          ids = Array.from(new Set(ones.concat(twos)));
+        for (const id of ids) {
+          const one = temps.find((cart) => cart.productId === id),
+            two = temps.find((temp) => temp.productId === id);
+          if ((one && two) || (!one && two)) {
+            list.push(two);
+          } else if (one && !two) {
+            list.push(one);
+          }
+        }
+        user.cart = await schema.set<Cart>("carts", cart, { proCarts: list });
+        return user;
+      }
+    }
+    return undefined;
+  }*/
+
+  private async checkCart(temp?: Cart): Promise<User | undefined> {
+    const { user } = this.state;
+    if (temp instanceof Cart && user instanceof User) {
+      const old = user.cart;
+      if (old instanceof Cart && old.id === temp.id) {
+        const carts = [],
+          pros = old.proCarts,
+          temps = temp.proCarts,
+          ones = pros.map((c) => c.productId),
+          twos = temps.map((t) => t.productId),
+          ids = Array.from(new Set(ones.concat(twos)));
+        for (const id of ids) {
+          const one = pros.find((cart) => cart.productId === id),
+            two = temps.find((temp) => temp.productId === id);
+          if ((one && two) || (!one && two)) {
+            carts.push(two);
+          } else if (one && !two) {
+            carts.push(one);
+          }
+        }
+        user.cart = await schema.set<Cart>("carts", temp, {
+          date: temp.date,
+          proCart: carts,
+        });
+        return user;
+      }
+    }
+    return undefined;
+  }
+
+  private dispatch = ({
+    state,
+    cart,
+  }: {
+    state?: { [K in keyof StoreStates]: any };
+    cart?: Cart;
+  }): void => {
+    const states: { [K in keyof StoreStates]?: any } = {};
+    if (state) {
+      const keys = Object.keys(state) as [keyof StoreStates];
+      for (const key of keys) {
+        if (!this.state.hasOwnProperty(key)) {
+          throw new Error(`${key} does not exist in state`);
+        } else if (this.excludes.includes(key)) {
+          throw new Error(`Can not set this ${key} from outside`);
+        }
+        states[key] = state[key];
+      }
+    }
+    this.checkCart(cart).then((user: User | undefined) => {
+      if (user) {
+        states.user = user;
+      }
+      if (states && Object.keys(states).length > 0) {
+        this.setState({ ...this.state, ...states });
+      }
+    });
   };
 
   public render() {

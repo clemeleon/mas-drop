@@ -17,7 +17,7 @@ export class Products extends Component<ProductsProps, ProductsStates> {
   public static contextType = Context;
 
   render() {
-    const [{ loading, products }] = this.context,
+    const [{ loading, products, user }] = this.context,
       clas = loading ? " center" : "";
     return (
       <div className={`products container${clas}`}>
@@ -25,15 +25,16 @@ export class Products extends Component<ProductsProps, ProductsStates> {
           <div className={"list"}>
             {products.map((pro: Product) => (
               <div key={pro.id} className={"product"}>
-                <Link to={`/product/${pro.slug()}`}>
-                  <div
-                    className={"img"}
-                    style={{ backgroundImage: `url("${pro.image}")` }}
-                  />
-                  <div className={"detail"}>
+                <div
+                  className={"img"}
+                  style={{ backgroundImage: `url("${pro.image}")` }}
+                />
+                <div className={"detail"}>
+                  <Link to={`/product/${pro.slug()}`}>
                     <h5>{pro.name()}</h5>
-                  </div>
-                </Link>
+                  </Link>
+                  <p>{pro.note()}</p>
+                </div>
               </div>
             ))}
           </div>

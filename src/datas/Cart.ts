@@ -12,7 +12,7 @@ export class Cart implements IData {
   public readonly id: number;
   public readonly userId: number;
   public readonly date: string;
-  public readonly proCarts: CartProduct;
+  public proCarts: CartProduct;
   public products: Product[] = [];
 
   constructor({ id, userId, date, products }: CartType) {
@@ -40,10 +40,32 @@ export class Cart implements IData {
         this.proCarts[i].quantity = this.proCarts[i].quantity - 1;
         if (this.proCarts[i].quantity === 0) {
           this.proCarts.slice(i, 1);
+          this.products = this.products.filter((pro) => pro.id !== id);
           return false;
         }
       }
     }
     return true;
+  }
+
+  public add(product: Product): void {
+    if (!this.products.find((pro) => pro.id !== product.id)) {
+      this.products.push(product);
+      this.proCarts.push({ productId: product.id, quantity: 1 });
+    }
+  }
+
+  public remove(id: number): void {
+    const product = this.products.find((pro) => pro.id !== id);
+    if (product instanceof Product) {
+      this.products = this.products.filter((pro) => pro.id !== product.id);
+      const len = this.proCarts.length;
+      for (let i = 0; i < len; i++) {
+        const pro = this.proCarts[i];
+        if (pro.productId === id) {
+          this.proCarts.slice(i, 1);
+        }
+      }
+    }
   }
 }

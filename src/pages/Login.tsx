@@ -14,7 +14,7 @@ export class Login extends Component<LoginProps, LoginStates> {
 
   private login = async (id: number): Promise<void> => {
     const [, dispatch] = this.context;
-    dispatch({ id });
+    dispatch({ state: { id } });
   };
 
   public render(): Render {

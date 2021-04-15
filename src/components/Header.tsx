@@ -16,7 +16,7 @@ export class Header extends Component<HeaderProps, HeaderStates> {
 
   private logout = (): void => {
     const [, dispatch] = this.context;
-    dispatch({ id: 0 });
+    dispatch({ state: { id: 0 } });
   };
 
   public render(): Render {
