@@ -113,6 +113,9 @@ class Store extends Component<StoreProps, StoreStates> {
           len = datas.length;
         for (i = 0; i < len; i++) {
           datas[i].userId = i + 2;
+          for (const pro of datas[i].products) {
+            pro.approved = false;
+          }
         }
         return datas;
       });
@@ -158,6 +161,7 @@ class Store extends Component<StoreProps, StoreStates> {
     nextContext: any
   ): boolean {
     try {
+      //console.log(this.state, nextState);
       if (Helper.state(this.state, nextState)) {
         const { id } = this.state,
           key = nextState.id;
@@ -181,12 +185,26 @@ class Store extends Component<StoreProps, StoreStates> {
     return false;
   }
 
-  private async checkCart(temp?: Cart): Promise<Cart | undefined> {
-    const { cart } = this.state;
-    if (temp instanceof Cart && cart instanceof Cart) {
-      if (!Helper.compare(temp, cart)) {
-        if (await schema.set("carts", temp)) {
-          return temp;
+  private async checkCart(temp?: Cart): Promise<Cart | undefined | Cart[]> {
+    const { user, cart, carts } = this.state;
+    if (user instanceof User) {
+      if (temp instanceof Cart) {
+        if (user.parent > 0) {
+          if (cart instanceof Cart) {
+            if (!Helper.compare(temp, cart)) {
+              if (await schema.set("carts", temp)) {
+                return temp;
+              }
+            }
+          }
+        } else {
+          const c = carts.find((c) => c.id === temp.id),
+            inx = c ? carts.indexOf(c) : -1;
+          if (inx > -1 && !Helper.compare(temp, c)) {
+            if (await schema.set("carts", temp)) {
+              return await schema.carts();
+            }
+          }
         }
       }
     }
@@ -212,9 +230,14 @@ class Store extends Component<StoreProps, StoreStates> {
         states[key] = state[key];
       }
     }
-    this.checkCart(cart).then((c: Cart | undefined) => {
+    this.checkCart(cart).then((c: Cart | undefined | Cart[]) => {
       if (c) {
-        states.cart = c;
+        if (Array.isArray(c)) {
+          states.carts = c;
+          console.log(c);
+        } else {
+          states.cart = c;
+        }
       }
       if (states && Object.keys(states).length > 0) {
         this.setState({ ...this.state, ...states });

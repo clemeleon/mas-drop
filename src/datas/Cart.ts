@@ -1,6 +1,10 @@
 import { IData } from "../faces/IData";
 
-export type CartProduct = Array<{ productId: number; quantity: number }>;
+export type CartProduct = Array<{
+  productId: number;
+  quantity: number;
+  approved: boolean;
+}>;
 export type CartType = {
   id: number;
   userId: number;
@@ -56,7 +60,7 @@ export class Cart implements IData {
 
   public add(id: number): void {
     if (!this.products.find((pro) => pro.productId === id)) {
-      this.products.push({ productId: id, quantity: 1 });
+      this.products.push({ productId: id, quantity: 1, approved: false });
     }
   }
 

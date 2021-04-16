@@ -42,7 +42,7 @@ export class Header extends Component<HeaderProps, HeaderStates> {
                 <span>
                   <img src={basket} />
                 </span>
-                <span>{count}</span>
+                <span className={"count"}>{count}</span>
                 <span>Cart</span>
               </Link>
             ) : (
@@ -56,12 +56,16 @@ export class Header extends Component<HeaderProps, HeaderStates> {
                   this.logout();
                 }}
               >
-                <img src={logout} />
+                <span className={"icon"}>
+                  <img src={logout} />
+                </span>
                 <span>Logout</span>
               </a>
             ) : (
               <Link to={"/"}>
-                <img src={login} />
+                <span className={"icon"}>
+                  <img src={login} />
+                </span>
                 <span>Login</span>
               </Link>
             )}

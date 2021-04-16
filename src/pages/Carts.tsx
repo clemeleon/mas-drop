@@ -9,6 +9,6 @@ export type CartsStates = {};
 
 export class Carts extends Component<CartsProps, CartsStates> {
   render() {
-    return <div>Carts</div>;
+    return <div className={"cart container"}></div>;
   }
 }
