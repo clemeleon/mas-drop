@@ -37,24 +37,24 @@ input {
   border-radius: 0; }
 
 h1 {
-  font-size: 56px;
-  font-size: 3.5rem; }
+  font-size: 26px;
+  font-size: 1.625rem; }
 
 h2 {
-  font-size: 48px;
-  font-size: 3rem; }
-
-h3 {
-  font-size: 40px;
-  font-size: 2.5rem; }
-
-h4 {
-  font-size: 32px;
-  font-size: 2rem; }
-
-h5 {
   font-size: 24px;
   font-size: 1.5rem; }
+
+h3 {
+  font-size: 22px;
+  font-size: 1.375rem; }
+
+h4 {
+  font-size: 20px;
+  font-size: 1.25rem; }
+
+h5 {
+  font-size: 18px;
+  font-size: 1.125rem; }
 
 h6 {
   font-size: 16px;
@@ -169,6 +169,22 @@ h6 {
 :root {
   font-size: 16px;
   font-size: 1rem; }
+  @media screen and (min-width: 400px) {
+    :root {
+      font-size: 17px;
+      font-size: 1.0625rem; } }
+  @media screen and (min-width: 650px) {
+    :root {
+      font-size: 18px;
+      font-size: 1.125rem; } }
+  @media screen and (min-width: 950px) {
+    :root {
+      font-size: 20px;
+      font-size: 1.25rem; } }
+  @media screen and (min-width: 1250px) {
+    :root {
+      font-size: 22px;
+      font-size: 1.375rem; } }
 
 html {
   width: 100vw;
@@ -181,8 +197,8 @@ html {
     min-height: 100vh;
     min-width: 320px; }
     html body p {
-      font-size: 20px;
-      font-size: 1.25rem; }
+      font-size: 16px;
+      font-size: 1rem; }
     html body header {
       width: 100%;
       padding: 0 15px;
@@ -339,13 +355,16 @@ html {
           margin-bottom: 0; }
           .login .users .user .detail .btn button {
             cursor: pointer;
-            font-size: 24px;
             padding: 0.4em 0.3em;
             background-color: #1b1f3d;
             color: #fff;
             text-transform: capitalize;
             width: 100%;
-            border: 0; }
+            border: 0;
+            font-weight: normal; }
+            .login .users .user .detail .btn button:focus {
+              border: 1px solid #1b1f3d;
+              outline: 0; }
             .login .users .user .detail .btn button:hover {
               opacity: 0.9; }
             @media screen and (min-width: 600px) {
@@ -368,30 +387,34 @@ html {
     @media screen and (min-width: 600px) {
       .products .list {
         flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center; } }
+        flex-wrap: wrap; } }
     .products .list .product {
-      min-height: 100px;
-      padding: 10px;
-      border-radius: 0.5rem;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 1px 0 12px rgba(0, 0, 0, 0.13);
-      width: -webkit-calc(100% - 20px);
-      width: -moz-calc(100% - 20px);
-      width: -ms-calc(100% - 20px);
-      width: -o-calc(100% - 20px);
-      width: calc(100% - 20px);
-      margin: 10px;
-      max-width: 300px;
       display: -webkit-flex;
       display: -moz-flex;
       display: -ms-flex;
       display: -o-flex;
       display: flex;
-      flex-direction: column; }
+      max-width: 320px;
+      width: 100%;
+      margin: 10px;
+      padding: 10px;
+      flex-direction: column;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 1px 0 12px rgba(0, 0, 0, 0.13); }
+      @media screen and (min-width: 600px) {
+        .products .list .product {
+          min-width: -webkit-calc(600px - 40px);
+          min-width: -moz-calc(600px - 40px);
+          min-width: -ms-calc(600px - 40px);
+          min-width: -o-calc(600px - 40px);
+          min-width: calc(600px - 40px);
+          flex-direction: row;
+          align-items: center;
+          min-height: 250px; } }
       .products .list .product .img {
         overflow: hidden;
-        width: 100%;
+        width: 250px;
+        margin: 0 auto 1rem;
         height: 320px;
         background-repeat: no-repeat;
         background-position: center center;
@@ -400,5 +423,83 @@ html {
         -ms-background-size: contain;
         -o-background-size: contain;
         background-size: contain; }
+        @media screen and (min-width: 600px) {
+          .products .list .product .img {
+            width: 200px;
+            padding: 10px;
+            height: 150px;
+            margin-bottom: 0; } }
+      .products .list .product .detail {
+        padding: 10px;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flex;
+        display: -o-flex;
+        display: flex;
+        flex-direction: column;
+        justify-items: stretch;
+        justify-content: space-around;
+        width: 100%; }
+        .products .list .product .detail > * {
+          margin-bottom: 15px; }
+        .products .list .product .detail a {
+          text-decoration: none;
+          color: #333;
+          flex-grow: 2; }
+        .products .list .product .detail .focus {
+          display: -webkit-flex;
+          display: -moz-flex;
+          display: -ms-flex;
+          display: -o-flex;
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          justify-content: space-between; }
+          .products .list .product .detail .focus.right button {
+            font-size: inherit; }
+          .products .list .product .detail .focus.right .price {
+            text-align: right; }
+          .products .list .product .detail .focus span {
+            font-size: 20px;
+            font-size: 1.25rem; }
+          .products .list .product .detail .focus .price {
+            flex-grow: 2; }
+          .products .list .product .detail .focus .cart {
+            margin-left: 15px;
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flex;
+            display: -o-flex;
+            display: flex;
+            justify-content: space-between;
+            width: 120px;
+            align-items: center; }
+            .products .list .product .detail .focus .cart.wide {
+              width: auto; }
+              .products .list .product .detail .focus .cart.wide button {
+                width: 100%; }
+            .products .list .product .detail .focus .cart button {
+              cursor: pointer;
+              padding: 0.4em 0.3em;
+              background-color: #1b1f3d;
+              color: #fff;
+              text-transform: capitalize;
+              width: 100%;
+              border: 0;
+              font-weight: normal;
+              background-color: transparent;
+              border: 1px solid #1b1f3d;
+              width: 40px;
+              padding: 5px;
+              height: 40px;
+              color: #000; }
+              .products .list .product .detail .focus .cart button:focus {
+                border: 1px solid #1b1f3d;
+                outline: 0; }
+              .products .list .product .detail .focus .cart button:hover {
+                opacity: 0.9; }
+              @media screen and (min-width: 600px) {
+                .products .list .product .detail .focus .cart button {
+                  margin: 1px; } }
 
 /*# sourceMappingURL=index.css.map */

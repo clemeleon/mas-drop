@@ -10,7 +10,7 @@ import { Error } from "./Error";
 
 export type ProductProps = { name: string };
 
-export type ProductStates = { product: Product | undefined; loading: boolean };
+export type ProductStates = {};
 
 export class OneProduct extends Component<ProductProps, ProductStates> {
   public static contextType = Context;
@@ -27,10 +27,24 @@ export class OneProduct extends Component<ProductProps, ProductStates> {
         {loading ? (
           <Loading bol={loading} />
         ) : product ? (
-          "found"
+          OneProduct.product(product)
         ) : (
           <Error mgs={`product with the name of (${name}) not found!`} />
         )}
+      </div>
+    );
+  }
+
+  private static product(product: Product) {
+    return (
+      <div className={"inner"}>
+        <h3>{product.name()}</h3>
+        <div
+          className={"img"}
+          style={{ backgroundImage: `url("${product.image}")` }}
+        />
+        <div className={"cart-option"}>cart</div>
+        <div className={"detail"}></div>
       </div>
     );
   }

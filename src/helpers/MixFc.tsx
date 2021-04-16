@@ -5,7 +5,7 @@
 import React, { ReactNode, ComponentType, FC } from "react";
 import { Render } from "./types";
 import { Error } from "../pages/Error";
-import { ProductParams, ProductRouteParams } from "../App";
+import { ProductParams } from "../App";
 
 const Loading: FC<{ bol: boolean }> = ({ bol }): Render => {
     return (
@@ -32,7 +32,7 @@ const Loading: FC<{ bol: boolean }> = ({ bol }): Render => {
     uri: string;
   }> = ({ params, action, names, uri }): Render => {
     const datas: ProductParams = {},
-      mgs = `404 page not found for ${uri}`;
+      mgs = `Url not found with the path of ${uri}`;
     for (const [key, val] of Object.entries(params)) {
       if (names.includes(key)) {
         datas[key] = val;

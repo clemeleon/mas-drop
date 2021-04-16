@@ -7,6 +7,10 @@ import { Context } from "../components/stores/Store";
 import { Product } from "../datas/Product";
 import { Link } from "react-router-dom";
 import { Loading } from "../helpers/MixFc";
+import { Cart } from "../datas/Cart";
+import plus from "../icons/plus.svg";
+import minus from "../icons/minus.svg";
+import remove from "../icons/delete.svg";
 export type ProductsStates = {
   products: Product[];
   loading: boolean;
@@ -16,8 +20,59 @@ export type ProductsProps = {};
 export class Products extends Component<ProductsProps, ProductsStates> {
   public static contextType = Context;
 
+  private action = async (
+    type: string,
+    cart: Cart,
+    pro: Product
+  ): Promise<void> => {
+    if (type === "add") {
+      cart.add(pro.id);
+    } else if (type === "plus") {
+      cart.plus(pro.id);
+    } else {
+      cart.minus(pro.id);
+    }
+    const [, dispatch] = this.context;
+    dispatch({ cart: cart });
+  };
+
+  private cart(product: Product, cart?: Cart) {
+    if (cart instanceof Cart) {
+      const pro = cart.products.find((p) => p.productId === product.id);
+      if (pro) {
+        return (
+          <div className={"cart"}>
+            <button
+              onClick={async () => await this.action("minus", cart, product)}
+            >
+              <img src={pro.quantity === 1 ? remove : minus} />
+            </button>
+            <span className={"count"}>{pro.quantity}</span>
+            <button
+              onClick={async () => await this.action("plus", cart, product)}
+            >
+              <img src={plus} />
+            </button>
+          </div>
+        );
+      } else {
+        return (
+          <div className={"cart wide"}>
+            <button
+              onClick={async () => await this.action("add", cart, product)}
+            >
+              Add to cart
+            </button>
+          </div>
+        );
+      }
+    }
+    return "";
+  }
+
   render() {
-    const [{ loading, products }] = this.context,
+    const [{ loading, products, user, cart }] = this.context,
+      bol = user && cart,
       clas = loading ? " center" : "";
     return (
       <div className={`products container${clas}`}>
@@ -25,15 +80,27 @@ export class Products extends Component<ProductsProps, ProductsStates> {
           <div className={"list"}>
             {products.map((pro: Product) => (
               <div key={pro.id} className={"product"}>
-                <Link to={`/product/${pro.slug()}`}>
-                  <div
-                    className={"img"}
-                    style={{ backgroundImage: `url("${pro.image}")` }}
-                  />
-                  <div className={"detail"}>
-                    <h5>{pro.name()}</h5>
+                <div
+                  className={"img"}
+                  style={{ backgroundImage: `url("${pro.image}")` }}
+                />
+                <div className={"detail"}>
+                  <Link to={`/product/${pro.slug()}`}>
+                    <h1>{pro.name()}</h1>
+                  </Link>
+                  <p>{pro.note()}</p>
+
+                  <div className={"category"}>
+                    <span>{pro.category}</span>
                   </div>
-                </Link>
+
+                  <div className={bol ? "focus" : "focus right"}>
+                    <div className={"price"}>
+                      <span>€{pro.price}</span>
+                    </div>
+                    {bol ? this.cart(pro, cart) : ""}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

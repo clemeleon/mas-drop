@@ -64,6 +64,28 @@
     +font-size($size)
     +line-height($line)
 
+@function strip-unit($value)
+    @return $value / ($value * 0 + 1)
+
+
+=fluid-type($min-vw, $max-vw, $min-font-size, $max-font-size)
+    $u1: unit($min-vw)
+    $u2: unit($max-vw)
+    $u3: unit($min-font-size)
+    $u4: unit($max-font-size)
+
+    @if $u1 == $u2 and $u1 == $u3 and $u1 == $u4
+        &
+            font-size: $min-font-size
+            @media screen and (min-width: $min-vw)
+                font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}))
+
+            @media screen and (min-width: $max-vw)
+                font-size: $max-font-size
+
+
+
+
 //@param vertical | horizontal | both
 =center($pos: both)
     position: absolute
@@ -107,13 +129,17 @@
 
 =btn()
     cursor: pointer
-    font-size: 24px
+    //font-size: 24px
     padding: 0.4em 0.3em
     background-color: $btn
     color: $white
     text-transform: capitalize
     width: 100%
     border: 0
+    font-weight: normal
+    &:focus
+        border: 1px solid $border
+        outline: 0
     &:hover
         opacity: .9
     +media(600px)

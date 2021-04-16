@@ -4,9 +4,12 @@
  */
 import { IData } from "../../faces/IData";
 import { DataType } from "./Store";
+import { Helper } from "../../helpers/Helper";
 
 export class Table<T extends IData, C extends DataType> {
   private datas: C[] = [];
+
+  private engine: Storage = localStorage;
 
   constructor(
     public readonly key: string,
@@ -41,63 +44,23 @@ export class Table<T extends IData, C extends DataType> {
     return temps.length > 0 ? this.populate(temps, fields).shift() : undefined;
   }
 
-  /*public async setx<K extends keyof C>(data: T, keys: K[]): Promise<boolean> {
+  public async set(data: T): Promise<boolean> {
     if (!(await this.load())) {
       return false;
     }
-    const raw: C = JSON.parse(JSON.stringify(data)),
-      old = this.datas.find((one) => {
-        return one.id === raw.id;
-      });
-    if (!old) {
-      return false;
-    }
-    if (Helper.compare(raw, old)) {
-      return true;
-    }
-    const index = this.datas.indexOf(old);
-    this.datas[index] = raw;
-    return this.save();
-  }*/
-
-  public async set<K extends keyof C>(data: T, changes: DataType): Promise<T> {
-    if (!(await this.load())) {
-      return data;
-    }
-    const raw: C = JSON.parse(JSON.stringify(data)),
+    const raw: C = Helper.clone(data),
       old = this.datas.find((one) => {
         return one.id === raw.id;
       }),
-      keys = Object.keys(changes);
+      index = old ? this.datas.indexOf(old) : -1;
     if (!old) {
-      return data;
+      return false;
     }
-    if (keys.length <= 0) {
-      throw new Error("modified keys are needed!");
+    if (!Helper.compare(raw, old) && index > -1) {
+      this.datas[index] = raw;
+      return this.save();
     }
-    const index = this.datas.indexOf(old);
-    let bol = false;
-    for (const key of keys) {
-      if (changes.hasOwnProperty(key) && old.hasOwnProperty(key)) {
-        if (
-          typeof changes[key] === typeof old[key] &&
-          changes[key] !== old[key]
-        ) {
-          if (key === "id") {
-            throw new Error("Can not change id!");
-          }
-          raw[key as K] = this.update(raw[key as K], changes[key]);
-          this.datas[index][key as K] = raw[key as K];
-          if (!bol) {
-            bol = true;
-          }
-        }
-      }
-    }
-    if (bol) {
-      this.save();
-    }
-    return this.populate([raw])[0];
+    return false;
   }
 
   private update(data: any, update: any): any {
@@ -119,7 +82,7 @@ export class Table<T extends IData, C extends DataType> {
       return true;
     }
     try {
-      let strs = localStorage.getItem(this.key),
+      let strs = this.engine.getItem(this.key),
         datas = strs && strs.length > 0 ? JSON.parse(strs) : [];
       if (datas.length <= 0) {
         datas = this.format(await this.fetch(this.key));
@@ -132,7 +95,7 @@ export class Table<T extends IData, C extends DataType> {
   private save(): boolean {
     try {
       if (this.datas.length > 0) {
-        localStorage.setItem(this.key, JSON.stringify(this.datas));
+        this.engine.setItem(this.key, JSON.stringify(this.datas));
         return true;
       }
     } catch (e) {}
@@ -214,7 +177,7 @@ export class Table<T extends IData, C extends DataType> {
           }
         }
         if (value) {
-          classes.push(new this.type(value));
+          classes.push(new this.type(Helper.clone(value)));
         }
       }
     } catch (e) {

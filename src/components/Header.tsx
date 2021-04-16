@@ -2,6 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Render } from "../helpers/types";
 import { Context, StoreStates } from "./stores/Store";
+import basket from "../icons/basket.svg";
+import login from "../icons/login.svg";
+import logout from "../icons/logout.svg";
+import { Cart, CartProduct } from "../datas/Cart";
+import { Helper } from "../helpers/Helper";
 
 /** Header props and states */
 export type HeaderProps = {};
@@ -16,12 +21,13 @@ export class Header extends Component<HeaderProps, HeaderStates> {
 
   private logout = (): void => {
     const [, dispatch] = this.context;
-    dispatch({ id: 0 });
+    dispatch({ state: { id: 0 } });
   };
 
   public render(): Render {
-    const [{ user }] = this.context,
-      auth = user;
+    const [{ user, cart }] = this.context,
+      auth = user,
+      count = cart instanceof Cart ? Helper.cartCount(cart) : 0;
     return (
       <header>
         <div className={"logo"}>
@@ -31,7 +37,17 @@ export class Header extends Component<HeaderProps, HeaderStates> {
         <div className={"nav"}>
           <nav>
             <Link to={"/products"}>Products</Link>
-            {auth ? <Link to={"/carts"}>Carts</Link> : ""}
+            {auth && cart ? (
+              <Link to={"/carts"}>
+                <span>
+                  <img src={basket} />
+                </span>
+                <span>{count}</span>
+                <span>Cart</span>
+              </Link>
+            ) : (
+              ""
+            )}
             {auth ? (
               <a
                 href={"/logout"}
@@ -40,10 +56,14 @@ export class Header extends Component<HeaderProps, HeaderStates> {
                   this.logout();
                 }}
               >
-                Logout
+                <img src={logout} />
+                <span>Logout</span>
               </a>
             ) : (
-              <Link to={"/"}>Login</Link>
+              <Link to={"/"}>
+                <img src={login} />
+                <span>Login</span>
+              </Link>
             )}
           </nav>
         </div>

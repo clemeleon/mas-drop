@@ -1,3 +1,5 @@
+import { Cart } from "../datas/Cart";
+
 export class Helper {
   /**Compare two values if they are same*/
   static compare = (one: any, two: any): boolean => {
@@ -96,5 +98,14 @@ export class Helper {
       }
     }
     return bol;
+  }
+
+  static clone<T>(clone: any): T {
+    return JSON.parse(JSON.stringify(clone));
+  }
+
+  static cartCount(cart: Cart): number {
+    const counts = cart.products.map((c) => c.quantity);
+    return counts.reduce((one, two) => one + two);
   }
 }

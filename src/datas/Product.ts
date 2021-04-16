@@ -31,6 +31,10 @@ export class Product implements IData {
     return Helper.truncate(this.title, 20);
   }
 
+  public note(limit: number = 50): string {
+    return Helper.truncate(this.description, limit);
+  }
+
   public slug(): string {
     return Helper.slug(this.title);
   }
