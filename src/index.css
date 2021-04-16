@@ -397,8 +397,55 @@ html {
         display: flex;
         flex-direction: column;
         width: 100%; }
+        .products .list .product .detail > * {
+          margin-bottom: 15px; }
         .products .list .product .detail a {
           text-decoration: none;
           color: #333; }
+        .products .list .product .detail .focus {
+          display: -webkit-flex;
+          display: -moz-flex;
+          display: -ms-flex;
+          display: -o-flex;
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          justify-content: space-between; }
+          .products .list .product .detail .focus.right .price {
+            text-align: right; }
+          .products .list .product .detail .focus span {
+            font-size: 35px;
+            font-size: 2.1875rem; }
+          .products .list .product .detail .focus .price {
+            flex-grow: 2; }
+          .products .list .product .detail .focus .cart {
+            margin-left: 15px;
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flex;
+            display: -o-flex;
+            display: flex;
+            justify-content: space-between;
+            width: 120px;
+            align-items: center; }
+            .products .list .product .detail .focus .cart.wide {
+              width: auto; }
+              .products .list .product .detail .focus .cart.wide button {
+                width: 100%; }
+            .products .list .product .detail .focus .cart button {
+              cursor: pointer;
+              font-size: 24px;
+              padding: 0.4em 0.3em;
+              background-color: #1b1f3d;
+              color: #fff;
+              text-transform: capitalize;
+              width: 100%;
+              border: 0;
+              width: 40px; }
+              .products .list .product .detail .focus .cart button:hover {
+                opacity: 0.9; }
+              @media screen and (min-width: 600px) {
+                .products .list .product .detail .focus .cart button {
+                  margin: 1px; } }
 
 /*# sourceMappingURL=index.css.map */

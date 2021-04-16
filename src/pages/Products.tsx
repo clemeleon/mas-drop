@@ -38,25 +38,29 @@ export class Products extends Component<ProductsProps, ProductsStates> {
       const pro = cart.products.find((p) => p.productId === product.id);
       if (pro) {
         return (
-          <>
+          <div className={"cart"}>
             <button
               onClick={async () => await this.action("plus", cart, product)}
             >
               +
             </button>
-            <span>{pro.quantity}</span>
+            <span className={"count"}>{pro.quantity}</span>
             <button
               onClick={async () => await this.action("minus", cart, product)}
             >
               -
             </button>
-          </>
+          </div>
         );
       } else {
         return (
-          <button onClick={async () => await this.action("add", cart, product)}>
-            Add to cart
-          </button>
+          <div className={"cart wide"}>
+            <button
+              onClick={async () => await this.action("add", cart, product)}
+            >
+              Add to cart
+            </button>
+          </div>
         );
       }
     }
@@ -82,11 +86,13 @@ export class Products extends Component<ProductsProps, ProductsStates> {
                     <h5>{pro.name()}</h5>
                   </Link>
                   <p>{pro.note()}</p>
-                  {bol ? (
-                    <div className={"cart"}>{this.cart(pro, cart)}</div>
-                  ) : (
-                    ""
-                  )}
+
+                  <div className={bol ? "focus" : "focus right"}>
+                    <div className={"price"}>
+                      <span>€{pro.price}</span>
+                    </div>
+                    {bol ? this.cart(pro, cart) : ""}
+                  </div>
                 </div>
               </div>
             ))}
