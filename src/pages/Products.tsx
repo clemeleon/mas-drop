@@ -8,6 +8,9 @@ import { Product } from "../datas/Product";
 import { Link } from "react-router-dom";
 import { Loading } from "../helpers/MixFc";
 import { Cart } from "../datas/Cart";
+import plus from "../icons/plus.svg";
+import minus from "../icons/minus.svg";
+import remove from "../icons/delete.svg";
 export type ProductsStates = {
   products: Product[];
   loading: boolean;
@@ -40,15 +43,15 @@ export class Products extends Component<ProductsProps, ProductsStates> {
         return (
           <div className={"cart"}>
             <button
-              onClick={async () => await this.action("plus", cart, product)}
+              onClick={async () => await this.action("minus", cart, product)}
             >
-              +
+              <img src={pro.quantity === 1 ? remove : minus} />
             </button>
             <span className={"count"}>{pro.quantity}</span>
             <button
-              onClick={async () => await this.action("minus", cart, product)}
+              onClick={async () => await this.action("plus", cart, product)}
             >
-              -
+              <img src={plus} />
             </button>
           </div>
         );
@@ -83,9 +86,13 @@ export class Products extends Component<ProductsProps, ProductsStates> {
                 />
                 <div className={"detail"}>
                   <Link to={`/product/${pro.slug()}`}>
-                    <h5>{pro.name()}</h5>
+                    <h1>{pro.name()}</h1>
                   </Link>
                   <p>{pro.note()}</p>
+
+                  <div className={"category"}>
+                    <span>{pro.category}</span>
+                  </div>
 
                   <div className={bol ? "focus" : "focus right"}>
                     <div className={"price"}>
