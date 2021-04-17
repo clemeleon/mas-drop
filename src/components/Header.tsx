@@ -5,8 +5,9 @@ import { Context, StoreStates } from "./stores/Store";
 import basket from "../icons/basket.svg";
 import login from "../icons/login.svg";
 import logout from "../icons/logout.svg";
+import manage from "../icons/manage.svg";
 import logo from "../icons/logo.svg";
-import { Cart, CartProduct } from "../datas/Cart";
+import { Cart } from "../datas/Cart";
 import { Helper } from "../helpers/Helper";
 
 /** Header props and states */
@@ -41,16 +42,26 @@ export class Header extends Component<HeaderProps, HeaderStates> {
               <span className={"icon"} />
               <span className={"txt"}>Products</span>
             </Link>
-            {auth && cart ? (
-              <Link to={"/carts"}>
-                <span
-                  className={"icon"}
-                  style={{ backgroundImage: `url("${basket}")` }}
-                >
-                  <span className={"count"}>{count}</span>
-                </span>
-                <span className={"txt"}>Cart</span>
-              </Link>
+            {auth ? (
+              cart ? (
+                <Link to={"/carts"}>
+                  <span
+                    className={"icon"}
+                    style={{ backgroundImage: `url("${basket}")` }}
+                  >
+                    <span className={"count"}>{count}</span>
+                  </span>
+                  <span className={"txt"}>Cart</span>
+                </Link>
+              ) : (
+                <Link to={"/manage"}>
+                  <span
+                    className={"icon"}
+                    style={{ backgroundImage: `url("${manage}")` }}
+                  />
+                  <span className={"txt"}>Manage</span>
+                </Link>
+              )
             ) : (
               ""
             )}

@@ -6,6 +6,12 @@ import React, { ReactNode, ComponentType, FC } from "react";
 import { Render } from "./types";
 import { Error } from "../pages/Error";
 import { ProductParams } from "../App";
+import { Product } from "../datas/Product";
+import { Cart } from "../datas/Cart";
+import remove from "../icons/delete.svg";
+import minus from "../icons/minus.svg";
+import plus from "../icons/plus.svg";
+import { Helper } from "./Helper";
 
 const Loading: FC<{ bol: boolean }> = ({ bol }): Render => {
     return (
@@ -48,6 +54,56 @@ const Loading: FC<{ bol: boolean }> = ({ bol }): Render => {
         )}
       </>
     );
+  },
+  CartAction: FC<{
+    dispatch: Function;
+    product: Product;
+    cart?: Cart;
+  }> = ({ dispatch, product, cart }): Render => {
+    if (cart instanceof Cart) {
+      const pro = cart.products.find((p) => p.productId === product.id);
+      if (pro) {
+        const stop = pro.approved;
+        return stop ? (
+          <></>
+        ) : (
+          <div className={"cart"}>
+            <button
+              className={stop ? "stop" : ""}
+              disabled={stop}
+              onClick={() =>
+                Helper.cartAction(dispatch, "minus", cart, product.id)
+              }
+            >
+              <img src={pro.quantity === 1 ? remove : minus} alt={"minus"} />
+            </button>
+            <span className={"count"}>{pro.quantity}</span>
+            <button
+              className={stop ? "stop" : ""}
+              disabled={stop}
+              onClick={() =>
+                Helper.cartAction(dispatch, "plus", cart, product.id)
+              }
+            >
+              <img src={plus} alt={"plus"} />
+            </button>
+          </div>
+        );
+      } else {
+        return (
+          <div className={"cart wide"}>
+            <button
+              onClick={() =>
+                Helper.cartAction(dispatch, "add", cart, product.id)
+              }
+            >
+              Add to cart
+            </button>
+          </div>
+        );
+      }
+    }
+    return <></>;
   };
 
-export { Loading, Auth, Conditional };
+export { Loading, Auth, Conditional, CartAction };

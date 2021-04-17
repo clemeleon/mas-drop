@@ -78,7 +78,6 @@
       .products .list .product .detail > *, .carts .cart-products .list .product .detail > * {
         margin-bottom: 15px; }
       .products .list .product .detail a, .carts .cart-products .list .product .detail a {
-        text-decoration: none;
         color: #333;
         flex-grow: 2; }
       .products .list .product .detail .focus, .carts .cart-products .list .product .detail .focus {
@@ -227,7 +226,6 @@
       .products .list .product .detail > *, .carts .cart-products .list .product .detail > * {
         margin-bottom: 15px; }
       .products .list .product .detail a, .carts .cart-products .list .product .detail a {
-        text-decoration: none;
         color: #333;
         flex-grow: 2; }
       .products .list .product .detail .focus, .carts .cart-products .list .product .detail .focus {
@@ -438,7 +436,6 @@ h6 {
       .products .list .product .detail > *, .carts .cart-products .list .product .detail > * {
         margin-bottom: 15px; }
       .products .list .product .detail a, .carts .cart-products .list .product .detail a {
-        text-decoration: none;
         color: #333;
         flex-grow: 2; }
       .products .list .product .detail .focus, .carts .cart-products .list .product .detail .focus {
@@ -693,7 +690,6 @@ h6 {
       .products .list .product .detail > *, .carts .cart-products .list .product .detail > * {
         margin-bottom: 15px; }
       .products .list .product .detail a, .carts .cart-products .list .product .detail a {
-        text-decoration: none;
         color: #333;
         flex-grow: 2; }
       .products .list .product .detail .focus, .carts .cart-products .list .product .detail .focus {
@@ -995,7 +991,6 @@ html {
       .products .list .product .detail > *, .carts .cart-products .list .product .detail > * {
         margin-bottom: 15px; }
       .products .list .product .detail a, .carts .cart-products .list .product .detail a {
-        text-decoration: none;
         color: #333;
         flex-grow: 2; }
       .products .list .product .detail .focus, .carts .cart-products .list .product .detail .focus {
@@ -1147,7 +1142,6 @@ html {
       .products .list .product .detail > *, .carts .cart-products .list .product .detail > * {
         margin-bottom: 15px; }
       .products .list .product .detail a, .carts .cart-products .list .product .detail a {
-        text-decoration: none;
         color: #333;
         flex-grow: 2; }
       .products .list .product .detail .focus, .carts .cart-products .list .product .detail .focus {
@@ -1400,7 +1394,6 @@ html {
       .products .list .product .detail > *, .carts .cart-products .list .product .detail > * {
         margin-bottom: 15px; }
       .products .list .product .detail a, .carts .cart-products .list .product .detail a {
-        text-decoration: none;
         color: #333;
         flex-grow: 2; }
       .products .list .product .detail .focus, .carts .cart-products .list .product .detail .focus {
@@ -1471,6 +1464,17 @@ html {
 
 .products {
   overflow-x: hidden; }
+
+.product {
+  overflow-x: hidden; }
+  .product .pic {
+    height: 500px;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -ms-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+    background-repeat: no-repeat; }
 
 .products .list .product, .carts .cart-products .list .product, .carts .cart-products .info, .carts .cart-products .list {
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -1552,7 +1556,6 @@ html {
       .products .list .product .detail > *, .carts .cart-products .list .product .detail > * {
         margin-bottom: 15px; }
       .products .list .product .detail a, .carts .cart-products .list .product .detail a {
-        text-decoration: none;
         color: #333;
         flex-grow: 2; }
       .products .list .product .detail .focus, .carts .cart-products .list .product .detail .focus {

@@ -38,13 +38,14 @@ export class OneProduct extends Component<ProductProps, ProductStates> {
   private static product(product: Product) {
     return (
       <div className={"inner"}>
-        <h3>{product.name()}</h3>
         <div
-          className={"img"}
+          className={"pic"}
           style={{ backgroundImage: `url("${product.image}")` }}
         />
-        <div className={"cart-option"}>cart</div>
-        <div className={"detail"}></div>
+        <div className={"detail"}>
+          <h3>{product.title}</h3>
+          <p>{product.description}</p>
+        </div>
       </div>
     );
   }

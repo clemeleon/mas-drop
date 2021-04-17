@@ -1,5 +1,9 @@
 import { Cart, CartProductType } from "../datas/Cart";
 import { Product } from "../datas/Product";
+import remove from "../icons/delete.svg";
+import minus from "../icons/minus.svg";
+import plus from "../icons/plus.svg";
+import React from "react";
 
 export class Helper {
   /**Compare two values if they are same*/
@@ -133,5 +137,25 @@ export class Helper {
       total.reduce((tot, b) => tot + b),
       approved.length,
     ];
+  }
+
+  static cartAction(
+    dispatch: Function,
+    type: string,
+    cart: Cart,
+    id: number
+  ): void {
+    if (type === "add") {
+      cart.add(id);
+    } else if (type === "plus") {
+      cart.plus(id);
+    } else if (type === "minus") {
+      cart.minus(id);
+    } else if (type === "accept") {
+      cart.changeStatus(id, true);
+    } else if (type === "cancel") {
+      cart.changeStatus(id, false);
+    }
+    dispatch({ cart: cart });
   }
 }
