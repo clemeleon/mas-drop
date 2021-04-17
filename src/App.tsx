@@ -18,6 +18,7 @@ import { Error } from "./pages/Error";
 import { Auth, Conditional } from "./helpers/MixFc";
 import { User } from "./datas/User";
 import { Login } from "./pages/Login";
+import { Manage } from "./pages/Manage";
 
 export type ProductParams = { [key: string]: any };
 
@@ -46,7 +47,9 @@ class App extends Component<AppProps, AppStates> {
   }
 
   public render(): Render {
-    const [{ id, user }] = this.context;
+    const [{ id, user }] = this.context,
+      parent = id > 0 && user instanceof User && user.parent === 0,
+      child = id > 0 && user instanceof User && user.parent !== 0;
     return (
       <div className="app">
         <Router>
@@ -79,8 +82,16 @@ class App extends Component<AppProps, AppStates> {
             <Route exact path="/carts">
               <Auth
                 lose={false}
-                condition={id > 0 && user instanceof User}
+                condition={child}
                 main={<Carts />}
+                other={<Redirect to={"/"} />}
+              />
+            </Route>
+            <Route exact path="/manage">
+              <Auth
+                lose={false}
+                condition={parent}
+                main={<Manage />}
                 other={<Redirect to={"/"} />}
               />
             </Route>

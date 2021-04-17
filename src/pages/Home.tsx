@@ -20,7 +20,7 @@ export class Home extends Component<HomeProps, HomeStates> {
   }
 
   public render(): Render {
-    const [{ user, loading, carts }] = this.context,
+    const [{ user, loading }] = this.context,
       clas = loading ? " center" : "";
     return (
       <div className={`home container${clas}`}>
