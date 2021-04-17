@@ -11,6 +11,7 @@ import { Cart } from "../datas/Cart";
 import plus from "../icons/plus.svg";
 import minus from "../icons/minus.svg";
 import remove from "../icons/delete.svg";
+import { ProductCard } from "../components/ProductCard";
 export type ProductsStates = {
   products: Product[];
   loading: boolean;
@@ -23,14 +24,14 @@ export class Products extends Component<ProductsProps, ProductsStates> {
   private action = async (
     type: string,
     cart: Cart,
-    pro: Product
+    id: number
   ): Promise<void> => {
     if (type === "add") {
-      cart.add(pro.id);
+      cart.add(id);
     } else if (type === "plus") {
-      cart.plus(pro.id);
+      cart.plus(id);
     } else {
-      cart.minus(pro.id);
+      cart.minus(id);
     }
     const [, dispatch] = this.context;
     dispatch({ cart: cart });
@@ -43,15 +44,15 @@ export class Products extends Component<ProductsProps, ProductsStates> {
         return (
           <div className={"cart"}>
             <button
-              onClick={async () => await this.action("minus", cart, product)}
+              onClick={async () => await this.action("minus", cart, product.id)}
             >
-              <img src={pro.quantity === 1 ? remove : minus} />
+              <img src={pro.quantity === 1 ? remove : minus} alt={"minus"} />
             </button>
             <span className={"count"}>{pro.quantity}</span>
             <button
-              onClick={async () => await this.action("plus", cart, product)}
+              onClick={async () => await this.action("plus", cart, product.id)}
             >
-              <img src={plus} />
+              <img src={plus} alt={"plus"} />
             </button>
           </div>
         );
@@ -59,7 +60,7 @@ export class Products extends Component<ProductsProps, ProductsStates> {
         return (
           <div className={"cart wide"}>
             <button
-              onClick={async () => await this.action("add", cart, product)}
+              onClick={async () => await this.action("add", cart, product.id)}
             >
               Add to cart
             </button>
@@ -70,7 +71,7 @@ export class Products extends Component<ProductsProps, ProductsStates> {
     return "";
   }
 
-  render() {
+  /*render() {
     const [{ loading, products, user, cart }] = this.context,
       bol = user && cart,
       clas = loading ? " center" : "";
@@ -104,6 +105,21 @@ export class Products extends Component<ProductsProps, ProductsStates> {
               </div>
             ))}
           </div>
+        ) : (
+          <Loading bol={loading} />
+        )}
+      </div>
+    );
+  }*/
+
+  render() {
+    const [{ loading, products, user, cart }] = this.context,
+      bol = user && cart,
+      clas = loading ? " center" : "";
+    return (
+      <div className={`products container${clas}`}>
+        {!loading ? (
+          <ProductCard bol={bol} cat={true} products={products} />
         ) : (
           <Loading bol={loading} />
         )}

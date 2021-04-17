@@ -7,6 +7,6 @@ export type FooterStates = {};
 
 export class Footer extends Component<FooterProps, FooterStates> {
   render(): Render {
-    return <footer>footer</footer>;
+    return <footer className={"footer"}>footer</footer>;
   }
 }

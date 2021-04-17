@@ -48,7 +48,7 @@ class App extends Component<AppProps, AppStates> {
   public render(): Render {
     const [{ id, user }] = this.context;
     return (
-      <div className="App">
+      <div className="app">
         <Router>
           <Header />
           <Switch>
