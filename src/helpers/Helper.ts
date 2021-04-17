@@ -1,4 +1,5 @@
-import { Cart } from "../datas/Cart";
+import { Cart, CartProductType } from "../datas/Cart";
+import { Product } from "../datas/Product";
 
 export class Helper {
   /**Compare two values if they are same*/
@@ -107,5 +108,30 @@ export class Helper {
   static cartCount(cart: Cart): number {
     const counts = cart.products.map((c) => c.quantity);
     return counts.reduce((one, two) => one + two);
+  }
+
+  static cartTotal(cart: Cart, products: Product[]): [number, number, number] {
+    const content = cart.products.map((p: CartProductType) => {
+        const product: Product | undefined = products.find(
+          (p1: Product) => p1.id === p.productId
+        );
+        if (!product) {
+          return { qty: 0, amount: 0, accepted: false };
+        }
+        return {
+          qty: p.quantity,
+          amount: product.price * p.quantity,
+          accepted: p.approved,
+        };
+      }),
+      amounts = content.map(({ amount }) => amount),
+      total = content.map(({ qty }) => qty),
+      amount = amounts.reduce((tot, b) => tot + b),
+      approved = content.filter(({ accepted }) => accepted);
+    return [
+      Math.round((amount + Number.EPSILON) * 100) / 100,
+      total.reduce((tot, b) => tot + b),
+      approved.length,
+    ];
   }
 }

@@ -1,5 +1,10 @@
 @import "../imports/helper"
-\:root
+html, body, #root, .app
+    width: 100%
+    min-width: 320px
+    overflow-x: hidden
+    min-height: 100vh
+html
     +font-size($base-size)
     +media(400px)
         +font-size($base-size + 1)
@@ -9,91 +14,92 @@
         +font-size($base-size + 4)
     +media(1250px)
         +font-size($base-size + 6)
-html
-    width: 100vw
-    height: 100%
-    overflow-x: hidden
-    min-width: 320px
-    //+fluid-type($min_width, $max_width, $min_font, $max_font)
-
     body
-        width: 100%
-        height: 100%
-        min-height: 100vh
-        min-width: 320px
         color: $color-666
         p
             +font-size(16)
-        //header
-        header
-            +calc(width, '100% - 30px')
+        header, footer
+            height: 80px
             max-width: 1300px
             margin: 0 auto
-            padding: 0 15px
-            height: 80px
-
-            border-bottom: 1px solid $border
-            +flexbox()
-            justify-content: space-between
-            .logo
-                width: 100px
-                height: 100%
+            &.header
+                border-bottom: 1px solid $border
                 +flexbox()
-                justify-content: center
-                align-items: center
-            .nav
-                +flexbox()
-                justify-content: center
-                align-items: center
-                height: 100%
-                nav
-                    width: 100%
-                    +flexbox()
-                    justify-content: flex-end
+                flex-direction: row
+                .logo
+                    width: 100px
+                    padding: 10px
                     a
-                        margin: 5px
-                        +flexbox()
-                        +font-size(14)
-                        text-decoration: none
-                        align-items: center
                         text-align: center
-                        justify-content: center
-                        position: relative
-                        width: 80px
-                        min-width: 60px
-                        color: $color-666
-                        > *
-                            margin-right: 10px
-                        .icon
-                            width: 20px
-                        .count
-                            position: absolute
-                            top: -30%
-                            left: 30%
-                            +font-size(8)
-                            background-color: green
-                            color: $white
-                            padding: 3px
-                            border-radius: 50%
-                            width: 16px
-                            height: 16px
+                        display: block
+                        +background-size(contain)
+                        background-repeat: no-repeat
+                        height: 100%
+                        width: 80%
+                        margin: 0 auto
+                .nav
+                    flex-grow: 2
+                    nav
+                        height: 100%
+                        +flexbox()
+                        flex-direction: row
+                        justify-content: flex-end
+                        align-items: center
+                        a
+                            +flexbox()
+                            flex-direction: column
+                            justify-content: center
+                            align-items: center
+                            width: auto
+                            min-width: 70px
+                            height: 40px
                             text-align: center
-        //footer
-        footer
-            width: 100%
-            border-top: 1px solid $border
-            +calc(width, '100% - 30px')
-            max-width: 1300px
-            margin: 0 auto
-            padding: 0 15px
-            height: 80px
+                            margin-right: 10px
+                            //border: 1px solid $border
+                            text-decoration: none
+                            color: $color-666
+                            +media(400px)
+                                padding: 2px
+                                flex-direction: row
+                                width: auto
+                                justify-content: space-between
+                                > *
+                                    margin-right: 10px
 
+                            .count
+                                +center(both)
+                                +font-size(9)
+                                top: -90%
+                                left: 130%
+                                width: 20px
+                                height: 20px
+                                padding: 7px 0 0 0
+                                text-align: center
+                                vertical-align: center
+                                border-radius: 50%
+                                background-color: $logo-color
+                                +media(400px)
+                                    top: -120%
+                                    left: 110%
+                                    width: 25px
+                                    height: 25px
+
+                            .icon
+                                position: relative
+                                +background-size(contain)
+                                background-repeat: no-repeat
+                                height: 20px
+                                width: 20px
+
+            &.footer
+                border-top: 1px solid $border
 
         .container
-            margin: 0 auto
-            max-width: 1300px
-            width: 95%
             min-width: 320px
+            max-width: 1300px
+            margin: 0 auto
+            width: 95%
+            padding: 10px
             +calc(min-height, '100vh - 180px')
             overflow-x: hidden
             &.center
@@ -101,4 +107,121 @@ html
                 justify-content: center
                 align-items: center
                 text-align: center
+
+
+
+
+
+
+//html
+    width: 100%
+    min-height: 100vh
+    overflow-x: hidden
+    min-width: 320px
+    margin: 0
+    padding: 0
+    +font-size($base-size)
+    +media(400px)
+        +font-size($base-size + 1)
+    +media(650px)
+        +font-size($base-size + 2)
+    +media(950px)
+        +font-size($base-size + 4)
+    +media(1250px)
+        +font-size($base-size + 6)
+        //+fluid-type($min_width, $max_width, $min_font, $max_font)
+
+    body
+        width: 100%
+        min-height: 100vh
+        min-width: 320px
+        color: $color-666
+        margin: 0
+        padding: 0
+        p
+            +font-size(16)
+        #root, .app
+            width: 100%
+            min-height: 100vh
+            //header
+            header
+                margin: 0 auto
+                //padding: 0 15px
+                height: 80px
+
+                border-bottom: 1px solid $border
+                +flexbox()
+                justify-content: space-between
+                .logo
+                    width: 100px
+                    height: 100%
+                    padding: 4px
+                    +flexbox()
+                    justify-content: center
+                    align-items: center
+                    a
+                        display: block
+                        width: 100%
+                        height: 100%
+                        > img
+                            display: block
+                            height: 60px
+                .nav
+                    padding: 2px
+                    +flexbox()
+                    justify-content: center
+                    align-items: center
+                    height: 100%
+                    nav
+                        width: 100%
+                        +flexbox()
+                        justify-content: flex-end
+                        a
+                            margin: 5px
+                            +flexbox()
+                            +font-size(14)
+                            text-decoration: none
+                            align-items: center
+                            text-align: center
+                            justify-content: center
+                            position: relative
+                            width: 80px
+                            min-width: 60px
+                            color: $color-666
+                            > *
+                                margin-right: 10px
+                            .icon
+                                width: 20px
+                            .count
+                                position: absolute
+                                top: -30%
+                                left: 30%
+                                +font-size(8)
+                                background-color: $logo-color
+                                color: $white
+                                padding: 3px
+                                border-radius: 50%
+                                width: 16px
+                                height: 16px
+                                text-align: center
+            //footer
+            footer
+                width: 100%
+                border-top: 1px solid $border
+                +calc(width, '100% - 30px')
+                max-width: 1300px
+                margin: 0 auto
+                padding: 0 15px
+                height: 80px
+
+
+            .container
+                min-width: 320px
+                +calc(min-height, '100vh - 180px')
+                overflow-x: hidden
+                &.center
+                    +flexbox()
+                    justify-content: center
+                    align-items: center
+                    text-align: center
 

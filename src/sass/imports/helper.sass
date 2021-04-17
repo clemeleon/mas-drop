@@ -117,16 +117,11 @@
     visibility: visible
     opacity: 1
     +prefix(transition-delay, 0s)
-%show
-    +show()
 
 =hide()
     visibility: hidden
     opacity: 0
     +transition(visibility 0s linear 0.5s, opacity 0.5s linear)
-%hide
-    +hide()
-
 =btn()
     cursor: pointer
     //font-size: 24px
@@ -144,5 +139,5 @@
         opacity: .9
     +media(600px)
         margin: 1px
-%btn
-    +btn()
+
+@import "placeholder"

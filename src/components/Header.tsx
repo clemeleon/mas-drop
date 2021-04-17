@@ -5,6 +5,7 @@ import { Context, StoreStates } from "./stores/Store";
 import basket from "../icons/basket.svg";
 import login from "../icons/login.svg";
 import logout from "../icons/logout.svg";
+import logo from "../icons/logo.svg";
 import { Cart, CartProduct } from "../datas/Cart";
 import { Helper } from "../helpers/Helper";
 
@@ -29,21 +30,26 @@ export class Header extends Component<HeaderProps, HeaderStates> {
       auth = user,
       count = cart instanceof Cart ? Helper.cartCount(cart) : 0;
     return (
-      <header>
+      <header className={"header"}>
         <div className={"logo"}>
-          <Link to={"/"}>logo</Link>
+          <Link to={"/"} style={{ backgroundImage: `url("${logo}")` }} />
         </div>
 
         <div className={"nav"}>
           <nav>
-            <Link to={"/products"}>Products</Link>
+            <Link to={"/products"}>
+              <span className={"icon"} />
+              <span className={"txt"}>Products</span>
+            </Link>
             {auth && cart ? (
               <Link to={"/carts"}>
-                <span>
-                  <img src={basket} />
+                <span
+                  className={"icon"}
+                  style={{ backgroundImage: `url("${basket}")` }}
+                >
+                  <span className={"count"}>{count}</span>
                 </span>
-                <span className={"count"}>{count}</span>
-                <span>Cart</span>
+                <span className={"txt"}>Cart</span>
               </Link>
             ) : (
               ""
@@ -56,17 +62,19 @@ export class Header extends Component<HeaderProps, HeaderStates> {
                   this.logout();
                 }}
               >
-                <span className={"icon"}>
-                  <img src={logout} />
-                </span>
-                <span>Logout</span>
+                <span
+                  className={"icon"}
+                  style={{ backgroundImage: `url("${logout}")` }}
+                />
+                <span className={"txt"}>Logout</span>
               </a>
             ) : (
               <Link to={"/"}>
-                <span className={"icon"}>
-                  <img src={login} />
-                </span>
-                <span>Login</span>
+                <span
+                  className={"icon"}
+                  style={{ backgroundImage: `url("${login}")` }}
+                />
+                <span className={"txt"}>Login</span>
               </Link>
             )}
           </nav>

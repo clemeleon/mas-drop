@@ -29,7 +29,7 @@ export class Home extends Component<HomeProps, HomeStates> {
         ) : (
           <>
             <div>{user.fullName()}</div>
-            <button onClick={() => this.test(carts)}>Click</button>
+            {/*<button onClick={() => this.test(carts)}>Click</button>*/}
           </>
         )}
       </div>
