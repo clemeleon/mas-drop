@@ -62,37 +62,3 @@
                 +media(1020px)
                     width: 100%
 
-//.carts
-    +flexbox()
-    flex-direction: column
-    .cart-products
-        +flexbox()
-        flex-direction: column-reverse
-        +media(1020px)
-            justify-content: center
-            flex-direction: row
-        .info
-            max-width: 320px
-            width: 100%
-            margin: 15px auto auto
-            @extend %card
-            padding: 10px
-            +media(600px)
-                +calc(min-width, '600px - 60px')
-            +media(1020px)
-                margin-top: 22px
-                width: auto
-                min-width:  300px
-        .list
-            @extend %list
-            flex-direction: column !important
-            .product
-                border: 0
-                //border-bottom: 1px solid $border
-                //&:first-child
-                    border-top: 1px solid $border
-                .focus
-                    justify-content: flex-end !important
-                    align-items: flex-end
-                    > *
-                        flex-grow: 0 !important
