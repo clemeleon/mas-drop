@@ -48,7 +48,6 @@ export type StoreItem = [
     state?: { [K in keyof StoreStates]: any };
     cart?: Cart;
   }) => void
-  //(state: { [K in keyof StoreStates]: any }) => void
 ];
 
 const schema = new Schema(),
@@ -63,7 +62,6 @@ const schema = new Schema(),
       loading: true,
     },
     ({ state, cart }): void => {},
-    //(state: { [K in keyof StoreStates]: any }): void => {},
   ],
   Context = createContext<StoreItem>(Def),
   { Provider, Consumer } = Context;
@@ -161,7 +159,6 @@ class Store extends Component<StoreProps, StoreStates> {
     nextContext: any
   ): boolean {
     try {
-      //console.log(this.state, nextState);
       if (Helper.state(this.state, nextState)) {
         const { id } = this.state,
           key = nextState.id;

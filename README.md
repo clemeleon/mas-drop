@@ -31,7 +31,7 @@ parent can log in and manage their children items and children can log in and ma
 * log in as who is needed, from parent to children from the home screen.
 
 ### Dependencies and others
-* The only dependency I have added is (react-router-dom).
+* The only dependency I have used are (create-react-app, react-router-dom and prettier).
 * Used SASS for css and OOP style with typescript
 * Global State, local-storage for app data store and session-storage is used for sign in user.
 * I used class component as I love OOP and separation of concern, I want everything to be separate.
