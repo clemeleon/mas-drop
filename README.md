@@ -1,46 +1,44 @@
-# Getting Started with Create React App
+#Drop Mas 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Drop mas is a place where parents can manage their children shopping and spending.
+Children can choose whatever they wanted, and the parent can decide if he/she will accept it.
 
-## Available Scripts
+## App Features
+In this app, parent have full control over their children cart and items and also children have free control to choose whatever they want and parent have to accept their selection if they find it reasonable.
+parent can log in and manage their children items and children can log in and make changes to item which is not yet approved by parent.
 
-In the project directory, you can run:
+### Parent features
+* Can log in and log out
+* Can manage their kids carts, by removing item or reduce the amount per items
+* Can accept or just ignore children selected items
+* Parent have full details and overview of all items by all children.
+* Can see the total amount of items selected by children and also full details of individual child items.
+* Accepted item by parent will be locked for children and parent have the right to cancel the accepted product.
+* Have manage/cart option.
 
-### `npm start`
+### Child features
+* Can log in and log out
+* Can manage own cart and choose any items they wanted
+* Full overview of all selection and price 
+* Have own cart for their selected items
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Setup and run app
 
-### `npm test`
+* run npm install. 
+* npm run start 
+* Everything will be managed and done automatically.
+* log in as who is needed, from parent to children from the home screen.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Dependencies and others
+* The only dependency I have used are (create-react-app, react-router-dom and prettier).
+* Used SASS for css and OOP style with typescript
+* Global State, local-storage for app data store and session-storage is used for sign in user.
+* I used class component as I love OOP and separation of concern, I want everything to be separate.
+* I want to write code that doesn't take long to make changes or add new features too.
 
-### `npm run build`
+### More information
+* Because of time and this is just a test project, I didn't implement everything, But I could add more feature if needed or requested.
+Thanks for giving me the opportunity, and the chance to take part.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).

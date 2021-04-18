@@ -32,20 +32,10 @@ export class Login extends Component<LoginProps, LoginStates> {
                   <div
                     className={"pic"}
                     style={{ backgroundImage: `url("images/pic.jpg")` }}
-                  >
-                    {/*<img src={"images/pic.jpg"} />*/}
-                  </div>
+                  />
                   <div className={"detail"}>
                     <h4>{user.fullName()}</h4>
                     <p>{user.type()}</p>
-                    {/*{user.parent === 0 ? (*/}
-                    {/*  ""*/}
-                    {/*) : (*/}
-                    {/*  <p>*/}
-                    {/*    Cart items:{" "}*/}
-                    {/*    {user.cart ? `${user.cart?.products.length}` : 0}*/}
-                    {/*  </p>*/}
-                    {/*)}*/}
                     <div className={"btn"}>
                       <button
                         onClick={() => this.login(user.id)}

@@ -6,7 +6,16 @@ export type FooterProps = {};
 export type FooterStates = {};
 
 export class Footer extends Component<FooterProps, FooterStates> {
+  private static reserved() {
+    const date = new Date();
+    return "©" + date.getFullYear() + " All rights reserved";
+  }
+
   render(): Render {
-    return <footer className={"footer"}>footer</footer>;
+    return (
+      <footer className={"footer"}>
+        <p>Drop Mas {Footer.reserved()}</p>
+      </footer>
+    );
   }
 }

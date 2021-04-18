@@ -17,7 +17,6 @@ export class Cart implements IData {
   public readonly userId: number;
   public readonly date: string;
   public products: CartProduct;
-  //public productList: Product[] = [];
 
   constructor({ id, userId, date, products }: CartType) {
     this.id = id;
@@ -32,6 +31,19 @@ export class Cart implements IData {
       return false;
     }
     return pro.approved;
+  }
+
+  /**
+   * Needed for parent to accept or cancel the
+   * @param id
+   * @param bol
+   */
+  public changeStatus(id: number, bol: boolean): void {
+    const pro = this.products.find((p) => p.productId === id);
+    if (!pro) {
+      return;
+    }
+    pro.approved = bol;
   }
 
   public plus(id: number): void {

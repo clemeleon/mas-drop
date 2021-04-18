@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { Render } from "../helpers/types";
 import { Context } from "../components/stores/Store";
 import { Loading } from "../helpers/MixFc";
-import { Cart } from "../datas/Cart";
-import { Helper } from "../helpers/Helper";
 
 /** Home props and states */
 export type HomeProps = {};
@@ -20,7 +18,7 @@ export class Home extends Component<HomeProps, HomeStates> {
   }
 
   public render(): Render {
-    const [{ user, loading, carts }] = this.context,
+    const [{ user, loading }] = this.context,
       clas = loading ? " center" : "";
     return (
       <div className={`home container${clas}`}>
@@ -28,19 +26,14 @@ export class Home extends Component<HomeProps, HomeStates> {
           <Loading bol={loading} />
         ) : (
           <>
-            <div>{user.fullName()}</div>
-            {/*<button onClick={() => this.test(carts)}>Click</button>*/}
+            <div
+              className={"image"}
+              style={{ backgroundImage: `url("images/shop.jpg")` }}
+            />
+            <h2>Welcome {user.fullName()}</h2>
           </>
         )}
       </div>
     );
-  }
-
-  private test(carts: Cart[]) {
-    console.log(carts);
-    const one = new Cart(Helper.clone(carts[0])),
-      [, dispatch] = this.context;
-    one.minus(2);
-    dispatch({ cart: one });
   }
 }

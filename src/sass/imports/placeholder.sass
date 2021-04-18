@@ -63,7 +63,6 @@
             > *
                 margin-bottom: 15px
             a
-                text-decoration: none
                 color: $light-black
                 flex-grow: 2
             .focus
@@ -108,96 +107,35 @@
                 display: block
                 +font-size(13)
                 color: green
-//%list
-    margin: 15px 0
-    width: 100%
+
+%accordion
     +flexbox()
-    justify-content: center
     flex-direction: column
-    align-items: center
-    +media(600px)
-        flex-direction: row
-        flex-wrap: wrap
-    .product
-        +flexbox()
-        max-width: 320px
+    width: 100%
+    .panel-body
         width: 100%
-        margin: 10px
-        padding: 10px
-        flex-direction: column
-        @extend %card
-        +media(600px)
-            +calc(min-width, '600px - 60px')
-            flex-direction: row
-            align-items: center
-            min-height: 250px
-        +media(620px)
-            min-width: 600px
-        .img
-            overflow: hidden
-            width: 250px
-            margin: 0 auto 1rem
-            height: 320px
-            background-repeat: no-repeat
-            background-position: center center
-            +background-size(contain)
-            +media(600px)
-                width: 200px
-                padding: 10px
-                height: 150px
-                margin-bottom: 0
-        .detail
-            padding: 10px
-            +flexbox()
-            flex-direction: column
-            justify-items: stretch
-            justify-content: space-around
+        overflow: hidden
+        margin-bottom: 1px
+        &.active
+            .content
+                @extend %show
+                height: auto
+        .label
             width: 100%
-            > *
-                margin-bottom: 15px
-            a
-                text-decoration: none
-                color: $light-black
-                flex-grow: 2
-            .focus
+            height: 100px
+            button
+                @extend %btn
+                height: 100%
                 +flexbox()
-                align-items: center
-                flex-direction: row
                 justify-content: space-between
-                &.right
-                    button
-                        font-size: inherit
-                    .price
-                        text-align: right
+                align-items: center
+                padding: 10px
+                flex-direction: column
+                +media(720px)
+                    flex-direction: row
                 span
-                    +font-size(20)
-                .price
-                    //text-align: right
-                    flex-grow: 2
-                .cart
-                    margin-left: 15px
-                    +flexbox()
-                    justify-content: space-between
-                    width: 120px
-                    align-items: center
-                    &.wide
-                        width: auto
-                        button
-                            width: 100%
-                    button
-                        +btn()
-                        &.stop
-                            opacity: .5
-                            pointer-events: none
-                        background-color: transparent
-                        border: 1px solid $border
-                        width: 40px
-                        padding: 5px
-                        height: 40px
-                        color: $black
-            .note
-                text-align: right
-                width: 100%
-                display: block
-                +font-size(13)
-                color: green
+                    +font-size(15)
+        .content
+            border: 1px solid $border
+            %hide
+            height: 0
