@@ -145,17 +145,18 @@ export class Helper {
     cart: Cart,
     id: number
   ): void {
+    const temp: Cart = new Cart(Helper.clone(cart));
     if (type === "add") {
-      cart.add(id);
+      temp.add(id);
     } else if (type === "plus") {
-      cart.plus(id);
+      temp.plus(id);
     } else if (type === "minus") {
-      cart.minus(id);
+      temp.minus(id);
     } else if (type === "accept") {
-      cart.changeStatus(id, true);
+      temp.changeStatus(id, true);
     } else if (type === "cancel") {
-      cart.changeStatus(id, false);
+      temp.changeStatus(id, false);
     }
-    dispatch({ cart: cart });
+    dispatch({ cart: temp });
   }
 }
