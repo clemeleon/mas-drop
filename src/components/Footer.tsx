@@ -14,7 +14,7 @@ export class Footer extends Component<FooterProps, FooterStates> {
   render(): Render {
     return (
       <footer className={"footer"}>
-        <p>Drop Mas {Footer.reserved()}</p>
+        <p>Mas Drop {Footer.reserved()}</p>
       </footer>
     );
   }
