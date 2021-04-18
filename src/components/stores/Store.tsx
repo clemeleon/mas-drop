@@ -234,7 +234,6 @@ class Store extends Component<StoreProps, StoreStates> {
       if (c) {
         if (Array.isArray(c)) {
           states.carts = c;
-          console.log(c);
         } else {
           states.cart = c;
         }
