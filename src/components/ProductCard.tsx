@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { Render } from "../helpers/types";
 import { CartAction } from "../helpers/MixFc";
 import { Cart } from "../datas/Cart";
+import { Helper } from "../helpers/Helper";
 
 type ProductCardProps = {
   bol: boolean;
@@ -58,9 +59,21 @@ class ProductCard extends Component<ProductCardProps, {}> {
               </div>
               {id > 0 && cart ? (
                 cart.approved(pro.id) ? (
-                  <button>{"Cancel"}</button>
+                  <button
+                    onClick={() =>
+                      Helper.cartAction(dispatch, "cancel", cart, pro.id)
+                    }
+                  >
+                    {"Cancel"}
+                  </button>
                 ) : (
-                  <button>{"Accept"}</button>
+                  <button
+                    onClick={() =>
+                      Helper.cartAction(dispatch, "accept", cart, pro.id)
+                    }
+                  >
+                    {"Accept"}
+                  </button>
                 )
               ) : cart && cart.approved(pro.id) ? (
                 <p className={"note"}>{"Item already approved by parent!"}</p>

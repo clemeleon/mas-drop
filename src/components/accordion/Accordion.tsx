@@ -6,7 +6,7 @@
 import React, { Component } from "react";
 import { Panel } from "./Panel";
 import { Render } from "../../helpers/types";
-type AccPanel = { label: string; content: Render };
+type AccPanel = { label: string | Render; content: Render };
 type AccProps = {
   panels: Array<AccPanel>;
   multiple: boolean;

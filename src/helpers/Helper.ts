@@ -114,37 +114,73 @@ export class Helper {
     return counts.reduce((one, two) => one + two);
   }
 
-  static cartTotal(cart: Cart, products: Product[]): [number, number, number] {
+  static cartTotal(
+    cart: Cart,
+    products: Product[]
+  ): [number, number, number, number] {
     const content = cart.products.map((p: CartProductType) => {
-        const product: Product | undefined = products.find(
-          (p1: Product) => p1.id === p.productId
-        );
-        if (!product) {
-          return { qty: 0, amount: 0, accepted: false };
-        }
-        return {
-          qty: p.quantity,
-          amount: product.price * p.quantity,
-          accepted: p.approved,
-        };
-      }),
+      const product: Product | undefined = products.find(
+        (p1: Product) => p1.id === p.productId
+      );
+      if (!product) {
+        return { qty: 0, amount: 0, count: 0, accepted: 0 };
+      }
+      return {
+        qty: p.quantity,
+        amount: product.price * p.quantity,
+        count: p.approved ? p.quantity : 0,
+        accepted: p.approved ? product.price * p.quantity : 0,
+      };
+    });
+    return Helper.cartReduce(content);
+    /*,
       amounts = content.map(({ amount }) => amount),
       total = content.map(({ qty }) => qty),
       amount = amounts.reduce((tot, b) => tot + b),
-      approved = content.filter(({ accepted }) => accepted);
+      bool = content.filter(({ bool }) => bool),
+      accepted = content.map(({ accepted }) => accepted),
+      accept = accepted.reduce((tot, a) => tot + a);
     return [
       Math.round((amount + Number.EPSILON) * 100) / 100,
       total.reduce((tot, b) => tot + b),
-      approved.length,
+      bool.length,
+      Math.round((accept + Number.EPSILON) * 100) / 100,
+    ];*/
+  }
+
+  static cartReduce(
+    content: Array<{
+      qty: number;
+      amount: number;
+      count: number;
+      accepted: number;
+    }>
+  ): [number, number, number, number] {
+    const amounts = content.map(({ amount }) => amount),
+      total = content.map(({ qty }) => qty),
+      amount = amounts.reduce((tot, b) => tot + b),
+      counts = content.map(({ count }) => (!count ? 0 : count)),
+      count = counts.reduce((tot, c) => tot + c),
+      accepted = content.map(({ accepted }) => accepted),
+      accept = accepted.reduce((tot, a) => tot + a);
+    //console.log(count, counts);
+    return [
+      Math.round((amount + Number.EPSILON) * 100) / 100,
+      total.reduce((tot, b) => tot + b),
+      count,
+      Math.round((accept + Number.EPSILON) * 100) / 100,
     ];
   }
 
   static cartAction(
     dispatch: Function,
     type: string,
-    cart: Cart,
+    cart: Cart | undefined,
     id: number
   ): void {
+    if (!cart) {
+      return;
+    }
     const temp: Cart = new Cart(Helper.clone(cart));
     if (type === "add") {
       temp.add(id);

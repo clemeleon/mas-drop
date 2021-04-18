@@ -7,7 +7,7 @@ import React, { Component } from "react";
 import { Render } from "../../helpers/types";
 
 type PanelProps = {
-  label: string;
+  label: string | Render;
   active: number;
   activate: (index: number) => void;
   index: number;
