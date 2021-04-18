@@ -23,7 +23,7 @@ export class Products extends Component<ProductsProps, ProductsStates> {
     return (
       <div className={`products container${clas}`}>
         {!loading ? (
-          <ProductCard bol={bol} cat={true} products={products} />
+          <ProductCard cart={cart} bol={bol} cat={true} products={products} />
         ) : (
           <Loading bol={loading} />
         )}

@@ -8,15 +8,22 @@ import { Context } from "./stores/Store";
 import { Link } from "react-router-dom";
 import { Render } from "../helpers/types";
 import { CartAction } from "../helpers/MixFc";
+import { Cart } from "../datas/Cart";
 
-type ProductCardProps = { bol: boolean; cat: boolean; products: Product[] };
+type ProductCardProps = {
+  bol: boolean;
+  cat: boolean;
+  cart: Cart | undefined;
+  products: Product[];
+  id?: number;
+};
 
 class ProductCard extends Component<ProductCardProps, {}> {
   public static contextType = Context;
 
   public render(): Render {
-    const [{ cart }, dispatch] = this.context,
-      { bol, cat, products } = this.props;
+    let [, dispatch] = this.context,
+      { bol, cat, products, id = 0, cart } = this.props;
     return (
       <div className={"list"}>
         {products.map((pro: Product) => (
@@ -49,7 +56,13 @@ class ProductCard extends Component<ProductCardProps, {}> {
                   ""
                 )}
               </div>
-              {cart && cart.approved(pro.id) ? (
+              {id > 0 && cart ? (
+                cart.approved(pro.id) ? (
+                  <button>{"Cancel"}</button>
+                ) : (
+                  <button>{"Accept"}</button>
+                )
+              ) : cart && cart.approved(pro.id) ? (
                 <p className={"note"}>{"Item already approved by parent!"}</p>
               ) : (
                 ""

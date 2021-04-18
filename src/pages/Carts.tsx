@@ -25,7 +25,7 @@ export class Carts extends Component<CartsProps, CartsStates> {
       <main className={"carts container"}>
         <h1>{`${user.firstName()}'s Cart`}</h1>
         <div className={"cart-products"}>
-          <ProductCard bol={true} cat={false} products={pros} />
+          <ProductCard cart={cart} bol={true} cat={false} products={pros} />
           <aside className={"info"}>
             <h3>Summary</h3>
             <div className={"sum-list"}>
