@@ -1398,18 +1398,36 @@ html {
 .home {
   width: 100%;
   color: #fff;
-  position: relative; }
-  .home > * {
+  position: relative;
+  padding: 0 !important;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .home h2 {
     z-index: 10; }
-  .home::before {
-    content: "";
-    position: absolute;
+  .home .image {
     width: 100%;
     height: 100%;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.5); }
+    min-height: 100vh;
+    position: absolute;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; }
+    .home .image::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.6); }
 
 .manage .accordion .panel-body.active .content {
   visibility: visible;

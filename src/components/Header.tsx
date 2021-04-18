@@ -77,7 +77,7 @@ export class Header extends Component<HeaderProps, HeaderStates> {
                   className={"icon"}
                   style={{ backgroundImage: `url("${logout}")` }}
                 />
-                <span className={"txt"}>Logout</span>
+                <span className={"txt"}>{user.firstName()}</span>
               </a>
             ) : (
               <Link to={"/"}>

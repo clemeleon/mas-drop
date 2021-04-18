@@ -11,7 +11,6 @@ type PanelProps = {
   active: number;
   activate: (index: number) => void;
   index: number;
-  id: string;
   own: boolean;
   children: Render;
 };
@@ -22,7 +21,7 @@ class Panel extends Component<PanelProps, PanelState> {
   constructor(props: PanelProps) {
     super(props);
     this.state = {
-      open: false,
+      open: this.props.index === 0,
     };
   }
   private activate = () => {
@@ -30,7 +29,7 @@ class Panel extends Component<PanelProps, PanelState> {
     this.setState({ open: !open });
   };
   render() {
-    let { label, active, index, activate, id, children, own } = this.props,
+    let { label, active, index, activate, children, own } = this.props,
       on = active === index,
       { open } = this.state;
     if (own) {

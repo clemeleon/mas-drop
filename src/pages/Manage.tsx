@@ -44,10 +44,10 @@ class Manage extends Component {
             <>
               <span>{u.fullName()}</span>
               <span>
-                Items: {total}/Accepted: {accepted}
+                Items: {total} / Total: €{amount}
               </span>
               <span>
-                Total: €{amount} / Total Accepted: €{amountAccepted}
+                Accepted: {accepted} / Total: €{amountAccepted}
               </span>
             </>
           ),

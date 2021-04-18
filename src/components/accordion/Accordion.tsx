@@ -40,7 +40,6 @@ class Accordion extends Component<AccProps, AccState> {
             activate={this.activate}
             index={i}
             own={multiple}
-            id={`id-${i}`}
             key={`id-${i}`}
           >
             {panel.content}

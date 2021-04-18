@@ -21,11 +21,18 @@ export class Home extends Component<HomeProps, HomeStates> {
     const [{ user, loading }] = this.context,
       clas = loading ? " center" : "";
     return (
-      <div
-        className={`home container${clas}`}
-        style={{ backgroundImage: `url("images/shop.jpg")` }}
-      >
-        {loading || !user ? <Loading bol={loading} /> : <></>}
+      <div className={`home container${clas}`}>
+        {loading || !user ? (
+          <Loading bol={loading} />
+        ) : (
+          <>
+            <div
+              className={"image"}
+              style={{ backgroundImage: `url("images/shop.jpg")` }}
+            />
+            <h2>Welcome {user.fullName()}</h2>
+          </>
+        )}
       </div>
     );
   }
