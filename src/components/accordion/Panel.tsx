@@ -40,14 +40,13 @@ class Panel extends Component<PanelProps, PanelState> {
       <div className={on ? "panel-body active" : "panel-body"}>
         <div className={"label"}>
           <button
-            className="panel-label"
             role="tab"
             onClick={() => (own ? this.activate() : activate(index))}
           >
             {label}
           </button>
-          <div className={"panel-content"}>{children}</div>
         </div>
+        <div className={"content"}>{children}</div>
       </div>
     );
   }

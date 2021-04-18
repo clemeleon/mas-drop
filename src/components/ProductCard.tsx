@@ -60,6 +60,7 @@ class ProductCard extends Component<ProductCardProps, {}> {
               {id > 0 && cart ? (
                 cart.approved(pro.id) ? (
                   <button
+                    className={"action"}
                     onClick={() =>
                       Helper.cartAction(dispatch, "cancel", cart, pro.id)
                     }
@@ -68,6 +69,7 @@ class ProductCard extends Component<ProductCardProps, {}> {
                   </button>
                 ) : (
                   <button
+                    className={"action"}
                     onClick={() =>
                       Helper.cartAction(dispatch, "accept", cart, pro.id)
                     }

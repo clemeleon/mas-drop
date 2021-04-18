@@ -93,6 +93,12 @@ html
 
             &.footer
                 border-top: 1px solid $border
+                +flexbox()
+                flex-direction: row
+                justify-content: flex-end
+                align-items: center
+                p
+                    +font-size(12)
 
         .container
             min-width: 320px
