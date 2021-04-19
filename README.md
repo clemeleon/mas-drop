@@ -1,4 +1,4 @@
-#Mas Drop
+# Mas Drop
 
 Mas drop is a place where parents can manage their children shopping and spending.
 Children can choose whatever they wanted, and the parent can decide if he/she will accept it.
@@ -37,8 +37,5 @@ parent can log in and manage their children items and children can log in and ma
 * I used class component as I love OOP and separation of concern, I want everything to be separate.
 * I want to write code that doesn't take long to make changes or add new features too.
 
-### More information
-* Because of time and this is just a test project, I didn't implement everything, But I could add more feature if needed or requested.
-Thanks for giving me the opportunity, and the chance to take part.
 
 
