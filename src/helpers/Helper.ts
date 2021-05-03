@@ -107,6 +107,9 @@ export class Helper {
 
   static cartCount(cart: Cart): number {
     const counts = cart.products.map((c) => c.quantity);
+    if (counts.length === 0) {
+      return 0;
+    }
     return counts.reduce((one, two) => one + two);
   }
 
