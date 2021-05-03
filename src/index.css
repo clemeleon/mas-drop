@@ -7,6 +7,14 @@
   -o-transition-delay: 0s;
   transition-delay: 0s; }
 
+.manage .accordion .panel-body .content {
+  visibility: hidden;
+  opacity: 0;
+  -opacity-transition: visibility 0s linear 0.5s;
+  -0.5s-transition: visibility 0s linear 0.5s;
+  -linear-transition: visibility 0s linear 0.5s;
+  transition: visibility 0s linear 0.5s; }
+
 .manage .accordion .panel-body .label button, .manage .list .product .action {
   cursor: pointer;
   padding: 0.4em 0.3em;
@@ -219,6 +227,14 @@
   -ms-transition-delay: 0s;
   -o-transition-delay: 0s;
   transition-delay: 0s; }
+
+.manage .accordion .panel-body .content {
+  visibility: hidden;
+  opacity: 0;
+  -opacity-transition: visibility 0s linear 0.5s;
+  -0.5s-transition: visibility 0s linear 0.5s;
+  -linear-transition: visibility 0s linear 0.5s;
+  transition: visibility 0s linear 0.5s; }
 
 .manage .accordion .panel-body .label button, .manage .list .product .action {
   cursor: pointer;
@@ -494,6 +510,14 @@ h6 {
   -ms-transition-delay: 0s;
   -o-transition-delay: 0s;
   transition-delay: 0s; }
+
+.manage .accordion .panel-body .content {
+  visibility: hidden;
+  opacity: 0;
+  -opacity-transition: visibility 0s linear 0.5s;
+  -0.5s-transition: visibility 0s linear 0.5s;
+  -linear-transition: visibility 0s linear 0.5s;
+  transition: visibility 0s linear 0.5s; }
 
 .manage .accordion .panel-body .label button, .manage .list .product .action {
   cursor: pointer;
@@ -813,6 +837,14 @@ h6 {
   -ms-transition-delay: 0s;
   -o-transition-delay: 0s;
   transition-delay: 0s; }
+
+.manage .accordion .panel-body .content {
+  visibility: hidden;
+  opacity: 0;
+  -opacity-transition: visibility 0s linear 0.5s;
+  -0.5s-transition: visibility 0s linear 0.5s;
+  -linear-transition: visibility 0s linear 0.5s;
+  transition: visibility 0s linear 0.5s; }
 
 .manage .accordion .panel-body .label button, .manage .list .product .action {
   cursor: pointer;
@@ -1191,6 +1223,14 @@ html {
   -o-transition-delay: 0s;
   transition-delay: 0s; }
 
+.manage .accordion .panel-body .content {
+  visibility: hidden;
+  opacity: 0;
+  -opacity-transition: visibility 0s linear 0.5s;
+  -0.5s-transition: visibility 0s linear 0.5s;
+  -linear-transition: visibility 0s linear 0.5s;
+  transition: visibility 0s linear 0.5s; }
+
 .manage .accordion .panel-body .label button, .manage .list .product .action {
   cursor: pointer;
   padding: 0.4em 0.3em;
@@ -1436,6 +1476,14 @@ html {
   -ms-transition-delay: 0s;
   -o-transition-delay: 0s;
   transition-delay: 0s; }
+
+.manage .accordion .panel-body .content {
+  visibility: hidden;
+  opacity: 0;
+  -opacity-transition: visibility 0s linear 0.5s;
+  -0.5s-transition: visibility 0s linear 0.5s;
+  -linear-transition: visibility 0s linear 0.5s;
+  transition: visibility 0s linear 0.5s; }
 
 .manage .accordion .panel-body .label button, .manage .list .product .action {
   cursor: pointer;
@@ -1754,6 +1802,14 @@ html {
   -o-transition-delay: 0s;
   transition-delay: 0s; }
 
+.manage .accordion .panel-body .content {
+  visibility: hidden;
+  opacity: 0;
+  -opacity-transition: visibility 0s linear 0.5s;
+  -0.5s-transition: visibility 0s linear 0.5s;
+  -linear-transition: visibility 0s linear 0.5s;
+  transition: visibility 0s linear 0.5s; }
+
 .manage .accordion .panel-body .label button, .manage .list .product .action {
   cursor: pointer;
   padding: 0.4em 0.3em;
@@ -1980,6 +2036,14 @@ html {
   -ms-transition-delay: 0s;
   -o-transition-delay: 0s;
   transition-delay: 0s; }
+
+.manage .accordion .panel-body .content {
+  visibility: hidden;
+  opacity: 0;
+  -opacity-transition: visibility 0s linear 0.5s;
+  -0.5s-transition: visibility 0s linear 0.5s;
+  -linear-transition: visibility 0s linear 0.5s;
+  transition: visibility 0s linear 0.5s; }
 
 .manage .accordion .panel-body .label button, .manage .list .product .action {
   cursor: pointer;
@@ -2229,6 +2293,14 @@ html {
   -ms-transition-delay: 0s;
   -o-transition-delay: 0s;
   transition-delay: 0s; }
+
+.manage .accordion .panel-body .content {
+  visibility: hidden;
+  opacity: 0;
+  -opacity-transition: visibility 0s linear 0.5s;
+  -0.5s-transition: visibility 0s linear 0.5s;
+  -linear-transition: visibility 0s linear 0.5s;
+  transition: visibility 0s linear 0.5s; }
 
 .manage .accordion .panel-body .label button, .manage .list .product .action {
   cursor: pointer;

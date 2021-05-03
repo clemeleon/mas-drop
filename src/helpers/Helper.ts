@@ -1,9 +1,5 @@
 import { Cart, CartProductType } from "../datas/Cart";
 import { Product } from "../datas/Product";
-import remove from "../icons/delete.svg";
-import minus from "../icons/minus.svg";
-import plus from "../icons/plus.svg";
-import React from "react";
 
 export class Helper {
   /**Compare two values if they are same*/
@@ -133,19 +129,6 @@ export class Helper {
       };
     });
     return Helper.cartReduce(content);
-    /*,
-      amounts = content.map(({ amount }) => amount),
-      total = content.map(({ qty }) => qty),
-      amount = amounts.reduce((tot, b) => tot + b),
-      bool = content.filter(({ bool }) => bool),
-      accepted = content.map(({ accepted }) => accepted),
-      accept = accepted.reduce((tot, a) => tot + a);
-    return [
-      Math.round((amount + Number.EPSILON) * 100) / 100,
-      total.reduce((tot, b) => tot + b),
-      bool.length,
-      Math.round((accept + Number.EPSILON) * 100) / 100,
-    ];*/
   }
 
   static cartReduce(
@@ -156,14 +139,16 @@ export class Helper {
       accepted: number;
     }>
   ): [number, number, number, number] {
-    const amounts = content.map(({ amount }) => amount),
+    if (content.length === 0) {
+      return [0, 0, 0, 0]
+    }
+    const amounts = (content.length === 0) ? [0] : content.map(({ amount }) => amount),
       total = content.map(({ qty }) => qty),
       amount = amounts.reduce((tot, b) => tot + b),
       counts = content.map(({ count }) => (!count ? 0 : count)),
       count = counts.reduce((tot, c) => tot + c),
       accepted = content.map(({ accepted }) => accepted),
       accept = accepted.reduce((tot, a) => tot + a);
-    //console.log(count, counts);
     return [
       Math.round((amount + Number.EPSILON) * 100) / 100,
       total.reduce((tot, b) => tot + b),
