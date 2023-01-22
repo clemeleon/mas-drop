@@ -135,6 +135,7 @@ export class Table<T extends IData, C extends DataType> {
       }
       return true;
     } catch (e) {
+      // @ts-ignore
       console.log(e.message);
     }
     return false;
@@ -181,6 +182,7 @@ export class Table<T extends IData, C extends DataType> {
         }
       }
     } catch (e) {
+      // @ts-ignore
       console.log(e.message);
     }
     return classes;
