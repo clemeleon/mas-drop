@@ -56,6 +56,7 @@ export class Schema {
         return true;
       }
     } catch (e) {
+      // @ts-ignore
       this.message = `${e.message} on db.create`;
     }
     return false;
@@ -75,6 +76,7 @@ export class Schema {
     try {
       return await table.all(fields, wheres, ids, limit);
     } catch (e) {
+      // @ts-ignore
       this.message = `${e.message} on db.all()`;
     }
     return [];
@@ -96,6 +98,7 @@ export class Schema {
       }
       return await table.get(fields, wheres);
     } catch (e) {
+      // @ts-ignore
       this.message = `${e.message} on db.get()`;
     }
     return undefined;
@@ -160,6 +163,7 @@ export class Schema {
     try {
       return await table.set(data);
     } catch (e) {
+      // @ts-ignore
       this.message = `${e.message} on db.set()`;
     }
     return false;
@@ -177,6 +181,7 @@ export class Schema {
       await this.prepare();
       return this.tables[name];
     } catch (e) {
+      // @ts-ignore
       this.message = `${e.message} on db.table()`;
     }
     return undefined;
@@ -193,6 +198,7 @@ export class Schema {
         res = await fetch(url, opts);
       return (await res.json()) as C[];
     } catch (e) {
+      // @ts-ignore
       this.message = `${e.message} on db.fetch`;
     }
     return [];

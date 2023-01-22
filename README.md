@@ -1,4 +1,4 @@
-# Mas Drop
+for # Mas Drop
 
 Mas drop is a place where parents can manage their children shopping and spending.
 Children can choose whatever they wanted, and the parent can decide if he/she will accept it.
