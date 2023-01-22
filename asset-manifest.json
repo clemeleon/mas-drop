@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/mas-drop/static/css/main.948c8f15.chunk.css",
+    "main.js": "/mas-drop/static/js/main.da6e5482.chunk.js",
+    "main.js.map": "/mas-drop/static/js/main.da6e5482.chunk.js.map",
+    "runtime-main.js": "/mas-drop/static/js/runtime-main.16a0a1a2.js",
+    "runtime-main.js.map": "/mas-drop/static/js/runtime-main.16a0a1a2.js.map",
+    "static/js/2.ce626868.chunk.js": "/mas-drop/static/js/2.ce626868.chunk.js",
+    "static/js/2.ce626868.chunk.js.map": "/mas-drop/static/js/2.ce626868.chunk.js.map",
+    "index.html": "/mas-drop/index.html",
+    "static/css/main.948c8f15.chunk.css.map": "/mas-drop/static/css/main.948c8f15.chunk.css.map",
+    "static/js/2.ce626868.chunk.js.LICENSE.txt": "/mas-drop/static/js/2.ce626868.chunk.js.LICENSE.txt",
+    "static/media/basket.041befaf.svg": "/mas-drop/static/media/basket.041befaf.svg",
+    "static/media/delete.e016087d.svg": "/mas-drop/static/media/delete.e016087d.svg",
+    "static/media/login.edbe09f0.svg": "/mas-drop/static/media/login.edbe09f0.svg",
+    "static/media/logo.51e190d5.svg": "/mas-drop/static/media/logo.51e190d5.svg",
+    "static/media/logout.90a0cb01.svg": "/mas-drop/static/media/logout.90a0cb01.svg",
+    "static/media/manage.863ee0da.svg": "/mas-drop/static/media/manage.863ee0da.svg",
+    "static/media/minus.d1e28aed.svg": "/mas-drop/static/media/minus.d1e28aed.svg",
+    "static/media/plus.1177e6ac.svg": "/mas-drop/static/media/plus.1177e6ac.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.16a0a1a2.js",
+    "static/js/2.ce626868.chunk.js",
+    "static/css/main.948c8f15.chunk.css",
+    "static/js/main.da6e5482.chunk.js"
+  ]
+}
