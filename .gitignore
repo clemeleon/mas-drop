@@ -24,3 +24,5 @@ yarn-error.log*
 /.idea/
 /src/index.css.map
 /src/sass/.sass-cache/
+/.yarn/
+/.yarnrc.yml
