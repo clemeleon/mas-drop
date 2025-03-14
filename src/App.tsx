@@ -52,7 +52,7 @@ class App extends Component<AppProps, AppStates> {
       child = id > 0 && user instanceof User && user.parent !== 0;
     return (
       <div className="app">
-        <Router>
+        <Router basename={process.env.REACT_BASE_URL}>
           <Header />
           <Switch>
             <Route exact path="/">
